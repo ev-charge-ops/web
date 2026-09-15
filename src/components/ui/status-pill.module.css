@@ -1,0 +1,43 @@
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: var(--radius-pill);
+  background: currentColor;
+}
+
+.charging {
+  color: var(--status-charging);
+  background: var(--status-charging-bg);
+}
+
+.idle {
+  color: var(--status-idle);
+  background: var(--status-idle-bg);
+}
+
+.fault {
+  color: var(--status-fault);
+  background: var(--status-fault-bg);
+}
+
+.info {
+  color: var(--status-info);
+  background: var(--status-info-bg);
+}
+
+.offline {
+  color: var(--status-offline);
+  background: var(--status-offline-bg);
+}

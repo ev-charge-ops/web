@@ -4,11 +4,19 @@ import { paths } from '@/config/paths'
 
 const router = createBrowserRouter([
   {
-    path: paths.home.path,
     lazy: async () => {
-      const { HomeRoute } = await import('./routes/home')
-      return { Component: HomeRoute }
+      const { DashboardRoot } = await import('./routes/dashboard-root')
+      return { Component: DashboardRoot }
     },
+    children: [
+      {
+        path: paths.home.path,
+        lazy: async () => {
+          const { HomeRoute } = await import('./routes/home')
+          return { Component: HomeRoute }
+        },
+      },
+    ],
   },
   {
     path: '*',
