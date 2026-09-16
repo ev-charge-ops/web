@@ -5,6 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { MainError } from '@/components/errors/main-error'
 import { Spinner } from '@/components/ui/spinner'
 import { ToastProvider } from '@/components/ui/toast'
+import { AuthProvider } from '@/lib/auth'
 import { createQueryClient } from '@/lib/react-query'
 
 import styles from './provider.module.css'
@@ -26,7 +27,9 @@ export function AppProvider({ children }: AppProviderProps) {
     >
       <ErrorBoundary FallbackComponent={MainError}>
         <QueryClientProvider client={queryClient}>
-          <ToastProvider>{children}</ToastProvider>
+          <AuthProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </AuthProvider>
         </QueryClientProvider>
       </ErrorBoundary>
     </Suspense>
