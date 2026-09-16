@@ -82,12 +82,17 @@ export function createAuthMiddleware(
   }
 }
 
+const lazyFetch = (request: Request) => globalThis.fetch(request)
+
 export function createApiClient(baseUrl: string) {
-  const client = createClient<paths>({ baseUrl })
+  const client = createClient<paths>({ baseUrl, fetch: lazyFetch })
   client.use(createAuthMiddleware(() => authHandlers))
   return client
 }
 
 export const apiClient = createApiClient(env.apiUrl)
 
-export const publicApiClient = createClient<paths>({ baseUrl: env.apiUrl })
+export const publicApiClient = createClient<paths>({
+  baseUrl: env.apiUrl,
+  fetch: lazyFetch,
+})
