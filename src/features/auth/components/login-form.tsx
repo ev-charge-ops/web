@@ -1,13 +1,19 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CircleAlert } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { Link } from 'react-router'
 
+import { Alert } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { TextField } from '@/components/ui/text-field'
-import { ApiError } from '@/lib/api-client'
+import { paths } from '@/config/paths'
 import type { AuthSession } from '@/lib/use-auth'
 
 import { loginInputSchema, useLogin, type LoginInput } from '../api/login'
+import {
+  hasStatus,
+  isRateLimited,
+  tooManyRequestsMessage,
+} from '../utils/error-messages'
 import styles from './login-form.module.css'
 
 type LoginFormProps = {
@@ -15,9 +21,8 @@ type LoginFormProps = {
 }
 
 function getErrorMessage(error: Error) {
-  if (error instanceof ApiError && error.status === 401) {
-    return 'E-mail ou senha inválidos'
-  }
+  if (hasStatus(error, 401)) return 'E-mail ou senha inválidos'
+  if (isRateLimited(error)) return tooManyRequestsMessage
   return 'Não foi possível entrar agora. Tente novamente em instantes.'
 }
 
@@ -38,12 +43,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       noValidate
       onSubmit={handleSubmit((values) => login.mutate(values))}
     >
-      {login.error ? (
-        <div role="alert" className={styles.error}>
-          <CircleAlert size={16} strokeWidth={2} aria-hidden />
-          <span>{getErrorMessage(login.error)}</span>
-        </div>
-      ) : null}
+      {login.error ? <Alert>{getErrorMessage(login.error)}</Alert> : null}
       <TextField
         label="E-mail"
         type="email"
@@ -59,6 +59,9 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         error={errors.password?.message}
         {...register('password')}
       />
+      <div className={styles.forgot}>
+        <Link to={paths.auth.forgotPassword.getHref()}>Esqueci minha senha</Link>
+      </div>
       <Button type="submit" isLoading={login.isPending} className={styles.submit}>
         Entrar
       </Button>
