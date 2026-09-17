@@ -4,6 +4,7 @@ import { DashboardLayout } from '@/components/layouts/dashboard-layout'
 import { FullPageSpinner } from '@/components/layouts/full-page-spinner'
 import { paths } from '@/config/paths'
 import { DriverAccessNotice } from '@/features/auth/components/driver-access-notice'
+import { EmailVerificationBanner } from '@/features/auth/components/email-verification-banner'
 import { UserMenu } from '@/features/auth/components/user-menu'
 import { useAuth } from '@/lib/use-auth'
 
@@ -30,6 +31,7 @@ export function ProtectedRoot() {
 
   return (
     <DashboardLayout user={<UserMenu user={user} />}>
+      <EmailVerificationBanner user={user} />
       <Outlet />
     </DashboardLayout>
   )
