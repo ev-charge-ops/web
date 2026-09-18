@@ -67,6 +67,18 @@ describe('LoginRoute', () => {
     expect(screen.getByLabelText('Senha')).toBeInTheDocument()
   })
 
+  it('links to the privacy policy and terms of use', () => {
+    renderRoutes()
+
+    expect(
+      screen.getByRole('link', { name: 'Política de Privacidade' }),
+    ).toHaveAttribute('href', '/privacidade')
+    expect(screen.getByRole('link', { name: 'Termos de Uso' })).toHaveAttribute(
+      'href',
+      '/termos',
+    )
+  })
+
   it('signs in with an email code and follows the redirect target', async () => {
     mockEmailLogin(managerUser)
     renderRoutes('/login?redirectTo=%2Freports')
