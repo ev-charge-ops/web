@@ -1,0 +1,30 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "JWSCRB8HGL.io.softmoon.evchargeops"
+        ],
+        "components": [
+          {
+            "/": "/invite*"
+          },
+          {
+            "/": "/reset-password*"
+          },
+          {
+            "/": "/login/email*"
+          },
+          {
+            "/": "/verify-email*"
+          }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "JWSCRB8HGL.io.softmoon.evchargeops"
+    ]
+  }
+}
