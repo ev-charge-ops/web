@@ -11,6 +11,13 @@ const router = createBrowserRouter([
     },
   },
   {
+    path: paths.auth.emailLogin.path,
+    lazy: async () => {
+      const { EmailLoginRoute } = await import('./routes/email-login')
+      return { Component: EmailLoginRoute }
+    },
+  },
+  {
     path: paths.auth.forgotPassword.path,
     lazy: async () => {
       const { ForgotPasswordRoute } = await import('./routes/forgot-password')

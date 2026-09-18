@@ -11,6 +11,11 @@ export const paths = {
           ? `/login?redirectTo=${encodeURIComponent(redirectTo)}`
           : '/login',
     },
+    emailLogin: {
+      path: '/login/email',
+      getHref: (token: string) =>
+        `/login/email?token=${encodeURIComponent(token)}`,
+    },
     forgotPassword: {
       path: '/forgot-password',
       getHref: () => '/forgot-password',
