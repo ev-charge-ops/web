@@ -39,6 +39,20 @@ const router = createBrowserRouter([
     },
   },
   {
+    path: paths.legal.privacy.path,
+    lazy: async () => {
+      const { PrivacyRoute } = await import('./routes/privacy')
+      return { Component: PrivacyRoute }
+    },
+  },
+  {
+    path: paths.legal.terms.path,
+    lazy: async () => {
+      const { TermsRoute } = await import('./routes/terms')
+      return { Component: TermsRoute }
+    },
+  },
+  {
     lazy: async () => {
       const { ProtectedRoot } = await import('./routes/protected-root')
       return { Component: ProtectedRoot }
