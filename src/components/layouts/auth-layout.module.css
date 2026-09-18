@@ -64,3 +64,11 @@
   line-height: 20px;
   color: var(--text-subtle);
 }
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-5);
+  font-size: 12px;
+}

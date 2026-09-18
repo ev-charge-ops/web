@@ -8,9 +8,15 @@ type AuthLayoutProps = {
   title: string
   description?: ReactNode
   children: ReactNode
+  footer?: ReactNode
 }
 
-export function AuthLayout({ title, description, children }: AuthLayoutProps) {
+export function AuthLayout({
+  title,
+  description,
+  children,
+  footer,
+}: AuthLayoutProps) {
   return (
     <main className={styles.page}>
       <div className={styles.content}>
@@ -27,6 +33,7 @@ export function AuthLayout({ title, description, children }: AuthLayoutProps) {
           </header>
           {children}
         </Card>
+        {footer ? <footer className={styles.footer}>{footer}</footer> : null}
       </div>
     </main>
   )
