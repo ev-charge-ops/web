@@ -32,9 +32,14 @@ function isActive(item: NavItem, pathname: string) {
 type DashboardLayoutProps = {
   children: ReactNode
   user?: ReactNode
+  organization?: ReactNode
 }
 
-export function DashboardLayout({ children, user }: DashboardLayoutProps) {
+export function DashboardLayout({
+  children,
+  user,
+  organization,
+}: DashboardLayoutProps) {
   const { pathname } = useLocation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const current = navItems.find((item) => isActive(item, pathname)) ?? navItems[0]
@@ -120,6 +125,9 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
             <span className={styles.description}>{current.description}</span>
           </div>
 
+          {organization ? (
+            <div className={styles.organization}>{organization}</div>
+          ) : null}
           {user ? <div className={styles.user}>{user}</div> : null}
         </header>
 
