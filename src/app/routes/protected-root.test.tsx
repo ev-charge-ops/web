@@ -64,6 +64,10 @@ describe('ProtectedRoot', () => {
     expect(
       await screen.findByText(managedOrganization.name),
     ).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Moradores' })).toHaveAttribute(
+      'href',
+      '/residents',
+    )
     expect(
       screen.queryByRole('region', { name: 'Verificação de e-mail' }),
     ).not.toBeInTheDocument()
