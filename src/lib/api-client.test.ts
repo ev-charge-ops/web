@@ -3,7 +3,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { server } from '@/testing/mocks/server'
 
-import { createApiClient, setAuthHandlers } from './api-client'
+import {
+  ApiError,
+  createApiClient,
+  setAuthHandlers,
+  toApiError,
+} from './api-client'
 
 const baseUrl = 'http://api.test'
 
@@ -74,5 +79,24 @@ describe('apiClient', () => {
 
     expect(response.status).toBe(401)
     expect(onRefreshFailure).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('toApiError', () => {
+  it('keeps the status and the error code from the body', () => {
+    const error = toApiError(new Response(null, { status: 410 }), {
+      code: 'INVITE_EXPIRED',
+    })
+
+    expect(error).toBeInstanceOf(ApiError)
+    expect(error.status).toBe(410)
+    expect(error.code).toBe('INVITE_EXPIRED')
+  })
+
+  it('ignores bodies without a code', () => {
+    expect(toApiError(new Response(null, { status: 500 })).code).toBeUndefined()
+    expect(
+      toApiError(new Response(null, { status: 400 }), { code: 42 }).code,
+    ).toBeUndefined()
   })
 })
