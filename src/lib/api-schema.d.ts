@@ -215,6 +215,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/oauth/google/code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Log in or sign up with a Google OAuth authorization code
+         * @description Exchanges an authorization code obtained through the Google popup flow (redirect URI "postmessage") for an ID token, then behaves like loginWithGoogle.
+         */
+        post: operations["loginWithGoogleCode"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/oauth/apple": {
         parameters: {
             query?: never;
@@ -465,6 +485,10 @@ export interface components {
         GoogleLoginDto: {
             /** @description ID token returned by Google Sign-In */
             idToken: string;
+        };
+        GoogleCodeLoginDto: {
+            /** @description Authorization code returned by the Google OAuth popup (redirect URI "postmessage") */
+            code: string;
         };
         AppleFullNameDto: {
             /** @example Ana */
@@ -1008,6 +1032,57 @@ export interface operations {
             };
             /** @description Too many requests */
             429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    loginWithGoogleCode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GoogleCodeLoginDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthResponseDto"];
+                };
+            };
+            /** @description Invalid payload */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid or expired code, invalid ID token or email not verified by Google */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Google authorization code flow is not configured (GOOGLE_CODE_FLOW_NOT_CONFIGURED) */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
