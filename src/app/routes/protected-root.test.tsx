@@ -8,6 +8,7 @@ import { env } from '@/config/env'
 import { refreshTokenStorageKey } from '@/lib/auth'
 import type { AuthUser } from '@/lib/use-auth'
 import { createSession, driverUser, managerUser } from '@/testing/mocks/auth'
+import { managedOrganization } from '@/testing/mocks/organizations'
 import { server } from '@/testing/mocks/server'
 import { renderApp } from '@/testing/test-utils'
 
@@ -60,6 +61,13 @@ describe('ProtectedRoot', () => {
     ).toBeInTheDocument()
     expect(screen.getByText('Gestor do condomínio')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Sair' })).toBeInTheDocument()
+    expect(
+      await screen.findByText(managedOrganization.name),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Moradores' })).toHaveAttribute(
+      'href',
+      '/residents',
+    )
     expect(
       screen.queryByRole('region', { name: 'Verificação de e-mail' }),
     ).not.toBeInTheDocument()

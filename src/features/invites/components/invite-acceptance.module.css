@@ -1,0 +1,84 @@
+.stack,
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-input);
+  background: var(--surface-inset);
+}
+
+.summary div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.summary dt {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-subtle);
+}
+
+.summary dd {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-title);
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--hairline);
+}
+
+.footnote {
+  margin: 0;
+  font-size: 13px;
+  text-align: center;
+  color: var(--text-subtle);
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.resultTitle {
+  margin: 0;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 800;
+  color: var(--text-title);
+}
+
+.resultDescription {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-muted);
+}

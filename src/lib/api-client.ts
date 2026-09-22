@@ -14,12 +14,25 @@ export type AuthHandlers = {
 
 export class ApiError extends Error {
   readonly status: number
+  readonly code?: string
 
-  constructor(status: number) {
+  constructor(status: number, code?: string) {
     super(`Request failed with status ${status}`)
     this.name = 'ApiError'
     this.status = status
+    this.code = code
   }
+}
+
+function readErrorCode(body: unknown) {
+  if (typeof body !== 'object' || body === null || !('code' in body)) {
+    return undefined
+  }
+  return typeof body.code === 'string' ? body.code : undefined
+}
+
+export function toApiError(response: Response, body?: unknown) {
+  return new ApiError(response.status, readErrorCode(body))
 }
 
 let authHandlers: AuthHandlers | null = null
