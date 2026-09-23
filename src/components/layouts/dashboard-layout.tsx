@@ -1,4 +1,11 @@
-import { LayoutDashboard, Menu, Users, X, type LucideIcon } from 'lucide-react'
+import {
+  BatteryCharging,
+  LayoutDashboard,
+  Menu,
+  Users,
+  X,
+  type LucideIcon,
+} from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
 import { NavLink, useLocation } from 'react-router'
 
@@ -22,6 +29,12 @@ const navItems: NavItem[] = [
     description: 'Resumo do condomínio',
     icon: LayoutDashboard,
     end: true,
+  },
+  {
+    to: paths.sessions.getHref(),
+    label: 'Sessões',
+    description: 'Recargas medidas e anomalias',
+    icon: BatteryCharging,
   },
   {
     to: paths.residents.getHref(),
