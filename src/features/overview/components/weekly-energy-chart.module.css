@@ -1,0 +1,88 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+.title::first-letter {
+  text-transform: uppercase;
+}
+
+.hint {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-subtle);
+}
+
+.chart {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  height: 188px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.column {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.value {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.track {
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.bar {
+  display: block;
+  width: 100%;
+  border-radius: 8px 8px 4px 4px;
+  background: rgba(38, 208, 124, 0.35);
+  transition: height var(--duration-slow) var(--ease-out);
+}
+
+.peak {
+  background: var(--status-charging);
+}
+
+.week {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-subtle);
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .chart {
+    height: 156px;
+  }
+}
