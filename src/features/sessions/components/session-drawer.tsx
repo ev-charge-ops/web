@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card'
 import { Drawer } from '@/components/ui/drawer'
 import { Spinner } from '@/components/ui/spinner'
 import { StatusPill } from '@/components/ui/status-pill'
+import { formatDemandFactor, formatDemandSource } from '@/utils/demand'
 import { formatCents } from '@/utils/format-currency'
 import { formatDateTime } from '@/utils/format-date'
 import { formatDuration } from '@/utils/format-duration'
@@ -12,8 +13,6 @@ import { formatPower } from '@/utils/format-power'
 import { useSession, type SessionDetail } from '../api/get-session'
 import type { OrganizationSession } from '../api/get-sessions'
 import {
-  demandSourceLabels,
-  formatDemandFactor,
   limitTypeLabels,
   regimeLabels,
   sessionStatusLabels,
@@ -66,12 +65,10 @@ function SessionDetails({
   summary: OrganizationSession
   session: SessionDetail
 }) {
-  const demandSource = [
-    demandSourceLabels[session.demandFactorSource],
+  const demandSource = formatDemandSource(
+    session.demandFactorSource,
     session.demandModelVersion,
-  ]
-    .filter(Boolean)
-    .join(' · ')
+  )
 
   const chargingLines: Line[] = [
     {

@@ -28,11 +28,6 @@ export const regimeLabels = {
   COMMERCIAL: 'Visitante',
 } satisfies Record<components['schemas']['ChargePointType'], string>
 
-export const demandSourceLabels = {
-  MODEL: 'Modelo de IA',
-  RULE: 'Regra por horário',
-} satisfies Record<components['schemas']['DemandFactorSource'], string>
-
 export const limitTypeLabels = {
   ENERGY: 'Por energia',
   AMOUNT: 'Por valor',
@@ -46,13 +41,4 @@ const scoreFormatter = new Intl.NumberFormat('pt-BR', {
 
 export function formatAnomalyScore(score: number) {
   return scoreFormatter.format(score)
-}
-
-const factorFormatter = new Intl.NumberFormat('pt-BR', {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 2,
-})
-
-export function formatDemandFactor(factor: number) {
-  return `${factorFormatter.format(factor)}×`
 }
