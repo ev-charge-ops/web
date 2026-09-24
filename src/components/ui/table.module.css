@@ -164,7 +164,22 @@
   color: var(--text-subtle);
 }
 
-.totalRow td {
+.table tbody th,
+.table tfoot th {
+  padding: 12px var(--space-5);
+  font-size: 13.5px;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text-title);
+}
+
+.danger {
+  font-weight: 700;
+  color: var(--status-fault);
+}
+
+.totalRow td,
+.totalRow th {
   background: rgba(255, 255, 255, 0.03);
   font-weight: 700;
   color: var(--text-title);
