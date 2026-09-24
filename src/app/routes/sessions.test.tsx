@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
@@ -26,9 +26,16 @@ function mockSessions(items = organizationSessions) {
       const params = new URL(request.url).searchParams
       requests.push(params)
       const status = params.get('status')
+      const chargePointId = params.get('chargePointId')
+      const anomaly = params.get('anomaly')
       return HttpResponse.json(
         createSessionPage(
-          status ? items.filter((session) => session.status === status) : items,
+          items.filter(
+            (session) =>
+              (!status || session.status === status) &&
+              (!chargePointId || session.chargePoint.id === chargePointId) &&
+              (!anomaly || Boolean(session.isAnomaly) === (anomaly === 'true')),
+          ),
         ),
       )
     }),
@@ -67,8 +74,11 @@ describe('SessionsRoute', () => {
       await screen.findByLabelText('Ponto'),
       'L1-02 · Garagem L1 · Vaga 13',
     )
+    expect(await screen.findByText('1 · 1 sinalizada pela IA')).toBeInTheDocument()
     expect(screen.queryByText('Marcelo Tavares')).not.toBeInTheDocument()
     expect(screen.getByText('Verônica Alencar')).toBeInTheDocument()
+    expect(requests.at(-1)?.get('chargePointId')).toBe(flaggedSession.chargePoint.id)
+    expect(requests.at(-1)?.get('status')).toBe('CLOSED')
     expect(
       screen.queryByRole('option', { name: /Estacionamento público/ }),
     ).not.toBeInTheDocument()
@@ -79,6 +89,38 @@ describe('SessionsRoute', () => {
       await screen.findByText(`Sessões de ${formatMonth(previousMonth)}`),
     ).toBeInTheDocument()
     expect(requests.at(-1)?.get('month')).toBe(previousMonth)
+  })
+
+  it('keeps only the flagged sessions when asked', async () => {
+    const requests = mockSessions()
+    const user = userEvent.setup()
+    renderApp(<SessionsRoute />, { route: '/sessions' })
+
+    await screen.findByRole('table', { name: 'Sessões' })
+    expect(requests[0].has('anomaly')).toBe(false)
+    expect(requests[0].has('chargePointId')).toBe(false)
+
+    await user.click(screen.getByRole('checkbox', { name: 'Somente anomalias' }))
+
+    expect(await screen.findByText('1 · 1 sinalizada pela IA')).toBeInTheDocument()
+    expect(screen.queryByText('Marcelo Tavares')).not.toBeInTheDocument()
+    expect(screen.getByText('Verônica Alencar')).toBeInTheDocument()
+    expect(requests.at(-1)?.get('anomaly')).toBe('true')
+  })
+
+  it('reads the point and anomaly filters from the URL', async () => {
+    const requests = mockSessions()
+    renderApp(<SessionsRoute />, {
+      route: `/sessions?point=${flaggedSession.chargePoint.id}&anomaly=true`,
+    })
+
+    expect(await screen.findByText('Verônica Alencar')).toBeInTheDocument()
+    expect(requests[0].get('chargePointId')).toBe(flaggedSession.chargePoint.id)
+    expect(requests[0].get('anomaly')).toBe('true')
+    expect(screen.getByRole('checkbox', { name: 'Somente anomalias' })).toBeChecked()
+    await waitFor(() =>
+      expect(screen.getByLabelText('Ponto')).toHaveValue(flaggedSession.chargePoint.id),
+    )
   })
 
   it('explains a flagged session in the detail drawer', async () => {
