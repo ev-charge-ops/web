@@ -11,6 +11,14 @@ export const paths = {
     path: '/sessions',
     getHref: () => '/sessions',
   },
+  chargePoints: {
+    path: '/charge-points',
+    getHref: () => '/charge-points',
+  },
+  rules: {
+    path: '/rules',
+    getHref: () => '/rules',
+  },
   invite: {
     path: '/invite',
     getHref: (token: string) => `/invite?token=${encodeURIComponent(token)}`,
