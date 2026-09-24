@@ -2,6 +2,8 @@ import {
   BatteryCharging,
   LayoutDashboard,
   Menu,
+  PlugZap,
+  SlidersHorizontal,
   Users,
   X,
   type LucideIcon,
@@ -35,6 +37,18 @@ const navItems: NavItem[] = [
     label: 'Sessões',
     description: 'Recargas medidas e anomalias',
     icon: BatteryCharging,
+  },
+  {
+    to: paths.chargePoints.getHref(),
+    label: 'Pontos e capacidade',
+    description: 'Status, carregadores e preço agora',
+    icon: PlugZap,
+  },
+  {
+    to: paths.rules.getHref(),
+    label: 'Regras',
+    description: 'Tarifas, tolerância e ocupação',
+    icon: SlidersHorizontal,
   },
   {
     to: paths.residents.getHref(),

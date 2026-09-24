@@ -93,6 +93,20 @@ const router = createBrowserRouter([
           return { Component: SessionsRoute }
         },
       },
+      {
+        path: paths.chargePoints.path,
+        lazy: async () => {
+          const { ChargePointsRoute } = await import('./routes/charge-points')
+          return { Component: ChargePointsRoute }
+        },
+      },
+      {
+        path: paths.rules.path,
+        lazy: async () => {
+          const { RulesRoute } = await import('./routes/rules')
+          return { Component: RulesRoute }
+        },
+      },
     ],
   },
   {
