@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   Menu,
   PlugZap,
+  Receipt,
   SlidersHorizontal,
   Users,
   X,
@@ -37,6 +38,12 @@ const navItems: NavItem[] = [
     label: 'Sessões',
     description: 'Recargas medidas e anomalias',
     icon: BatteryCharging,
+  },
+  {
+    to: paths.costSharing.getHref(),
+    label: 'Rateio',
+    description: 'Fechamento mensal por unidade',
+    icon: Receipt,
   },
   {
     to: paths.chargePoints.getHref(),
