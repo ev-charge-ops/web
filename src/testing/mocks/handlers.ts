@@ -18,5 +18,12 @@ export const handlers = [
   http.get(`${env.apiUrl}/organizations/:organizationId/sessions`, () =>
     HttpResponse.json(createSessionPage([])),
   ),
-  http.get(`${env.apiUrl}/charge-points`, () => HttpResponse.json(chargePoints)),
+  http.get(`${env.apiUrl}/charge-points`, ({ request }) => {
+    const organizationId = new URL(request.url).searchParams.get('organizationId')
+    return HttpResponse.json(
+      organizationId
+        ? chargePoints.filter((point) => point.organizationId === organizationId)
+        : chargePoints,
+    )
+  }),
 ]
