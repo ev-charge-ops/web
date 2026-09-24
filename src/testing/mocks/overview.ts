@@ -29,6 +29,9 @@ export function createOverview(overrides: Partial<Overview> = {}): Overview {
       { week: 4, energyKwh: 288.1 },
       { week: 5, energyKwh: 104.1 },
     ],
+    anomaliesCount: 0,
+    recentAnomalies: [],
+    chargePoints: [],
     ...overrides,
   }
 }
