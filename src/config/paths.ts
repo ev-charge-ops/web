@@ -11,6 +11,10 @@ export const paths = {
     path: '/sessions',
     getHref: () => '/sessions',
   },
+  costSharing: {
+    path: '/cost-sharing',
+    getHref: () => '/cost-sharing',
+  },
   chargePoints: {
     path: '/charge-points',
     getHref: () => '/charge-points',
