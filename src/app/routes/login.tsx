@@ -53,7 +53,7 @@ export function LoginRoute() {
       <div className={styles.divider}>ou</div>
       <OAuthButtons />
       <Button
-        variant="outline"
+        variant="secondary"
         icon={
           isPassword ? (
             <Mail size={16} strokeWidth={2} aria-hidden />

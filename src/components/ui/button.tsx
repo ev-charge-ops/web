@@ -5,11 +5,18 @@ import { cn } from '@/utils/cn'
 import styles from './button.module.css'
 import { Spinner } from './spinner'
 
-export type ButtonVariant = 'primary' | 'outline' | 'ghost' | 'link'
+export type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'destructive'
+  | 'ghost'
+  | 'link'
+
+export type ButtonSize = 'sm' | 'md' | 'lg'
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant
-  size?: 'md' | 'sm'
+  size?: ButtonSize
   icon?: ReactNode
   isLoading?: boolean
 }
@@ -33,7 +40,7 @@ export function Button({
       className={cn(
         styles.button,
         styles[variant],
-        size === 'sm' && styles.sm,
+        size !== 'md' && styles[size],
         className,
       )}
       {...props}

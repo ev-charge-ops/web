@@ -24,10 +24,10 @@ describe('Button', () => {
   })
 
   it('applies the requested variant', () => {
-    render(<Button variant="outline">Cancelar</Button>)
+    render(<Button variant="secondary">Cancelar</Button>)
 
     expect(screen.getByRole('button', { name: 'Cancelar' }).className).toMatch(
-      /outline/,
+      /secondary/,
     )
   })
 

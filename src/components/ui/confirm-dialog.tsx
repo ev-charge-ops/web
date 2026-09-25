@@ -12,6 +12,7 @@ type ConfirmDialogProps = {
   confirmLabel: string
   cancelLabel?: string
   isConfirming?: boolean
+  isDestructive?: boolean
   onConfirm: () => void
   onCancel: () => void
 }
@@ -23,6 +24,7 @@ export function ConfirmDialog({
   confirmLabel,
   cancelLabel = 'Cancelar',
   isConfirming = false,
+  isDestructive = false,
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
@@ -48,10 +50,14 @@ export function ConfirmDialog({
           {description}
         </p>
         <div className={styles.actions}>
-          <Button variant="outline" onClick={onCancel} disabled={isConfirming}>
+          <Button variant="secondary" onClick={onCancel} disabled={isConfirming}>
             {cancelLabel}
           </Button>
-          <Button isLoading={isConfirming} onClick={onConfirm}>
+          <Button
+            variant={isDestructive ? 'destructive' : 'primary'}
+            isLoading={isConfirming}
+            onClick={onConfirm}
+          >
             {confirmLabel}
           </Button>
         </div>
