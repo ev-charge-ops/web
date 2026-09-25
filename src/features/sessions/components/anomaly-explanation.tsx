@@ -7,7 +7,7 @@ import { formatDuration } from '@/utils/format-duration'
 import { formatEnergy } from '@/utils/format-energy'
 import { formatPower } from '@/utils/format-power'
 
-import type { SessionDetail } from '../api/get-session'
+import type { OrganizationSessionDetail } from '../api/get-organization-session'
 import { formatAnomalyScore } from '../utils/labels'
 import { getAveragePowerKw, getChargingMinutes } from '../utils/session-metrics'
 import styles from './anomaly-explanation.module.css'
@@ -18,7 +18,7 @@ const weekdayFormatter = new Intl.DateTimeFormat('pt-BR', {
 })
 
 type AnomalyExplanationProps = {
-  session: SessionDetail
+  session: OrganizationSessionDetail
 }
 
 export function AnomalyExplanation({ session }: AnomalyExplanationProps) {
