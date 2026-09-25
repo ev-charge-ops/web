@@ -1,6 +1,45 @@
 import type { components } from '@/lib/api-schema'
 
+import { chargePoints } from './charge-points'
+import { managedOrganization } from './organizations'
+import { flaggedSession } from './sessions'
+
 type Overview = components['schemas']['OrganizationOverviewResponseDto']
+type RecentAnomaly = components['schemas']['RecentAnomalyDto']
+type OverviewChargePoint = components['schemas']['OverviewChargePointDto']
+
+export function createRecentAnomaly(
+  overrides: Partial<RecentAnomaly> = {},
+): RecentAnomaly {
+  return {
+    sessionId: flaggedSession.id,
+    status: flaggedSession.status,
+    regime: flaggedSession.regime,
+    chargePoint: flaggedSession.chargePoint,
+    driver: flaggedSession.driver,
+    unitLabel: flaggedSession.unitLabel,
+    startedAt: flaggedSession.startedAt,
+    endedAt: flaggedSession.endedAt,
+    energyKwh: flaggedSession.energyKwh,
+    idleMinutes: flaggedSession.idleMinutes,
+    totalCents: flaggedSession.totalCents,
+    anomalyScore: flaggedSession.anomalyScore,
+    anomalyModelVersion: 'v1',
+    ...overrides,
+  }
+}
+
+export const overviewChargePoints: OverviewChargePoint[] = chargePoints
+  .filter((point) => point.organizationId === managedOrganization.id)
+  .map(({ id, code, name, type, maxPowerKw, status, pricing }) => ({
+    id,
+    code,
+    name,
+    type,
+    maxPowerKw,
+    status,
+    pricing,
+  }))
 
 export function createOverview(overrides: Partial<Overview> = {}): Overview {
   return {
@@ -29,6 +68,9 @@ export function createOverview(overrides: Partial<Overview> = {}): Overview {
       { week: 4, energyKwh: 288.1 },
       { week: 5, energyKwh: 104.1 },
     ],
+    anomaliesCount: 3,
+    recentAnomalies: [createRecentAnomaly()],
+    chargePoints: overviewChargePoints,
     ...overrides,
   }
 }

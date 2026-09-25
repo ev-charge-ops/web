@@ -1,0 +1,38 @@
+.field {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-end;
+  gap: var(--space-3);
+  height: 40px;
+  padding: 0 var(--space-4);
+  background: var(--surface-inset);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-input);
+  cursor: pointer;
+  transition: border-color var(--duration-base) var(--ease-standard);
+}
+
+.field:focus-within {
+  border-color: var(--border-strong);
+}
+
+.control {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-title);
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .field {
+    height: 44px;
+  }
+}

@@ -4,6 +4,7 @@ import type { components } from '@/lib/api-schema'
 import type { SessionStatus } from '../api/get-sessions'
 
 export const sessionStatusLabels = {
+  AWAITING_PAYMENT: 'Aguardando pagamento',
   PENDING: 'Aguardando',
   ACTIVE: 'Carregando',
   GRACE: 'Tolerância',
@@ -13,6 +14,7 @@ export const sessionStatusLabels = {
 } satisfies Record<SessionStatus, string>
 
 export const sessionStatusTones = {
+  AWAITING_PAYMENT: 'info',
   PENDING: 'info',
   ACTIVE: 'charging',
   GRACE: 'idle',
@@ -41,4 +43,8 @@ const scoreFormatter = new Intl.NumberFormat('pt-BR', {
 
 export function formatAnomalyScore(score: number) {
   return scoreFormatter.format(score)
+}
+
+export function formatAnomalySource(modelVersion: string | null) {
+  return modelVersion ? `IA · ${modelVersion}` : 'Regra'
 }

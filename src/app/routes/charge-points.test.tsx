@@ -4,6 +4,7 @@ import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 
 import { env } from '@/config/env'
+import { managedOrganization } from '@/testing/mocks/organizations'
 import { server } from '@/testing/mocks/server'
 import { renderApp } from '@/testing/test-utils'
 
@@ -43,6 +44,20 @@ describe('ChargePointsRoute', () => {
         name: 'Demanda atual sobre o limite contratado',
       }),
     ).toBeInTheDocument()
+  })
+
+  it('requests only the points of the managed organization', async () => {
+    const organizationIds: (string | null)[] = []
+    server.use(
+      http.get(`${env.apiUrl}/charge-points`, ({ request }) => {
+        organizationIds.push(new URL(request.url).searchParams.get('organizationId'))
+        return HttpResponse.json([])
+      }),
+    )
+    renderApp(<ChargePointsRoute />, { route: '/charge-points' })
+
+    await screen.findByText('Nenhum ponto de recarga neste condomínio.')
+    expect(organizationIds).toEqual([managedOrganization.id])
   })
 
   it('shows an empty state when the organization has no points', async () => {
