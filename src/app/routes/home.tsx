@@ -45,16 +45,17 @@ function Overview({ organizationId }: { organizationId: string }) {
             <WeeklyEnergyChart overview={overview.data} />
             <CapacityCard capacity={overview.data.capacity} />
           </div>
+          <div className={styles.halves}>
+            <DynamicPriceCard chargePoints={overview.data.chargePoints} />
+            <RecentAnomalies
+              anomalies={overview.data.recentAnomalies}
+              anomaliesCount={overview.data.anomaliesCount}
+              month={month}
+              sessionsHref={`${paths.sessions.getHref()}?anomaly=true`}
+            />
+          </div>
         </>
       )}
-      <div className={styles.halves}>
-        <DynamicPriceCard organizationId={organizationId} />
-        <RecentAnomalies
-          organizationId={organizationId}
-          month={month}
-          sessionsHref={paths.sessions.getHref()}
-        />
-      </div>
     </>
   )
 }

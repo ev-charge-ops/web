@@ -4,11 +4,13 @@ import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 
 import { env } from '@/config/env'
-import { chargePoints } from '@/testing/mocks/charge-points'
 import { managedOrganization } from '@/testing/mocks/organizations'
-import { createOverview } from '@/testing/mocks/overview'
+import {
+  createOverview,
+  createRecentAnomaly,
+  overviewChargePoints,
+} from '@/testing/mocks/overview'
 import { server } from '@/testing/mocks/server'
-import { createSessionPage, organizationSessions } from '@/testing/mocks/sessions'
 import { renderApp } from '@/testing/test-utils'
 import { formatMonth, getCurrentMonth } from '@/utils/month'
 
@@ -20,14 +22,20 @@ const normalize = (value: string | null) => value?.replace(/\s/g, ' ')
 describe('HomeRoute', () => {
   it('shows the month indicators, capacity, dynamic price and anomalies', async () => {
     let overviewMonth: string | null = null
+    const extraRequests: string[] = []
     server.use(
       http.get(`${organizationUrl}/overview`, ({ request }) => {
         overviewMonth = new URL(request.url).searchParams.get('month')
         return HttpResponse.json(createOverview())
       }),
-      http.get(`${organizationUrl}/sessions`, () =>
-        HttpResponse.json(createSessionPage(organizationSessions)),
-      ),
+      http.get(`${organizationUrl}/sessions`, ({ request }) => {
+        extraRequests.push(request.url)
+        return HttpResponse.json({ items: [], total: 0, page: 1, pageSize: 50 })
+      }),
+      http.get(`${env.apiUrl}/charge-points`, ({ request }) => {
+        extraRequests.push(request.url)
+        return HttpResponse.json([])
+      }),
     )
     renderApp(<HomeRoute />)
 
@@ -61,10 +69,32 @@ describe('HomeRoute', () => {
     const anomalies = await screen.findByRole('list', { name: 'Anomalias recentes' })
     expect(within(anomalies).getByText('B · 23')).toBeInTheDocument()
     expect(within(anomalies).getByText('Anomalia · 0,91')).toBeInTheDocument()
+    expect(within(anomalies).getByText('IA · v1')).toBeInTheDocument()
+    expect(screen.getByText('3 no mês')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Ver sessões' })).toHaveAttribute(
       'href',
-      '/sessions',
+      '/sessions?anomaly=true',
     )
+    expect(extraRequests).toEqual([])
+  })
+
+  it('labels the anomalies scored by the rule fallback', async () => {
+    server.use(
+      http.get(`${organizationUrl}/overview`, () =>
+        HttpResponse.json(
+          createOverview({
+            anomaliesCount: 1,
+            recentAnomalies: [createRecentAnomaly({ anomalyModelVersion: null })],
+          }),
+        ),
+      ),
+    )
+    renderApp(<HomeRoute />)
+
+    const anomalies = await screen.findByRole('list', { name: 'Anomalias recentes' })
+    expect(within(anomalies).getByText('Regra')).toBeInTheDocument()
+    expect(within(anomalies).queryByText(/^IA ·/)).not.toBeInTheDocument()
+    expect(screen.getByText('1 no mês')).toBeInTheDocument()
   })
 
   it('recommends a demand upgrade when the average peak is high', async () => {
@@ -93,8 +123,17 @@ describe('HomeRoute', () => {
 
   it('explains when there are no anomalies nor priced points', async () => {
     server.use(
-      http.get(`${env.apiUrl}/charge-points`, () =>
-        HttpResponse.json(chargePoints.map((point) => ({ ...point, pricing: null }))),
+      http.get(`${organizationUrl}/overview`, () =>
+        HttpResponse.json(
+          createOverview({
+            anomaliesCount: 0,
+            recentAnomalies: [],
+            chargePoints: overviewChargePoints.map((point) => ({
+              ...point,
+              pricing: null,
+            })),
+          }),
+        ),
       ),
     )
     renderApp(<HomeRoute />)

@@ -44,3 +44,7 @@ const scoreFormatter = new Intl.NumberFormat('pt-BR', {
 export function formatAnomalyScore(score: number) {
   return scoreFormatter.format(score)
 }
+
+export function formatAnomalySource(modelVersion: string | null) {
+  return modelVersion ? `IA · ${modelVersion}` : 'Regra'
+}
