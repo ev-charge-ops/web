@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -112,6 +112,35 @@ describe('CostSharingRoute', () => {
     const blob = createObjectURL.mock.calls[0][0]
     expect(await blob.text()).toBe(csv)
     expect(revokeObjectURL).toHaveBeenCalledWith('blob:statement')
+  })
+
+  it('names the downloaded file after the server filename', async () => {
+    mockStatements()
+    server.use(
+      http.get(
+        `${statementsUrl}/export.csv`,
+        () =>
+          new HttpResponse(csv, {
+            headers: {
+              'Content-Type': 'text/csv; charset=utf-8',
+              'Content-Disposition':
+                'attachment; filename="rateio-residencial-aurora-2026-10.csv"',
+            },
+          }),
+      ),
+    )
+    const click = vi
+      .spyOn(HTMLAnchorElement.prototype, 'click')
+      .mockImplementation(() => {})
+    const user = userEvent.setup()
+    renderApp(<CostSharingRoute />, { route: '/cost-sharing' })
+
+    await screen.findByRole('table', { name: 'Rateio por unidade' })
+    await user.click(screen.getByRole('button', { name: 'Exportar CSV' }))
+
+    await waitFor(() => expect(click).toHaveBeenCalledOnce())
+    const link = click.mock.contexts[0] as HTMLAnchorElement
+    expect(link.download).toBe('rateio-residencial-aurora-2026-10.csv')
   })
 
   it('shows an error toast when the export fails', async () => {
