@@ -3,36 +3,40 @@
   align-items: center;
   align-self: flex-end;
   gap: var(--space-3);
-  height: 40px;
-  padding: 0 var(--space-4);
-  background: var(--surface-inset);
+  height: 52px;
+  padding: 0 var(--space-5);
+  background: var(--surface-field);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-input);
   cursor: pointer;
-  transition: border-color var(--duration-base) var(--ease-standard);
+  transition: border-color var(--duration-fast) var(--ease-standard);
 }
 
-.field:focus-within {
+.field:hover {
   border-color: var(--border-strong);
 }
 
+.field:focus-within {
+  border-color: var(--focus-ring);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 .control {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   margin: 0;
-  accent-color: var(--accent);
+  accent-color: var(--energy);
   cursor: pointer;
 }
 
+.control:focus-visible {
+  outline: none;
+}
+
 .label {
-  font-size: 13.5px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-title);
   white-space: nowrap;
-}
-
-@media (max-width: 900px) {
-  .field {
-    height: 44px;
-  }
 }

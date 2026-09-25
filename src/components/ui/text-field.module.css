@@ -1,62 +1,67 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-3);
 }
 
 .label {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-title);
 }
 
 .control {
-  height: 44px;
-  padding: 0 var(--space-4);
-  background: var(--surface-inset);
+  height: 52px;
+  padding: 0 var(--space-5);
+  background: var(--surface-field);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-input);
   color: var(--text-title);
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
   outline: none;
-  transition: border-color var(--duration-base) var(--ease-standard);
+  transition: border-color var(--duration-fast) var(--ease-standard);
 }
 
 .control::placeholder {
-  color: var(--text-subtle);
+  color: var(--text-faint);
   font-weight: 500;
 }
 
-.control:focus {
+.control:hover:not(:disabled) {
   border-color: var(--border-strong);
 }
 
+.control:focus {
+  border-color: var(--focus-ring);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 .control:disabled {
+  background: var(--surface-inset);
   color: var(--text-disabled);
   cursor: not-allowed;
 }
 
 .invalid,
+.invalid:hover:not(:disabled),
 .invalid:focus {
   border-color: var(--border-danger);
 }
 
+.invalid:focus {
+  outline-color: var(--border-danger);
+}
+
 .hint {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
-  color: var(--text-subtle);
+  color: var(--text-muted);
 }
 
 .error {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--status-fault);
-}
-
-@media (max-width: 900px) {
-  .control {
-    height: 48px;
-    font-size: 16px;
-  }
 }
