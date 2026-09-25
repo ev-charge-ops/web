@@ -124,7 +124,10 @@ function SessionDetails({ session }: { session: OrganizationSessionDetail }) {
   return (
     <>
       <div className={styles.tags}>
-        <StatusPill tone={sessionStatusTones[session.status]} withDot>
+        <StatusPill
+          tone={sessionStatusTones[session.status]}
+          isLive={session.status === 'ACTIVE'}
+        >
           {sessionStatusLabels[session.status]}
         </StatusPill>
         <StatusPill tone="offline">{regimeLabels[session.regime]}</StatusPill>

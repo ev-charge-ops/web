@@ -1,43 +1,62 @@
 .pill {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
+  gap: var(--space-3);
+  padding: 6px 12px 6px 10px;
   border-radius: var(--radius-pill);
-  font-size: 12px;
+  font-size: 13px;
+  line-height: 18px;
   font-weight: 700;
   white-space: nowrap;
 }
 
 .dot {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   flex: none;
   border-radius: var(--radius-pill);
-  background: currentColor;
+  background: var(--pill-fill);
+}
+
+.live .dot {
+  animation: live-pulse 1.6s var(--ease-pulse) infinite;
 }
 
 .charging {
+  --pill-fill: var(--status-charging-fill);
   color: var(--status-charging);
   background: var(--status-charging-bg);
 }
 
 .idle {
+  --pill-fill: var(--status-idle-fill);
   color: var(--status-idle);
   background: var(--status-idle-bg);
 }
 
 .fault {
+  --pill-fill: var(--status-fault-fill);
   color: var(--status-fault);
   background: var(--status-fault-bg);
 }
 
 .info {
+  --pill-fill: var(--status-info-fill);
   color: var(--status-info);
   background: var(--status-info-bg);
 }
 
 .offline {
+  --pill-fill: var(--status-offline-fill);
   color: var(--status-offline);
   background: var(--status-offline-bg);
+}
+
+@keyframes live-pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--pulse-ring);
+  }
+  100% {
+    box-shadow: 0 0 0 8px transparent;
+  }
 }
