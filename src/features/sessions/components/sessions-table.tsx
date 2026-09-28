@@ -65,7 +65,10 @@ export function SessionsTable({ sessions, onSelect }: SessionsTableProps) {
                 {formatCents(session.totalCents)}
               </td>
               <td>
-                <StatusPill tone={sessionStatusTones[session.status]} withDot>
+                <StatusPill
+                  tone={sessionStatusTones[session.status]}
+                  isLive={session.status === 'ACTIVE'}
+                >
                   {sessionStatusLabels[session.status]}
                 </StatusPill>
               </td>

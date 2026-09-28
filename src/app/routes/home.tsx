@@ -31,7 +31,7 @@ function Overview({ organizationId }: { organizationId: string }) {
       ) : overview.error ? (
         <Alert
           action={
-            <Button variant="outline" size="sm" onClick={() => overview.refetch()}>
+            <Button variant="secondary" size="sm" onClick={() => overview.refetch()}>
               Tentar novamente
             </Button>
           }

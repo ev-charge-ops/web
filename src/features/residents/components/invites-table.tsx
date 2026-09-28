@@ -93,7 +93,7 @@ export function InvitesTable({ organizationId }: InvitesTableProps) {
                   <td className={styles.strong}>{invite.email}</td>
                   <td className={styles.mono}>{invite.unitLabel ?? '—'}</td>
                   <td>
-                    <StatusPill tone={inviteStatusTones[invite.status]} withDot>
+                    <StatusPill tone={inviteStatusTones[invite.status]}>
                       {inviteStatusLabels[invite.status]}
                     </StatusPill>
                   </td>
@@ -103,7 +103,7 @@ export function InvitesTable({ organizationId }: InvitesTableProps) {
                       <div className={styles.actions}>
                         <Button
                           size="sm"
-                          variant="outline"
+                          variant="secondary"
                           icon={<RotateCw size={14} strokeWidth={2} aria-hidden />}
                           aria-label={`Reenviar convite para ${invite.email}`}
                           onClick={() =>
@@ -147,6 +147,7 @@ export function InvitesTable({ organizationId }: InvitesTableProps) {
         title="Revogar convite?"
         description={`O link enviado para ${pendingAction?.invite.email ?? ''} deixa de funcionar. Você pode convidar o mesmo e-mail novamente depois.`}
         confirmLabel="Revogar"
+        isDestructive
         isConfirming={revokeInvite.isPending}
         onConfirm={confirmAction}
         onCancel={closeDialog}

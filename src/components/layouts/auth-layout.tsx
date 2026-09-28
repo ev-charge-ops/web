@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 
 import { Card } from '@/components/ui/card'
+import { Logo } from '@/components/ui/logo'
 
 import styles from './auth-layout.module.css'
 
@@ -21,7 +22,7 @@ export function AuthLayout({
     <main className={styles.page}>
       <div className={styles.content}>
         <div className={styles.brand}>
-          <span className={styles.brandName}>EV ChargeOps</span>
+          <Logo size={44} className={styles.logo} />
           <span className={styles.eyebrow}>Portal do condomínio</span>
         </div>
         <Card className={styles.card}>

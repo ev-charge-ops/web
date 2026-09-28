@@ -19,7 +19,7 @@ export function UserMenu({ user }: UserMenuProps) {
         {user.name}
       </span>
       <Button
-        variant="outline"
+        variant="secondary"
         size="sm"
         icon={<LogOut size={15} strokeWidth={2} aria-hidden />}
         isLoading={logout.isPending}

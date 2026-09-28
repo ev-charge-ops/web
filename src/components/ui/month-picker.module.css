@@ -1,32 +1,35 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-3);
   min-width: 0;
 }
 
 .label {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-title);
 }
 
 .control {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  height: 40px;
-  padding: 0 4px;
-  background: var(--surface-inset);
+  align-self: flex-start;
+  gap: var(--space-1);
+  height: 52px;
+  padding: 0 var(--space-2);
+  background: var(--surface-field);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-input);
+  border-radius: var(--radius-pill);
 }
 
 .value {
   flex: 1;
-  min-width: 132px;
-  font-size: 13.5px;
+  min-width: 136px;
+  font-size: 15px;
   font-weight: 700;
   text-align: center;
+  font-variant-numeric: tabular-nums;
   color: var(--text-title);
   white-space: nowrap;
 }
@@ -39,34 +42,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   flex: none;
   border: 0;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   background: transparent;
-  color: var(--text-muted);
+  color: var(--text-body);
   cursor: pointer;
-  transition: background var(--duration-fast) var(--ease-standard);
+  transition:
+    background var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
 }
 
 .step:hover:not(:disabled) {
-  background: var(--hover-lift);
+  background: var(--surface-inset);
   color: var(--text-title);
+}
+
+.step:active:not(:disabled) {
+  transform: scale(var(--press-scale));
 }
 
 .step:disabled {
   opacity: 0.35;
   cursor: not-allowed;
-}
-
-@media (max-width: 900px) {
-  .control {
-    height: 44px;
-  }
-
-  .step {
-    width: 36px;
-    height: 36px;
-  }
 }

@@ -19,14 +19,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
-.brandName {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.3px;
-  color: var(--text-title);
+.logo {
+  margin-bottom: var(--space-2);
 }
 
 .eyebrow {
@@ -52,17 +49,18 @@
 
 .title {
   margin: 0;
-  font-size: 22px;
-  line-height: 28px;
-  font-weight: 800;
+  font-size: 28px;
+  line-height: 34px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-title);
   color: var(--text-title);
 }
 
 .description {
   margin: 0;
-  font-size: 14px;
-  line-height: 20px;
-  color: var(--text-subtle);
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--text-muted);
 }
 
 .footer {

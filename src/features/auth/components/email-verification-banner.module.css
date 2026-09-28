@@ -4,7 +4,6 @@
   gap: var(--space-4);
   margin-bottom: var(--space-7);
   padding: var(--space-4) var(--gutter-card);
-  border: 1px solid rgba(245, 166, 35, 0.32);
   border-radius: var(--radius-card);
   background: var(--status-idle-bg);
 }

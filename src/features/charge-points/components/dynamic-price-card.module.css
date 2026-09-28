@@ -38,7 +38,7 @@
 .factorValue {
   font-size: 14px;
   font-weight: 700;
-  color: var(--blue-400);
+  color: var(--status-info);
 }
 
 .factorSource {

@@ -16,6 +16,20 @@ describe('MonthPicker', () => {
     expect(onChange.mock.calls).toEqual([['2025-12'], ['2026-02']])
   })
 
+  it('keeps the group labelled when the label is visually hidden', () => {
+    render(
+      <MonthPicker
+        label="Mês do rateio"
+        value="2026-09"
+        isLabelHidden
+        onChange={vi.fn()}
+      />,
+    )
+
+    expect(screen.getByRole('group', { name: 'Mês do rateio' })).toBeInTheDocument()
+    expect(screen.getByText('Mês do rateio')).toHaveClass('sr-only')
+  })
+
   it('does not go past the maximum month', () => {
     render(<MonthPicker value="2026-10" max="2026-10" onChange={vi.fn()} />)
 

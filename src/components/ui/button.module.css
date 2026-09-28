@@ -4,20 +4,26 @@
   justify-content: center;
   gap: var(--space-3);
   height: 44px;
-  padding: 0 var(--space-5);
+  padding: 0 18px;
   border: 0;
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-pill);
   font-size: 15px;
   font-weight: 700;
+  white-space: nowrap;
   cursor: pointer;
   transition:
     background var(--duration-fast) var(--ease-standard),
-    color var(--duration-fast) var(--ease-standard);
+    color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+
+.button:active:not(:disabled) {
+  transform: scale(var(--press-scale));
 }
 
 .button:disabled {
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 0.45;
 }
 
 .primary {
@@ -29,50 +35,68 @@
   background: var(--accent-hover);
 }
 
-.primary:active:not(:disabled) {
-  background: var(--accent-press);
-  transform: translateY(1px);
-}
-
-.outline {
-  background: transparent;
-  color: var(--text-title);
-  border: 1px solid var(--border-subtle);
-}
-
-.outline:hover:not(:disabled) {
+.secondary {
   background: var(--surface-inset);
+  color: var(--text-title);
+}
+
+.secondary:hover:not(:disabled) {
+  background: var(--surface-raised);
+}
+
+.destructive {
+  background: var(--surface-card);
+  color: var(--status-fault);
+  box-shadow: inset 0 0 0 1.5px var(--status-fault-fill);
+}
+
+.destructive:hover:not(:disabled) {
+  background: var(--status-fault-bg);
 }
 
 .ghost {
   background: transparent;
-  color: var(--text-muted);
+  color: var(--text-body);
 }
 
 .ghost:hover:not(:disabled) {
-  background: var(--hover-lift);
+  background: var(--surface-inset);
   color: var(--text-title);
 }
 
 .link {
   height: auto;
   padding: 0;
+  border-radius: var(--radius-sm);
   background: none;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-link);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .link:hover:not(:disabled) {
   color: var(--text-link-hover);
 }
 
-.sm {
-  height: 36px;
-  padding: 0 var(--space-4);
-  font-size: 13px;
+.link:active:not(:disabled) {
+  transform: none;
 }
 
-.link.sm {
+.sm {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 14px;
+}
+
+.lg {
+  height: 56px;
+  padding: 0 24px;
+  font-size: 17px;
+}
+
+.link.sm,
+.link.lg {
   height: auto;
   padding: 0;
 }

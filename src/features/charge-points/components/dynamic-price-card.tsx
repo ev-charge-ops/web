@@ -28,7 +28,7 @@ export function DynamicPriceCard({ chargePoints }: DynamicPriceCardProps) {
       <div className={styles.head}>
         <h2 className={styles.title}>Preço dinâmico agora</h2>
         {reference ? (
-          <StatusPill tone={demandLevelTones[reference.pricing.demandLevel]} withDot>
+          <StatusPill tone={demandLevelTones[reference.pricing.demandLevel]}>
             {demandLevelLabels[reference.pricing.demandLevel]}
           </StatusPill>
         ) : null}

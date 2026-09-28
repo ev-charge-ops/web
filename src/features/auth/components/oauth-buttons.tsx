@@ -104,7 +104,7 @@ function GoogleButton() {
     <div className={styles.provider}>
       {error ? <Alert>{error}</Alert> : null}
       <Button
-        variant="outline"
+        variant="secondary"
         className={styles.button}
         icon={<GoogleLogo />}
         isLoading={googleLogin.isPending}
@@ -156,7 +156,7 @@ function AppleButton({ servicesId }: { servicesId: string }) {
     <div className={styles.provider}>
       {error ? <Alert>{error}</Alert> : null}
       <Button
-        variant="outline"
+        variant="secondary"
         className={styles.button}
         icon={<AppleLogo />}
         isLoading={isAuthorizing || appleLogin.isPending}
