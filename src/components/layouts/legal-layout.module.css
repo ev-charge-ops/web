@@ -21,9 +21,8 @@
 }
 
 .brand {
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--text-title);
+  align-self: flex-start;
+  border-radius: var(--radius-sm);
   text-decoration: none;
 }
 
