@@ -77,7 +77,11 @@ export function ToastProvider({ children }: ToastProviderProps) {
         {toasts.map(({ id, message, tone }) => {
           const Icon = toneIcons[tone]
           return (
-            <div key={id} className={cn(styles.toast, styles[tone])}>
+            <div
+              key={id}
+              data-surface="night"
+              className={cn(styles.toast, styles[tone])}
+            >
               <Icon size={16} strokeWidth={2} className={styles.icon} aria-hidden />
               <span className={styles.message}>{message}</span>
               <button
