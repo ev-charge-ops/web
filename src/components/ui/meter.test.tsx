@@ -12,6 +12,14 @@ describe('Meter', () => {
     expect(meter.firstElementChild).toHaveStyle({ width: '34%' })
   })
 
+  it('animates the fill only while live', () => {
+    render(<Meter label="Energia" value={10} max={20} tone="energy" isLive />)
+
+    expect(
+      screen.getByRole('meter', { name: 'Energia' }).firstElementChild?.className,
+    ).toMatch(/live/)
+  })
+
   it('never overflows the track', () => {
     render(<Meter label="Demanda" value={90} max={75} tone="over" />)
 

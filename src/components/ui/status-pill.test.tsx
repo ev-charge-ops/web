@@ -21,13 +21,22 @@ describe('StatusPill', () => {
     },
   )
 
-  it('renders a decorative dot when requested', () => {
-    const { container } = render(
-      <StatusPill tone="charging">
+  it('always pairs the text with a decorative dot', () => {
+    const { container } = render(<StatusPill tone="idle">Tolerância</StatusPill>)
+
+    expect(container.querySelector('[aria-hidden="true"]')).toBeInTheDocument()
+    expect(screen.getByText('Tolerância')).not.toHaveAttribute('data-live')
+  })
+
+  it('pulses the dot while live', () => {
+    render(
+      <StatusPill tone="charging" isLive>
         Carregando
       </StatusPill>,
     )
 
-    expect(container.querySelector('[aria-hidden="true"]')).toBeInTheDocument()
+    const pill = screen.getByText('Carregando')
+    expect(pill).toHaveAttribute('data-live', 'true')
+    expect(pill.className).toMatch(/live/)
   })
 })
