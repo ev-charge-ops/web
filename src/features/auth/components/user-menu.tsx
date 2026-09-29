@@ -1,7 +1,8 @@
 import { LogOut } from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import type { AuthUser } from '@/lib/use-auth'
+import { getInitials } from '@/utils/initials'
 
 import { useLogout } from '../api/logout'
 import styles from './user-menu.module.css'
@@ -15,18 +16,32 @@ export function UserMenu({ user }: UserMenuProps) {
 
   return (
     <div className={styles.menu}>
-      <span className={styles.name} title={user.email}>
-        {user.name}
+      <span className={styles.avatar} aria-hidden="true">
+        {getInitials(user.name)}
       </span>
-      <Button
-        variant="secondary"
-        size="sm"
-        icon={<LogOut size={15} strokeWidth={2} aria-hidden />}
-        isLoading={logout.isPending}
+      <span className={styles.text}>
+        <span className={styles.name} title={user.name}>
+          {user.name}
+        </span>
+        <span className={styles.email} title={user.email}>
+          {user.email}
+        </span>
+      </span>
+      <button
+        type="button"
+        className={styles.logout}
+        aria-label="Sair"
+        title="Sair"
+        disabled={logout.isPending}
+        aria-busy={logout.isPending || undefined}
         onClick={() => logout.mutate()}
       >
-        Sair
-      </Button>
+        {logout.isPending ? (
+          <Spinner size="sm" />
+        ) : (
+          <LogOut size={18} strokeWidth={2} aria-hidden />
+        )}
+      </button>
     </div>
   )
 }
