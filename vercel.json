@@ -8,9 +8,18 @@
     {
       "source": "/.well-known/assetlinks.json",
       "headers": [{ "key": "Content-Type", "value": "application/json" }]
+    },
+    {
+      "source": "/media/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, s-maxage=31536000, stale-while-revalidate=604800"
+        }
+      ]
     }
   ],
   "rewrites": [
-    { "source": "/((?!\\.well-known/).*)", "destination": "/index.html" }
+    { "source": "/((?!\\.well-known/|media/).*)", "destination": "/index.html" }
   ]
 }
