@@ -84,7 +84,7 @@ describe('EmailLoginRoute', () => {
     await userEvent.click(screen.getByRole('link', { name: 'Voltar para o login' }))
 
     expect(
-      await screen.findByRole('heading', { name: 'Entrar no portal' }),
+      await screen.findByRole('heading', { name: 'Entrar', level: 1 }),
     ).toBeInTheDocument()
   })
 

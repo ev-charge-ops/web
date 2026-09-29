@@ -5,13 +5,13 @@ import { Link, Navigate, useSearchParams } from 'react-router'
 import { AuthLayout } from '@/components/layouts/auth-layout'
 import { FullPageSpinner } from '@/components/layouts/full-page-spinner'
 import { Button } from '@/components/ui/button'
+import { Divider } from '@/components/ui/divider'
 import { paths } from '@/config/paths'
+import { DriverAppNote } from '@/features/auth/components/driver-app-note'
 import { EmailLoginForm } from '@/features/auth/components/email-login-form'
 import { LoginForm } from '@/features/auth/components/login-form'
 import { OAuthButtons } from '@/features/auth/components/oauth-buttons'
 import { useAuth } from '@/lib/use-auth'
-
-import styles from './login.module.css'
 
 type LoginMethod = 'password' | 'email'
 
@@ -40,8 +40,8 @@ export function LoginRoute() {
 
   return (
     <AuthLayout
-      title="Entrar no portal"
-      description="Acesso exclusivo para gestores do condomínio."
+      title="Entrar"
+      description="Portal do gestor e do síndico"
       footer={
         <>
           <Link to={paths.legal.privacy.getHref()}>Política de Privacidade</Link>
@@ -50,10 +50,10 @@ export function LoginRoute() {
       }
     >
       {isPassword ? <LoginForm /> : <EmailLoginForm />}
-      <div className={styles.divider}>ou</div>
+      <Divider>ou</Divider>
       <OAuthButtons />
       <Button
-        variant="secondary"
+        variant="ghost"
         icon={
           isPassword ? (
             <Mail size={16} strokeWidth={2} aria-hidden />
@@ -63,8 +63,9 @@ export function LoginRoute() {
         }
         onClick={() => setMethod(isPassword ? 'email' : 'password')}
       >
-        {isPassword ? 'Entrar com código por e-mail' : 'Entrar com senha'}
+        {isPassword ? 'Receber link de acesso por e-mail' : 'Entrar com senha'}
       </Button>
+      <DriverAppNote />
     </AuthLayout>
   )
 }

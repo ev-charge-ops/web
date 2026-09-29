@@ -47,7 +47,7 @@ describe('ProtectedRoot', () => {
     renderRoutes()
 
     expect(
-      await screen.findByRole('heading', { name: 'Entrar no portal' }),
+      await screen.findByRole('heading', { name: 'Entrar', level: 1 }),
     ).toBeInTheDocument()
   })
 
@@ -127,7 +127,7 @@ describe('ProtectedRoot', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Sair' }))
 
     expect(
-      await screen.findByRole('heading', { name: 'Entrar no portal' }),
+      await screen.findByRole('heading', { name: 'Entrar', level: 1 }),
     ).toBeInTheDocument()
     expect(localStorage.getItem(refreshTokenStorageKey)).toBeNull()
   })
