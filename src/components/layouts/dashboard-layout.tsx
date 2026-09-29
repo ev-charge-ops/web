@@ -64,13 +64,13 @@ export function DashboardLayout({
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setIsMenuOpen(false)
     }
-    closeButtonRef.current?.focus()
+    closeButtonRef.current?.focus({ preventScroll: true })
     document.addEventListener('keydown', onKeyDown)
     document.body.style.overflow = 'hidden'
     return () => {
       document.removeEventListener('keydown', onKeyDown)
       document.body.style.overflow = ''
-      openButton?.focus()
+      openButton?.focus({ preventScroll: true })
     }
   }, [isMenuOpen])
 
