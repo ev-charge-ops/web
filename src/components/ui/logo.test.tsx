@@ -28,4 +28,12 @@ describe('Logo', () => {
       screen.getByRole('img', { name: 'EV ChargeOps' }).querySelector('circle'),
     ).not.toBeInTheDocument()
   })
+
+  it('inverts the tile for dark panels', () => {
+    render(<Logo variant="inverse" />)
+
+    const logo = screen.getByRole('img', { name: 'EV ChargeOps' })
+    expect(logo).toHaveAttribute('data-variant', 'inverse')
+    expect(logo.querySelector('rect')).toHaveAttribute('fill', '#FFFFFF')
+  })
 })
