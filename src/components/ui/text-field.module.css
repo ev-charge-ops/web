@@ -4,6 +4,15 @@
   gap: var(--space-3);
 }
 
+.labelRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font-size: 14px;
+  font-weight: 600;
+}
+
 .label {
   font-size: 14px;
   font-weight: 600;
