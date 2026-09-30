@@ -1,0 +1,71 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-title);
+}
+
+.note {
+  min-height: 96px;
+  padding: var(--space-4) var(--space-5);
+  resize: vertical;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-input);
+  background: var(--surface-field);
+  color: var(--text-title);
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 500;
+  outline: none;
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+
+.note::placeholder {
+  color: var(--text-faint);
+}
+
+.note:hover {
+  border-color: var(--border-strong);
+}
+
+.note:focus {
+  border-color: var(--focus-ring);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.counter {
+  align-self: flex-end;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.actions > * {
+  flex: 1 1 180px;
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--text-muted);
+}

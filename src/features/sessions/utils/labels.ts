@@ -37,6 +37,18 @@ export const limitTypeLabels = {
   PERCENT: 'Por carga da bateria',
 } satisfies Record<components['schemas']['ChargingLimitType'], string>
 
+export const anomalyReviewLabels = {
+  PENDING_REVIEW: 'Para revisar',
+  CONFIRMED: 'Anomalia confirmada',
+  DISMISSED: 'Descartada',
+} satisfies Record<components['schemas']['AnomalyReviewStatus'], string>
+
+export const anomalyReviewTones = {
+  PENDING_REVIEW: 'fault',
+  CONFIRMED: 'idle',
+  DISMISSED: 'offline',
+} satisfies Record<components['schemas']['AnomalyReviewStatus'], StatusTone>
+
 const scoreFormatter = new Intl.NumberFormat('pt-BR', {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
