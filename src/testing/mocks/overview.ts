@@ -25,6 +25,10 @@ export function createRecentAnomaly(
     totalCents: flaggedSession.totalCents,
     anomalyScore: flaggedSession.anomalyScore,
     anomalyModelVersion: 'v1',
+    anomalyReviewStatus: flaggedSession.anomalyReviewStatus,
+    anomalyReviewNote: flaggedSession.anomalyReviewNote,
+    anomalyReviewedAt: flaggedSession.anomalyReviewedAt,
+    anomalyReviewedById: flaggedSession.anomalyReviewedById,
     ...overrides,
   }
 }
@@ -70,6 +74,7 @@ export function createOverview(overrides: Partial<Overview> = {}): Overview {
       { week: 5, energyKwh: 104.1 },
     ],
     anomaliesCount: 3,
+    anomaliesPendingReviewCount: 1,
     recentAnomalies: [createRecentAnomaly()],
     chargePoints: overviewChargePoints,
     ...overrides,
