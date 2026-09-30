@@ -44,6 +44,15 @@ export const overviewChargePoints: OverviewChargePoint[] = chargePoints
     photoUrl,
     status,
     pricing,
+    currentPowerKw: status === 'CHARGING' ? 6.8 : 0,
+    activeSession:
+      status === 'CHARGING'
+        ? {
+            sessionId: 'b8e4d3c2-1a0f-4d9e-8a6b-7f6e5d4c3b21',
+            status: 'ACTIVE' as const,
+            graceEndsAt: null,
+          }
+        : null,
   }))
 
 export function createOverview(overrides: Partial<Overview> = {}): Overview {
@@ -51,6 +60,17 @@ export function createOverview(overrides: Partial<Overview> = {}): Overview {
     month: '2026-10',
     energyKwh: 1284.6,
     sessionsCount: 102,
+    energyCents: 128930,
+    totalCents: 136210,
+    previousMonth: {
+      month: '2026-09',
+      energyKwh: 1190.2,
+      sessionsCount: 96,
+      energyCents: 121870,
+      totalCents: 128420,
+    },
+    visitorSessionsCount: 7,
+    monthPeak: { demandKw: 41.2, at: '2026-10-18T22:40:00.000Z' },
     activeSessionsCount: 2,
     costSharingTotalCents: 198734,
     commercialRevenueCents: 45210,

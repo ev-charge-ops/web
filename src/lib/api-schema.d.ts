@@ -2076,6 +2076,36 @@ export interface components {
             /** @example 20 */
             pageSize: number;
         };
+        MonthComparisonDto: {
+            /** @example 2026-07 */
+            month: string;
+            /** @example 1190.2 */
+            energyKwh: number;
+            /** @example 96 */
+            sessionsCount: number;
+            /**
+             * @description Energy cost of the sessions started in the month
+             * @example 121870
+             */
+            energyCents: number;
+            /**
+             * @description Total of the sessions started in the month (energy plus idle fees)
+             * @example 128420
+             */
+            totalCents: number;
+        };
+        MonthPeakDto: {
+            /**
+             * @description Highest simultaneous charging demand of the sessions started in the month, without the common area reserve
+             * @example 36
+             */
+            demandKw: number;
+            /**
+             * Format: date-time
+             * @description When the peak started, null without charging in the month
+             */
+            at: string | null;
+        };
         SiteCapacityDto: {
             /** @example 75 */
             contractedDemandKw: number;
@@ -2150,6 +2180,16 @@ export interface components {
              */
             anomalyReviewedById: string | null;
         };
+        OverviewActiveSessionDto: {
+            /** Format: uuid */
+            sessionId: string;
+            status: components["schemas"]["ChargingSessionStatus"];
+            /**
+             * Format: date-time
+             * @description When the free grace period ends (set once charging ended, in GRACE and IDLE); the idle fee starts at this instant
+             */
+            graceEndsAt: string | null;
+        };
         OverviewChargePointDto: {
             /** Format: uuid */
             id: string;
@@ -2169,6 +2209,13 @@ export interface components {
             status: components["schemas"]["ChargePointStatus"];
             /** @description Current price of the point; null when no tariff is configured */
             pricing: components["schemas"]["ChargePointPricingDto"] | null;
+            /**
+             * @description Power delivered now by the session charging at the point (from its latest telemetry), 0 when it is not charging
+             * @example 6.4
+             */
+            currentPowerKw: number;
+            /** @description Open session at the point, null when it is free */
+            activeSession: components["schemas"]["OverviewActiveSessionDto"] | null;
         };
         OrganizationOverviewResponseDto: {
             /** @example 2026-08 */
@@ -2177,6 +2224,24 @@ export interface components {
             energyKwh: number;
             /** @example 102 */
             sessionsCount: number;
+            /**
+             * @description Energy cost of the sessions started in the month, every regime
+             * @example 128930
+             */
+            energyCents: number;
+            /**
+             * @description Total of the sessions started in the month (energy plus idle fees), every regime
+             * @example 136210
+             */
+            totalCents: number;
+            /** @description Same totals for the previous month, for month over month deltas */
+            previousMonth: components["schemas"]["MonthComparisonDto"];
+            /**
+             * @description Sessions of the month at commercial points of the organization or by drivers who are not members
+             * @example 14
+             */
+            visitorSessionsCount: number;
+            monthPeak: components["schemas"]["MonthPeakDto"];
             /**
              * @description Sessions open now (charging, grace or idle)
              * @example 1
