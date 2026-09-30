@@ -151,6 +151,86 @@ describe('SessionsRoute', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
+  it('reviews a flagged session from the detail drawer', async () => {
+    mockSessions()
+    let reviewBody: unknown
+    let detail = createSessionDetail(flaggedSession)
+    server.use(
+      http.get(`${sessionsUrl}/${flaggedSession.id}`, () => HttpResponse.json(detail)),
+      http.post(
+        `${sessionsUrl}/${flaggedSession.id}/anomaly-review`,
+        async ({ request }) => {
+          reviewBody = await request.json()
+          detail = createSessionDetail(flaggedSession, {
+            anomalyReviewStatus: 'DISMISSED',
+            anomalyReviewNote: 'Visitante autorizado',
+            anomalyReviewedAt: '2026-10-06T12:00:00.000Z',
+          })
+          return HttpResponse.json(detail)
+        },
+      ),
+    )
+    const user = userEvent.setup()
+    renderApp(<SessionsRoute />, { route: '/sessions' })
+
+    await user.click(
+      await screen.findByRole('button', {
+        name: /Ver detalhes da sessão de Verônica Alencar/,
+      }),
+    )
+    const drawer = screen.getByRole('dialog', { name: 'Detalhes da sessão' })
+    expect(await within(drawer).findByText('Para revisar')).toBeInTheDocument()
+
+    await user.click(within(drawer).getByRole('button', { name: 'Revisar' }))
+    await user.type(
+      within(drawer).getByLabelText('Observação (opcional)'),
+      '  Visitante autorizado ',
+    )
+    await user.click(
+      within(drawer).getByRole('button', { name: 'Descartar sinalização' }),
+    )
+
+    expect(await screen.findByText('Sinalização descartada.')).toBeInTheDocument()
+    expect(reviewBody).toEqual({ status: 'DISMISSED', note: 'Visitante autorizado' })
+    expect(await within(drawer).findByText('Descartada')).toBeInTheDocument()
+    expect(within(drawer).getByText('“Visitante autorizado”')).toBeInTheDocument()
+    expect(
+      within(drawer).getByRole('button', { name: 'Revisar de novo' }),
+    ).toBeInTheDocument()
+  })
+
+  it('explains when the session is no longer flagged for review', async () => {
+    mockSessions()
+    server.use(
+      http.get(`${sessionsUrl}/${flaggedSession.id}`, () =>
+        HttpResponse.json(createSessionDetail(flaggedSession)),
+      ),
+      http.post(`${sessionsUrl}/${flaggedSession.id}/anomaly-review`, () =>
+        HttpResponse.json(
+          { statusCode: 409, message: 'Session is not flagged', code: 'SESSION_NOT_FLAGGED' },
+          { status: 409 },
+        ),
+      ),
+    )
+    const user = userEvent.setup()
+    renderApp(<SessionsRoute />, { route: '/sessions' })
+
+    await user.click(
+      await screen.findByRole('button', {
+        name: /Ver detalhes da sessão de Verônica Alencar/,
+      }),
+    )
+    const drawer = screen.getByRole('dialog', { name: 'Detalhes da sessão' })
+    await user.click(await within(drawer).findByRole('button', { name: 'Revisar' }))
+    await user.click(
+      within(drawer).getByRole('button', { name: 'Confirmar anomalia' }),
+    )
+
+    expect(await within(drawer).findByRole('alert')).toHaveTextContent(
+      'Esta sessão não está sinalizada pela IA.',
+    )
+  })
+
   it('loads the drawer from the organization session detail', async () => {
     mockSessions()
     const requested: string[] = []
