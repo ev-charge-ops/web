@@ -119,6 +119,7 @@ export function EmailLoginForm() {
         />
         <Button
           type="submit"
+          size="lg"
           isLoading={request.isPending}
           className={styles.submit}
         >
@@ -153,6 +154,7 @@ export function EmailLoginForm() {
       />
       <Button
         type="submit"
+        size="lg"
         isLoading={verify.isPending}
         disabled={code.length !== emailLoginCodeLength}
         className={styles.submit}
