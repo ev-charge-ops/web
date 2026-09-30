@@ -34,6 +34,7 @@ export const limitTypeLabels = {
   ENERGY: 'Por energia',
   AMOUNT: 'Por valor',
   FULL: 'Até completar',
+  PERCENT: 'Por carga da bateria',
 } satisfies Record<components['schemas']['ChargingLimitType'], string>
 
 const scoreFormatter = new Intl.NumberFormat('pt-BR', {
