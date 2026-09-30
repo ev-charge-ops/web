@@ -22,6 +22,7 @@
   color: var(--gray-900);
 }
 
-.light .wordmark {
+.light .wordmark,
+.inverse .wordmark {
   color: var(--gray-0);
 }

@@ -82,7 +82,7 @@ describe('LoginForm', () => {
   it('links to the password recovery page', () => {
     renderApp(<LoginForm />)
 
-    expect(screen.getByRole('link', { name: 'Esqueci minha senha' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Esqueci a senha' })).toHaveAttribute(
       'href',
       '/forgot-password',
     )

@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 
 import { Alert } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { Divider } from '@/components/ui/divider'
 import { Spinner } from '@/components/ui/spinner'
 import { paths } from '@/config/paths'
 import { ApiError } from '@/lib/api-client'
@@ -189,7 +190,7 @@ export function InviteAcceptance({ token, oauthButtons }: InviteAcceptanceProps)
       />
       {oauthButtons ? (
         <>
-          <div className={styles.divider}>ou</div>
+          <Divider>ou</Divider>
           {oauthButtons}
         </>
       ) : null}

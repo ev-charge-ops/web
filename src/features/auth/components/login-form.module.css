@@ -1,15 +1,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
-}
-
-.forgot {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: calc(var(--space-3) * -1);
-  font-size: 13px;
-  font-weight: 700;
+  gap: 18px;
 }
 
 .submit {

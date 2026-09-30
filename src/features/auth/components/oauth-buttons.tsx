@@ -102,15 +102,16 @@ function GoogleButton() {
 
   return (
     <div className={styles.provider}>
-      {error ? <Alert>{error}</Alert> : null}
+      {error ? <Alert className={styles.error}>{error}</Alert> : null}
       <Button
         variant="secondary"
         className={styles.button}
         icon={<GoogleLogo />}
         isLoading={googleLogin.isPending}
+        aria-label="Continuar com o Google"
         onClick={handleClick}
       >
-        Continuar com o Google
+        Google
       </Button>
     </div>
   )
@@ -154,15 +155,16 @@ function AppleButton({ servicesId }: { servicesId: string }) {
 
   return (
     <div className={styles.provider}>
-      {error ? <Alert>{error}</Alert> : null}
+      {error ? <Alert className={styles.error}>{error}</Alert> : null}
       <Button
         variant="secondary"
         className={styles.button}
         icon={<AppleLogo />}
         isLoading={isAuthorizing || appleLogin.isPending}
+        aria-label="Continuar com a Apple"
         onClick={() => void handleClick()}
       >
-        Continuar com a Apple
+        Apple
       </Button>
     </div>
   )

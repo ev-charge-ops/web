@@ -73,6 +73,7 @@ export function ForgotPasswordForm() {
       />
       <Button
         type="submit"
+        size="lg"
         isLoading={forgotPassword.isPending}
         className={styles.submit}
       >
