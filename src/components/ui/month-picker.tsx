@@ -1,7 +1,8 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useId } from 'react'
 
-import { formatMonth, shiftMonth } from '@/utils/month'
+import { cn } from '@/utils/cn'
+import { formatMonth, formatShortMonth, shiftMonth } from '@/utils/month'
 
 import styles from './month-picker.module.css'
 
@@ -10,6 +11,7 @@ type MonthPickerProps = {
   value: string
   max?: string
   isLabelHidden?: boolean
+  isCompact?: boolean
   onChange: (month: string) => void
 }
 
@@ -18,6 +20,7 @@ export function MonthPicker({
   value,
   max,
   isLabelHidden = false,
+  isCompact = false,
   onChange,
 }: MonthPickerProps) {
   const labelId = useId()
@@ -31,7 +34,7 @@ export function MonthPicker({
       >
         {label}
       </span>
-      <div className={styles.control}>
+      <div className={cn(styles.control, isCompact && styles.compact)}>
         <button
           type="button"
           className={styles.step}
@@ -41,7 +44,14 @@ export function MonthPicker({
           <ChevronLeft size={16} strokeWidth={2} aria-hidden />
         </button>
         <span className={styles.value} aria-live="polite">
-          {formatMonth(value)}
+          {isCompact ? (
+            <>
+              <span aria-hidden="true">{formatShortMonth(value)}</span>
+              <span className="sr-only">{formatMonth(value)}</span>
+            </>
+          ) : (
+            formatMonth(value)
+          )}
         </span>
         <button
           type="button"

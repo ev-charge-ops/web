@@ -775,6 +775,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/statements/{month}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Monthly cost-sharing statement of the unit of the authenticated user in a condominium (private regime only), with the energy per day */
+        get: operations["getMyMonthlyStatement"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/organizations/{organizationId}/sessions": {
         parameters: {
             query?: never;
@@ -1233,6 +1250,12 @@ export interface components {
             longitude: number;
             /** @example 7 */
             maxPowerKw: number;
+            /**
+             * Format: uri
+             * @description Absolute URL of a photo of the point, null without one
+             * @example https://app.evchargeops.com.br/media/points/garage-a.webp
+             */
+            photoUrl: string | null;
             status: components["schemas"]["ChargePointStatus"];
             /** @description Whether the user belongs to the organization of the point */
             isMember: boolean;
@@ -1296,11 +1319,11 @@ export interface components {
             gracePeriodMinutes?: number;
         };
         /** @enum {string} */
-        ChargingLimitType: "ENERGY" | "AMOUNT" | "FULL";
+        ChargingLimitType: "ENERGY" | "AMOUNT" | "FULL" | "PERCENT";
         ChargingLimitRequestDto: {
             type: components["schemas"]["ChargingLimitType"];
             /**
-             * @description Required for ENERGY (kWh, up to 3 decimals) and AMOUNT (integer cents)
+             * @description Required for ENERGY (kWh, up to 3 decimals), AMOUNT (integer cents) and PERCENT (target state of charge, integer from 1 to 100 above the current one of the vehicle)
              * @example 10
              */
             value?: number;
@@ -1330,6 +1353,11 @@ export interface components {
             energyKwh: number | null;
             /** @example 2000 */
             amountCents: number | null;
+            /**
+             * @description Target state of charge of PERCENT limits
+             * @example 80
+             */
+            socPercent: number | null;
         };
         /**
          * @description PENDING_AUTHORIZATION until the card is confirmed, AUTHORIZED while the hold is active, CAPTURED with the final amount, CANCELED when the hold is released, FAILED when the card was declined (the driver may retry)
@@ -1884,6 +1912,65 @@ export interface components {
             lines: components["schemas"]["StatementLineDto"][];
             totals: components["schemas"]["StatementTotalsDto"];
         };
+        StatementOrganizationDto: {
+            /** Format: uuid */
+            id: string;
+            /** @example Residencial Aclimação */
+            name: string;
+        };
+        /**
+         * @description OPEN while the month is running (amounts may still grow), CLOSED once it ended
+         * @enum {string}
+         */
+        StatementStatus: "OPEN" | "CLOSED";
+        DailyEnergyDto: {
+            /**
+             * Format: date
+             * @example 2026-08-03
+             */
+            date: string;
+            /** @example 11.76 */
+            energyKwh: number;
+        };
+        MyMonthlyStatementResponseDto: {
+            organization: components["schemas"]["StatementOrganizationDto"];
+            /** @example B · 42 */
+            unitLabel: string;
+            /** @example 2026-08 */
+            month: string;
+            /** @description OPEN while the month is running (amounts may still grow), CLOSED once it ended */
+            status: components["schemas"]["StatementStatus"];
+            /**
+             * Format: date-time
+             * @description End of the month in America/Sao_Paulo
+             */
+            closesAt: string;
+            /** @example 15.81 */
+            energyKwh: number;
+            /**
+             * @description Energy at the locked rates
+             * @example 1407
+             */
+            energyCents: number;
+            /**
+             * @description Utility rate per kWh of the condominium tariff in force at the end of the month, null without a tariff
+             * @example 89
+             */
+            utilityRateCents: number | null;
+            /**
+             * @description Monthly access fee, charged when the unit has a vehicle
+             * @example 3500
+             */
+            accessFeeCents: number;
+            /** @example 150 */
+            idleFeeCents: number;
+            /** @example 5057 */
+            totalCents: number;
+            /** @example 2 */
+            sessionsCount: number;
+            /** @description Energy of the unit per day of the month, every day included (zero without charges) */
+            dailyEnergy: components["schemas"]["DailyEnergyDto"][];
+        };
         OrganizationSessionPointDto: {
             /** Format: uuid */
             id: string;
@@ -2007,6 +2094,12 @@ export interface components {
             type: components["schemas"]["ChargePointType"];
             /** @example 7 */
             maxPowerKw: number;
+            /**
+             * Format: uri
+             * @description Absolute URL of a photo of the point, null without one
+             * @example https://app.evchargeops.com.br/media/points/garage-a.webp
+             */
+            photoUrl: string | null;
             status: components["schemas"]["ChargePointStatus"];
             /** @description Current price of the point; null when no tariff is configured */
             pricing: components["schemas"]["ChargePointPricingDto"] | null;
@@ -4166,6 +4259,52 @@ export interface operations {
                 content?: never;
             };
             /** @description Organization not found or user is not a member */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getMyMonthlyStatement: {
+        parameters: {
+            query?: {
+                /** @description Condominium to read when the user has a unit in more than one; defaults to the first one by name */
+                organizationId?: string;
+            };
+            header?: never;
+            path: {
+                /** @description Calendar month in America/Sao_Paulo */
+                month: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyMonthlyStatementResponseDto"];
+                };
+            };
+            /** @description Invalid month or organization id */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Missing or invalid access token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The user has no unit in a private organization, or not in the requested one */
             404: {
                 headers: {
                     [name: string]: unknown;

@@ -35,4 +35,19 @@ describe('MonthPicker', () => {
 
     expect(screen.getByRole('button', { name: 'Próximo mês' })).toBeDisabled()
   })
+
+  it('renders a compact pill with the short month and the full name for screen readers', () => {
+    render(
+      <MonthPicker
+        label="Mês"
+        value="2026-09"
+        isLabelHidden
+        isCompact
+        onChange={vi.fn()}
+      />,
+    )
+
+    expect(screen.getByText('Set 2026')).toHaveAttribute('aria-hidden', 'true')
+    expect(screen.getByText('setembro de 2026')).toHaveClass('sr-only')
+  })
 })

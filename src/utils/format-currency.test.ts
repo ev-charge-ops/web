@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { formatCents, formatCurrency } from './format-currency'
+import { formatCents, formatCentsAmount, formatCurrency } from './format-currency'
 
 const normalize = (value: string) => value.replace(/\s/g, ' ')
 
@@ -26,5 +26,12 @@ describe('formatCents', () => {
   it('formats integer cents as BRL', () => {
     expect(normalize(formatCents(198734))).toBe('R$ 1.987,34')
     expect(normalize(formatCents(25))).toBe('R$ 0,25')
+  })
+})
+
+describe('formatCentsAmount', () => {
+  it('formats cents without the currency symbol', () => {
+    expect(formatCentsAmount(58323)).toBe('583,23')
+    expect(formatCentsAmount(123456)).toBe('1.234,56')
   })
 })

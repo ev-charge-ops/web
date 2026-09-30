@@ -31,12 +31,13 @@ export function createRecentAnomaly(
 
 export const overviewChargePoints: OverviewChargePoint[] = chargePoints
   .filter((point) => point.organizationId === managedOrganization.id)
-  .map(({ id, code, name, type, maxPowerKw, status, pricing }) => ({
+  .map(({ id, code, name, type, maxPowerKw, photoUrl, status, pricing }) => ({
     id,
     code,
     name,
     type,
     maxPowerKw,
+    photoUrl,
     status,
     pricing,
   }))

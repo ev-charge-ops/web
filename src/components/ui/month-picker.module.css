@@ -68,3 +68,19 @@
   opacity: 0.35;
   cursor: not-allowed;
 }
+
+.compact {
+  height: 44px;
+  border-color: transparent;
+  background: var(--surface-card);
+}
+
+.compact .value {
+  min-width: 72px;
+  font-size: 15px;
+}
+
+.compact .step {
+  width: 36px;
+  height: 36px;
+}

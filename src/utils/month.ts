@@ -15,6 +15,11 @@ const monthNameFormatter = new Intl.DateTimeFormat('pt-BR', {
   timeZone: 'UTC',
 })
 
+const shortMonthFormatter = new Intl.DateTimeFormat('pt-BR', {
+  month: 'short',
+  timeZone: 'UTC',
+})
+
 const monthPattern = /^\d{4}-(0[1-9]|1[0-2])$/
 
 function toUtcDate(month: string) {
@@ -42,4 +47,23 @@ export function formatMonth(month: string) {
 
 export function formatMonthName(month: string) {
   return monthNameFormatter.format(toUtcDate(month))
+}
+
+function capitalize(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1)
+}
+
+export function formatMonthTitle(month: string) {
+  return capitalize(formatMonth(month))
+}
+
+export function formatShortMonth(month: string) {
+  const name = shortMonthFormatter.format(toUtcDate(month)).replace('.', '')
+  return `${capitalize(name)} ${month.slice(0, 4)}`
+}
+
+export function getMonthLastDay(month: string) {
+  const [year, monthIndex] = month.split('-').map(Number)
+  const day = new Date(Date.UTC(year, monthIndex, 0)).getUTCDate()
+  return `${String(day).padStart(2, '0')}/${String(monthIndex).padStart(2, '0')}`
 }

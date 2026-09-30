@@ -3,7 +3,10 @@ import { describe, expect, it } from 'vitest'
 import {
   formatMonth,
   formatMonthName,
+  formatMonthTitle,
+  formatShortMonth,
   getCurrentMonth,
+  getMonthLastDay,
   isMonth,
   shiftMonth,
 } from './month'
@@ -22,6 +25,13 @@ describe('month utils', () => {
   it('formats months in Portuguese', () => {
     expect(formatMonth('2026-10')).toBe('outubro de 2026')
     expect(formatMonthName('2026-08')).toBe('agosto')
+    expect(formatMonthTitle('2026-09')).toBe('Setembro de 2026')
+    expect(formatShortMonth('2026-09')).toBe('Set 2026')
+  })
+
+  it('reads the last day of a month as day and month', () => {
+    expect(getMonthLastDay('2026-09')).toBe('30/09')
+    expect(getMonthLastDay('2028-02')).toBe('29/02')
   })
 
   it('validates the month format', () => {
