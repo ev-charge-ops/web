@@ -10,6 +10,7 @@ import {
   createSessionPage,
   organizationSessions,
 } from './sessions'
+import { createTariff } from './tariff'
 
 export const handlers = [
   http.get(`${env.apiUrl}/health`, () => HttpResponse.json({ status: 'ok' })),
@@ -18,6 +19,9 @@ export const handlers = [
   ),
   http.get(`${env.apiUrl}/organizations/:organizationId/overview`, () =>
     HttpResponse.json(createOverview()),
+  ),
+  http.get(`${env.apiUrl}/organizations/:organizationId/tariff`, () =>
+    HttpResponse.json(createTariff()),
   ),
   http.get(`${env.apiUrl}/organizations/:organizationId/sessions`, () =>
     HttpResponse.json(createSessionPage([])),
