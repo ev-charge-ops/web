@@ -24,7 +24,7 @@ import {
   sessionStatusLabels,
   sessionStatuses,
 } from '@/features/sessions/utils/labels'
-import { formatMonth, getCurrentMonth, isMonth } from '@/utils/month'
+import { formatMonth, formatMonthTitle, getCurrentMonth, isMonth } from '@/utils/month'
 
 const pageTitle = 'Sessões'
 const pageSize = 50
@@ -100,6 +100,7 @@ function SessionsPage({ organizationId }: { organizationId: string }) {
   return (
     <>
       <PageTitle
+        eyebrow={formatMonthTitle(filters.month)}
         title={pageTitle}
         description="Registro de cada recarga medida no condomínio. Toda linha do rateio nasce daqui. Sessões que o modelo de IA considerou atípicas aparecem destacadas."
       />
