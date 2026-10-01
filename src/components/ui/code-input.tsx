@@ -1,9 +1,4 @@
-import {
-  useId,
-  useRef,
-  type ClipboardEvent,
-  type KeyboardEvent,
-} from 'react'
+import { useId, useRef, type ClipboardEvent, type KeyboardEvent } from 'react'
 
 import { cn } from '@/utils/cn'
 
@@ -11,6 +6,8 @@ import styles from './code-input.module.css'
 
 type CodeInputProps = {
   label: string
+  labelledBy?: string
+  appearance?: 'outlined' | 'inset'
   value: string
   onChange: (value: string) => void
   onComplete?: (value: string) => void
@@ -26,6 +23,8 @@ function onlyDigits(value: string) {
 
 export function CodeInput({
   label,
+  labelledBy,
+  appearance = 'outlined',
   value,
   onChange,
   onComplete,
@@ -90,11 +89,11 @@ export function CodeInput({
   return (
     <div
       role="group"
-      aria-labelledby={labelId}
+      aria-labelledby={labelledBy ?? labelId}
       aria-describedby={error ? errorId : undefined}
-      className={styles.field}
+      className={cn(styles.field, appearance === 'inset' && styles.inset)}
     >
-      <span id={labelId} className={styles.label}>
+      <span id={labelId} className={cn(styles.label, labelledBy && 'sr-only')}>
         {label}
       </span>
       <div
@@ -116,7 +115,11 @@ export function CodeInput({
             autoFocus={autoFocus && index === 0}
             disabled={disabled}
             value={value[index] ?? ''}
-            className={cn(styles.box, error && styles.invalid)}
+            className={cn(
+              styles.box,
+              value[index] && styles.filled,
+              error && styles.invalid,
+            )}
             onFocus={(event) => event.target.select()}
             onChange={(event) => onInputChange(index, event.target.value)}
             onKeyDown={(event) => onKeyDown(index, event)}
