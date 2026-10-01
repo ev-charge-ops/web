@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { env } from '@/config/env'
 import { managedOrganization } from '@/testing/mocks/organizations'
 import { server } from '@/testing/mocks/server'
-import { createSessionPage } from '@/testing/mocks/sessions'
+import { createOverview } from '@/testing/mocks/overview'
 import { createStatement } from '@/testing/mocks/statements'
 import { renderApp } from '@/testing/test-utils'
 import {
@@ -86,31 +86,25 @@ describe('CostSharingRoute', () => {
     expect(formula).toHaveTextContent('após 10 min de tolerância')
   })
 
-  it('counts the visitor sessions of the commercial points outside the statement', async () => {
+  it('shows the visitor sessions of the month outside the statement', async () => {
     mockStatements()
-    const requests: { month: string | null; chargePointId: string | null }[] = []
+    const overviewMonths: (string | null)[] = []
     server.use(
       http.get(
-        `${env.apiUrl}/organizations/${managedOrganization.id}/sessions`,
+        `${env.apiUrl}/organizations/${managedOrganization.id}/overview`,
         ({ request }) => {
-          const params = new URL(request.url).searchParams
-          requests.push({
-            month: params.get('month'),
-            chargePointId: params.get('chargePointId'),
-          })
-          return HttpResponse.json(createSessionPage([], { total: 7 }))
+          overviewMonths.push(new URL(request.url).searchParams.get('month'))
+          return HttpResponse.json(createOverview({ visitorSessionsCount: 12 }))
         },
       ),
     )
     renderApp(<CostSharingRoute />, { route: '/cost-sharing' })
 
     const card = await screen.findByRole('region', { name: 'Fora do rateio' })
-    expect(await within(card).findByText('7')).toBeInTheDocument()
+    expect(await within(card).findByText('12')).toBeInTheDocument()
     expect(card).toHaveTextContent('sessões de visitantes')
     expect(card).toHaveTextContent('L2-01 é ponto comercial')
-    expect(requests).toEqual([
-      { month: getCurrentMonth(), chargePointId: '5b0e8c1d-2f3a-4b6c-8d7e-9f0a1b2c3d03' },
-    ])
+    expect(overviewMonths).toEqual([getCurrentMonth()])
   })
 
   it('loads the statement of the chosen month', async () => {

@@ -2,15 +2,17 @@ import { Sparkles } from 'lucide-react'
 
 import { StatusPill } from '@/components/ui/status-pill'
 
+import type { AnomalyReviewStatus } from '../api/review-session-anomaly'
 import { formatAnomalyScore } from '../utils/labels'
 import styles from './anomaly-badge.module.css'
 
 type AnomalyBadgeProps = {
   score: number | null
   isAnomaly: boolean | null
+  reviewStatus?: AnomalyReviewStatus | null
 }
 
-export function AnomalyBadge({ score, isAnomaly }: AnomalyBadgeProps) {
+export function AnomalyBadge({ score, isAnomaly, reviewStatus }: AnomalyBadgeProps) {
   if (score === null) {
     return <span className={styles.none}>—</span>
   }
@@ -23,10 +25,22 @@ export function AnomalyBadge({ score, isAnomaly }: AnomalyBadgeProps) {
     )
   }
 
+  if (reviewStatus === 'DISMISSED') {
+    return (
+      <StatusPill tone="offline" className={styles.badge}>
+        Descartada · {formatAnomalyScore(score)}
+      </StatusPill>
+    )
+  }
+
   return (
-    <StatusPill tone="fault" className={styles.badge}>
+    <StatusPill
+      tone={reviewStatus === 'CONFIRMED' ? 'idle' : 'fault'}
+      className={styles.badge}
+    >
       <Sparkles size={12} strokeWidth={2.2} aria-hidden />
-      Anomalia · {formatAnomalyScore(score)}
+      {reviewStatus === 'CONFIRMED' ? 'Confirmada' : 'Anomalia'} ·{' '}
+      {formatAnomalyScore(score)}
     </StatusPill>
   )
 }

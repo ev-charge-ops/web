@@ -50,7 +50,7 @@ describe('EmailLoginRoute', () => {
     renderRoutes()
 
     expect(
-      await screen.findByRole('heading', { name: `Olá, ${managerUser.name}` }),
+      await screen.findByRole('heading', { name: 'Visão geral', level: 1 }),
     ).toBeInTheDocument()
     expect(verify).toHaveBeenCalledTimes(1)
     expect(verify).toHaveBeenCalledWith({ token: 'magic-token' })

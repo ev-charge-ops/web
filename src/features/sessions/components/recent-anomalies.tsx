@@ -1,41 +1,63 @@
-import { ShieldCheck } from 'lucide-react'
+import { CircleCheck, ShieldCheck, TriangleAlert } from 'lucide-react'
+import { useState } from 'react'
 import { Link } from 'react-router'
 
-import { Card } from '@/components/ui/card'
-import { StatusPill } from '@/components/ui/status-pill'
-import type { components } from '@/lib/api-schema'
-import { formatCents } from '@/utils/format-currency'
-import { formatDateTime } from '@/utils/format-date'
+import { cn } from '@/utils/cn'
 import { formatMonth } from '@/utils/month'
 
-import { formatAnomalySource } from '../utils/labels'
-import { AnomalyBadge } from './anomaly-badge'
+import {
+  getAnomalyMeta,
+  getAnomalyTitle,
+  type RecentAnomaly,
+} from '../utils/anomaly-summary'
+import { anomalyReviewLabels } from '../utils/labels'
+import { AnomalyReviewDrawer } from './anomaly-review-drawer'
 import styles from './recent-anomalies.module.css'
 
-export type RecentAnomaly = components['schemas']['RecentAnomalyDto']
+export type { RecentAnomaly }
 
 type RecentAnomaliesProps = {
+  organizationId: string
   anomalies: RecentAnomaly[]
-  anomaliesCount: number
   month: string
   sessionsHref: string
 }
 
+function AnomalyIcon({ anomaly }: { anomaly: RecentAnomaly }) {
+  const status = anomaly.anomalyReviewStatus
+  if (status === 'DISMISSED') {
+    return (
+      <span className={cn(styles.tile, styles.tileDismissed)}>
+        <CircleCheck size={20} strokeWidth={2} aria-hidden />
+      </span>
+    )
+  }
+  return (
+    <span
+      className={cn(
+        styles.tile,
+        status === 'CONFIRMED' ? styles.tileConfirmed : styles.tilePending,
+      )}
+    >
+      <TriangleAlert size={20} strokeWidth={2} aria-hidden />
+    </span>
+  )
+}
+
 export function RecentAnomalies({
+  organizationId,
   anomalies,
-  anomaliesCount,
   month,
   sessionsHref,
 }: RecentAnomaliesProps) {
+  const [reviewing, setReviewing] = useState<RecentAnomaly | null>(null)
+
   return (
-    <Card flush>
+    <section className={styles.card} aria-labelledby="recent-anomalies-title">
       <div className={styles.head}>
-        <div className={styles.heading}>
-          <h2 className={styles.title}>Anomalias recentes</h2>
-          <StatusPill tone={anomaliesCount > 0 ? 'fault' : 'charging'}>
-            {anomaliesCount} no mês
-          </StatusPill>
-        </div>
+        <h2 id="recent-anomalies-title" className={styles.title}>
+          Anomalias detectadas
+        </h2>
         <Link to={sessionsHref} className={styles.link}>
           Ver sessões
         </Link>
@@ -49,31 +71,49 @@ export function RecentAnomalies({
           </span>
         </div>
       ) : (
-        <ul className={styles.list} aria-label="Anomalias recentes">
-          {anomalies.map((anomaly) => (
-            <li className={styles.item} key={anomaly.sessionId}>
-              <div className={styles.main}>
-                <span className={styles.label}>
-                  <span className={styles.unit}>{anomaly.unitLabel ?? '—'}</span>
-                  <span className={styles.source}>
-                    {formatAnomalySource(anomaly.anomalyModelVersion)}
-                  </span>
+        <ul className={styles.list} aria-label="Anomalias detectadas">
+          {anomalies.map((anomaly) => {
+            const status = anomaly.anomalyReviewStatus ?? 'PENDING_REVIEW'
+            return (
+              <li className={styles.item} key={anomaly.sessionId}>
+                <AnomalyIcon anomaly={anomaly} />
+                <span className={styles.main}>
+                  <span className={styles.label}>{getAnomalyTitle(anomaly)}</span>
+                  <span className={styles.meta}>{getAnomalyMeta(anomaly)}</span>
                 </span>
-                <span className={styles.meta}>
-                  {anomaly.driver.name} · {anomaly.chargePoint.code} ·{' '}
-                  {formatDateTime(anomaly.startedAt)}
-                </span>
-              </div>
-              <div className={styles.side}>
-                <AnomalyBadge score={anomaly.anomalyScore} isAnomaly />
-                <span className={styles.total}>
-                  {formatCents(anomaly.totalCents)}
-                </span>
-              </div>
-            </li>
-          ))}
+                {status === 'PENDING_REVIEW' ? (
+                  <button
+                    type="button"
+                    className={styles.review}
+                    aria-label={`Revisar a sessão de ${anomaly.driver.name}`}
+                    onClick={() => setReviewing(anomaly)}
+                  >
+                    Revisar
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className={styles.reviewed}
+                    aria-label={`${anomalyReviewLabels[status]}: revisar de novo a sessão de ${anomaly.driver.name}`}
+                    onClick={() => setReviewing(anomaly)}
+                  >
+                    {status === 'CONFIRMED' ? 'Confirmada' : 'Descartada'}
+                  </button>
+                )}
+              </li>
+            )
+          })}
         </ul>
       )}
-    </Card>
+      <p className={styles.note}>
+        O score vem do modelo de detecção de anomalias; nenhuma cobrança muda
+        sem revisão do gestor.
+      </p>
+      <AnomalyReviewDrawer
+        organizationId={organizationId}
+        anomaly={reviewing}
+        onClose={() => setReviewing(null)}
+      />
+    </section>
   )
 }

@@ -7,6 +7,12 @@ const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
   timeZone,
 })
 
+const dayMonthFormatter = new Intl.DateTimeFormat('pt-BR', {
+  day: '2-digit',
+  month: '2-digit',
+  timeZone,
+})
+
 const dateTimeFormatter = new Intl.DateTimeFormat('pt-BR', {
   day: '2-digit',
   month: '2-digit',
@@ -35,4 +41,8 @@ export function formatDateTime(value: string | Date) {
 
 export function formatTime(value: string | Date) {
   return timeFormatter.format(toDate(value))
+}
+
+export function formatDayMonth(value: string | Date) {
+  return dayMonthFormatter.format(toDate(value))
 }

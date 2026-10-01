@@ -124,7 +124,7 @@
   min-width: 0;
   max-width: 1400px;
   padding: var(--space-3) var(--space-3) var(--space-10);
-  animation: page-rise var(--duration-slow) var(--ease-out) both;
+  animation: page-rise var(--duration-slow) var(--ease-out) backwards;
 }
 
 @media (max-width: 900px) {

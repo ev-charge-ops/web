@@ -53,6 +53,7 @@ export function RulesRoute() {
       {(organization) => (
         <>
           <PageTitle
+            eyebrow={organization.name}
             title={pageTitle}
             description="Mudanças valem para as sessões seguintes. As sessões já medidas mantêm a tarifa travada no início."
           />

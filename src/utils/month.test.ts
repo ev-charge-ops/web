@@ -6,6 +6,7 @@ import {
   formatMonthTitle,
   formatShortMonth,
   getCurrentMonth,
+  getDaysInMonth,
   getMonthLastDay,
   isMonth,
   shiftMonth,
@@ -32,6 +33,7 @@ describe('month utils', () => {
   it('reads the last day of a month as day and month', () => {
     expect(getMonthLastDay('2026-09')).toBe('30/09')
     expect(getMonthLastDay('2028-02')).toBe('29/02')
+    expect(getDaysInMonth('2026-02')).toBe(28)
   })
 
   it('validates the month format', () => {

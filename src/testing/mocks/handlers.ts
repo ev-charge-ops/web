@@ -10,6 +10,7 @@ import {
   createSessionPage,
   organizationSessions,
 } from './sessions'
+import { createStatement } from './statements'
 import { createTariff } from './tariff'
 
 export const handlers = [
@@ -19,6 +20,13 @@ export const handlers = [
   ),
   http.get(`${env.apiUrl}/organizations/:organizationId/overview`, () =>
     HttpResponse.json(createOverview()),
+  ),
+  http.get(`${env.apiUrl}/organizations/:organizationId/statements`, ({ request }) =>
+    HttpResponse.json(
+      createStatement({
+        month: new URL(request.url).searchParams.get('month') ?? '2026-10',
+      }),
+    ),
   ),
   http.get(`${env.apiUrl}/organizations/:organizationId/tariff`, () =>
     HttpResponse.json(createTariff()),
