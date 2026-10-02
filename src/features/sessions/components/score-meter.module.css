@@ -1,0 +1,61 @@
+.meter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.track {
+  display: block;
+  width: 84px;
+  height: 6px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--hairline);
+}
+
+.critical .track {
+  background: var(--surface-card);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--text-faint);
+  animation: fill 0.9s var(--ease-out) 0.2s both;
+}
+
+.warning .fill {
+  background: var(--warning);
+}
+
+.critical .fill {
+  background: var(--critical);
+}
+
+.value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  color: var(--text-title);
+}
+
+.critical .value {
+  color: var(--critical-text);
+}
+
+.none {
+  color: var(--text-faint);
+}
+
+@keyframes fill {
+  from {
+    width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    animation: none;
+  }
+}

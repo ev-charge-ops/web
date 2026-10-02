@@ -1,0 +1,26 @@
+.table {
+  min-width: 980px;
+}
+
+.open {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.open:focus-visible {
+  border-radius: var(--radius-sm);
+}
+
+.idle {
+  font-weight: 700;
+  color: var(--warning-text);
+}
+
+.onFlagged[data-tone] {
+  background: var(--surface-card);
+}
