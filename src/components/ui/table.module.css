@@ -31,22 +31,20 @@
 
 .table th {
   padding: 12px var(--space-5);
-  border-top: 1px solid var(--hairline);
-  background: var(--surface-inset);
-  font-size: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: var(--tracking-caps);
   text-align: left;
-  text-transform: uppercase;
   color: var(--text-muted);
   white-space: nowrap;
 }
 
 .table td {
   padding: 14px var(--space-5);
-  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
   color: var(--text-body);
   vertical-align: middle;
+  white-space: nowrap;
 }
 
 .table th:first-child,
@@ -115,15 +113,31 @@
 
 .clickable {
   cursor: pointer;
-  transition: background var(--duration-fast) var(--ease-standard);
 }
 
-.clickable:hover {
+.clickable td {
+  transition: background var(--duration-fast) var(--ease-pulse);
+}
+
+.clickable:hover td {
   background: var(--surface-inset);
 }
 
-.flagged td:first-child {
-  box-shadow: inset 3px 0 0 var(--status-fault-fill);
+.flagged td,
+.flagged:hover td {
+  background: var(--status-fault-bg);
+}
+
+.selected {
+  outline: 2px solid var(--text-title);
+  outline-offset: -2px;
+}
+
+.num {
+  font-weight: 700;
+  color: var(--text-title);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
 .rowAction {
