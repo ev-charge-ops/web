@@ -46,3 +46,7 @@ export function formatTime(value: string | Date) {
 export function formatDayMonth(value: string | Date) {
   return dayMonthFormatter.format(toDate(value))
 }
+
+export function formatDayTime(value: string | Date) {
+  return `${formatDayMonth(value)} · ${formatTime(value)}`
+}

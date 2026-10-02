@@ -10,3 +10,8 @@ export function formatDuration(totalMinutes: number) {
 export function minutesBetween(start: string, end: string) {
   return (new Date(end).getTime() - new Date(start).getTime()) / 60000
 }
+
+export function formatClockDuration(totalMinutes: number) {
+  const minutes = Math.max(0, Math.round(totalMinutes))
+  return `${Math.floor(minutes / 60)}h${String(minutes % 60).padStart(2, '0')}`
+}

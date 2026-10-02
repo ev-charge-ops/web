@@ -1,15 +1,73 @@
 .pagination {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  padding: var(--space-4) var(--gutter-card);
-  border-top: 1px solid var(--hairline);
+  padding: var(--space-5) var(--space-6);
 }
 
 .status {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-muted);
-  white-space: nowrap;
+}
+
+.pages {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--surface-inset);
+  color: var(--text-title);
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-pulse),
+    color var(--duration-fast) var(--ease-pulse),
+    transform var(--duration-fast) var(--ease-pulse);
+}
+
+.page:hover:not(:disabled) {
+  background: var(--surface-raised);
+}
+
+.page:active:not(:disabled) {
+  transform: scale(var(--press-scale));
+}
+
+.page[aria-current='page'],
+.page[aria-current='page']:hover {
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+.step {
+  width: 44px;
+  padding: 0;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-card);
+}
+
+.step:disabled {
+  color: var(--text-faint);
+  cursor: default;
+}
+
+.gap {
+  padding: 0 var(--space-2);
+  font-weight: 700;
+  color: var(--text-muted);
 }

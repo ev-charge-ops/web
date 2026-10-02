@@ -13,7 +13,12 @@ import {
   organizationSessions,
 } from '@/testing/mocks/sessions'
 import { renderApp } from '@/testing/test-utils'
-import { formatMonth, getCurrentMonth, shiftMonth } from '@/utils/month'
+import {
+  formatMonth,
+  formatMonthName,
+  getCurrentMonth,
+  shiftMonth,
+} from '@/utils/month'
 
 import { SessionsRoute } from './sessions'
 
@@ -51,11 +56,19 @@ describe('SessionsRoute', () => {
     const table = await screen.findByRole('table', { name: 'Sessões' })
     const rows = within(table).getAllByRole('row')
     expect(rows).toHaveLength(4)
-    expect(within(rows[1]).getByText('Marcelo Tavares')).toBeInTheDocument()
-    expect(within(rows[1]).getByText('Encerrada')).toBeInTheDocument()
-    expect(within(rows[2]).getByText('Anomalia · 0,91')).toBeInTheDocument()
+    expect(within(rows[1]).getByText(/Marcelo Tavares/)).toBeInTheDocument()
+    expect(within(rows[1]).getByText('Concluída')).toBeInTheDocument()
+    expect(within(rows[1]).getByText('1h48')).toBeInTheDocument()
+    expect(within(rows[2]).getByText('Revisar')).toBeInTheDocument()
+    expect(within(rows[2]).getByText('0,91')).toBeInTheDocument()
+    expect(within(rows[2]).getByText(/2 h 11 min ocupação/)).toBeInTheDocument()
     expect(within(rows[3]).getByText('Carregando')).toBeInTheDocument()
-    expect(screen.getByText('3 · 1 sinalizada pela IA')).toBeInTheDocument()
+    expect(screen.getByText('Mostrando 1–3 de 3 sessões')).toBeInTheDocument()
+    expect(
+      await screen.findByText(
+        `102 sessões em ${formatMonthName(getCurrentMonth())} · 95 de moradores, 7 de visitantes`,
+      ),
+    ).toBeInTheDocument()
     expect(requests[0].get('month')).toBe(getCurrentMonth())
   })
 
@@ -66,18 +79,22 @@ describe('SessionsRoute', () => {
 
     await screen.findByRole('table', { name: 'Sessões' })
     await user.selectOptions(screen.getByLabelText('Status'), 'CLOSED')
-    expect(await screen.findByText('Verônica Alencar')).toBeInTheDocument()
-    expect(screen.queryByText('Diego Lima')).not.toBeInTheDocument()
+    expect(await screen.findByText(/Verônica Alencar/)).toBeInTheDocument()
+    expect(screen.queryByText(/Diego Lima/)).not.toBeInTheDocument()
     expect(requests.at(-1)?.get('status')).toBe('CLOSED')
 
     await user.selectOptions(
       await screen.findByLabelText('Ponto'),
       'L1-02 · Garagem L1 · Vaga 13',
     )
-    expect(await screen.findByText('1 · 1 sinalizada pela IA')).toBeInTheDocument()
-    expect(screen.queryByText('Marcelo Tavares')).not.toBeInTheDocument()
-    expect(screen.getByText('Verônica Alencar')).toBeInTheDocument()
-    expect(requests.at(-1)?.get('chargePointId')).toBe(flaggedSession.chargePoint.id)
+    expect(
+      await screen.findByText('Mostrando 1–1 de 1 sessão'),
+    ).toBeInTheDocument()
+    expect(screen.queryByText(/Marcelo Tavares/)).not.toBeInTheDocument()
+    expect(screen.getByText(/Verônica Alencar/)).toBeInTheDocument()
+    expect(requests.at(-1)?.get('chargePointId')).toBe(
+      flaggedSession.chargePoint.id,
+    )
     expect(requests.at(-1)?.get('status')).toBe('CLOSED')
     expect(
       screen.queryByRole('option', { name: /Estacionamento público/ }),
@@ -85,10 +102,10 @@ describe('SessionsRoute', () => {
 
     await user.click(screen.getByRole('button', { name: 'Mês anterior' }))
     const previousMonth = shiftMonth(getCurrentMonth(), -1)
-    expect(
-      await screen.findByText(`Sessões de ${formatMonth(previousMonth)}`),
-    ).toBeInTheDocument()
-    expect(requests.at(-1)?.get('month')).toBe(previousMonth)
+    await waitFor(() =>
+      expect(requests.at(-1)?.get('month')).toBe(previousMonth),
+    )
+    expect(screen.getByText(formatMonth(previousMonth))).toBeInTheDocument()
   })
 
   it('keeps only the flagged sessions when asked', async () => {
@@ -100,11 +117,13 @@ describe('SessionsRoute', () => {
     expect(requests[0].has('anomaly')).toBe(false)
     expect(requests[0].has('chargePointId')).toBe(false)
 
-    await user.click(screen.getByRole('checkbox', { name: 'Somente anomalias' }))
+    await user.click(screen.getByRole('switch', { name: 'Somente anomalias' }))
 
-    expect(await screen.findByText('1 · 1 sinalizada pela IA')).toBeInTheDocument()
-    expect(screen.queryByText('Marcelo Tavares')).not.toBeInTheDocument()
-    expect(screen.getByText('Verônica Alencar')).toBeInTheDocument()
+    expect(
+      await screen.findByText('Mostrando 1–1 de 1 sessão'),
+    ).toBeInTheDocument()
+    expect(screen.queryByText(/Marcelo Tavares/)).not.toBeInTheDocument()
+    expect(screen.getByText(/Verônica Alencar/)).toBeInTheDocument()
     expect(requests.at(-1)?.get('anomaly')).toBe('true')
   })
 
@@ -114,12 +133,16 @@ describe('SessionsRoute', () => {
       route: `/sessions?point=${flaggedSession.chargePoint.id}&anomaly=true`,
     })
 
-    expect(await screen.findByText('Verônica Alencar')).toBeInTheDocument()
+    expect(await screen.findByText(/Verônica Alencar/)).toBeInTheDocument()
     expect(requests[0].get('chargePointId')).toBe(flaggedSession.chargePoint.id)
     expect(requests[0].get('anomaly')).toBe('true')
-    expect(screen.getByRole('checkbox', { name: 'Somente anomalias' })).toBeChecked()
+    expect(
+      screen.getByRole('switch', { name: 'Somente anomalias' }),
+    ).toBeChecked()
     await waitFor(() =>
-      expect(screen.getByLabelText('Ponto')).toHaveValue(flaggedSession.chargePoint.id),
+      expect(screen.getByLabelText('Ponto')).toHaveValue(
+        flaggedSession.chargePoint.id,
+      ),
     )
   })
 
@@ -141,13 +164,28 @@ describe('SessionsRoute', () => {
 
     const drawer = screen.getByRole('dialog', { name: 'Detalhes da sessão' })
     expect(
-      await within(drawer).findByText('Sessão sinalizada · score 0,91'),
+      within(drawer).getByText('B · 23 · Verônica Alencar · 05/10'),
     ).toBeInTheDocument()
-    expect(within(drawer).getByText('Ocupação após a recarga')).toBeInTheDocument()
-    expect(within(drawer).getByText('2 h 11 min')).toBeInTheDocument()
-    expect(within(drawer).getByText('Modelo de IA · v1')).toBeInTheDocument()
+    expect(
+      await within(drawer).findByText(
+        'Sessão atípica para o histórico do condomínio',
+      ),
+    ).toBeInTheDocument()
+    expect(within(drawer).getByText('0,91')).toBeInTheDocument()
+    expect(
+      within(drawer).getByText('2 h 11 min após a tolerância · R$ 30,00'),
+    ).toBeInTheDocument()
+    expect(within(drawer).getByText('Não se aplica')).toBeInTheDocument()
+    expect(
+      within(drawer).getByText(
+        '38,30 kWh × R$ 0,89 + R$ 30,00 de ocupação, a custo',
+      ),
+    ).toBeInTheDocument()
+    expect(within(drawer).getByText('R$ 64,09')).toBeInTheDocument()
 
-    await user.click(within(drawer).getAllByRole('button', { name: 'Fechar' })[0])
+    await user.click(
+      within(drawer).getAllByRole('button', { name: 'Fechar' })[0],
+    )
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
@@ -156,7 +194,9 @@ describe('SessionsRoute', () => {
     let reviewBody: unknown
     let detail = createSessionDetail(flaggedSession)
     server.use(
-      http.get(`${sessionsUrl}/${flaggedSession.id}`, () => HttpResponse.json(detail)),
+      http.get(`${sessionsUrl}/${flaggedSession.id}`, () =>
+        HttpResponse.json(detail),
+      ),
       http.post(
         `${sessionsUrl}/${flaggedSession.id}/anomaly-review`,
         async ({ request }) => {
@@ -190,10 +230,17 @@ describe('SessionsRoute', () => {
       within(drawer).getByRole('button', { name: 'Descartar sinalização' }),
     )
 
-    expect(await screen.findByText('Sinalização descartada.')).toBeInTheDocument()
-    expect(reviewBody).toEqual({ status: 'DISMISSED', note: 'Visitante autorizado' })
+    expect(
+      await screen.findByText('Sinalização descartada.'),
+    ).toBeInTheDocument()
+    expect(reviewBody).toEqual({
+      status: 'DISMISSED',
+      note: 'Visitante autorizado',
+    })
     expect(await within(drawer).findByText('Descartada')).toBeInTheDocument()
-    expect(within(drawer).getByText('“Visitante autorizado”')).toBeInTheDocument()
+    expect(
+      within(drawer).getByText('“Visitante autorizado”'),
+    ).toBeInTheDocument()
     expect(
       within(drawer).getByRole('button', { name: 'Revisar de novo' }),
     ).toBeInTheDocument()
@@ -207,7 +254,11 @@ describe('SessionsRoute', () => {
       ),
       http.post(`${sessionsUrl}/${flaggedSession.id}/anomaly-review`, () =>
         HttpResponse.json(
-          { statusCode: 409, message: 'Session is not flagged', code: 'SESSION_NOT_FLAGGED' },
+          {
+            statusCode: 409,
+            message: 'Session is not flagged',
+            code: 'SESSION_NOT_FLAGGED',
+          },
           { status: 409 },
         ),
       ),
@@ -221,7 +272,9 @@ describe('SessionsRoute', () => {
       }),
     )
     const drawer = screen.getByRole('dialog', { name: 'Detalhes da sessão' })
-    await user.click(await within(drawer).findByRole('button', { name: 'Revisar' }))
+    await user.click(
+      await within(drawer).findByRole('button', { name: 'Revisar' }),
+    )
     await user.click(
       within(drawer).getByRole('button', { name: 'Confirmar anomalia' }),
     )
@@ -240,7 +293,10 @@ describe('SessionsRoute', () => {
         return HttpResponse.json(
           createSessionDetail(organizationSessions[2], {
             energyKwh: 4.5,
-            driver: { id: organizationSessions[2].driver.id, name: 'Diego Lima Souza' },
+            driver: {
+              id: organizationSessions[2].driver.id,
+              name: 'Diego Lima Souza',
+            },
           }),
         )
       }),
@@ -255,8 +311,10 @@ describe('SessionsRoute', () => {
     )
 
     const drawer = screen.getByRole('dialog', { name: 'Detalhes da sessão' })
-    expect(await within(drawer).findByText('Diego Lima Souza')).toBeInTheDocument()
-    expect(within(drawer).getByText('4,5 kWh')).toBeInTheDocument()
+    expect(
+      await within(drawer).findByText('Diego Lima Souza'),
+    ).toBeInTheDocument()
+    expect(within(drawer).getByText('4,50 kWh')).toBeInTheDocument()
     expect(requested).toEqual([organizationSessions[2].id])
   })
 
@@ -304,7 +362,7 @@ describe('SessionsRoute', () => {
   it('lets the manager retry when the sessions fail to load', async () => {
     let attempts = 0
     server.use(
-        http.get(sessionsUrl, () => {
+      http.get(sessionsUrl, () => {
         attempts += 1
         return attempts === 1
           ? new HttpResponse(null, { status: 500 })

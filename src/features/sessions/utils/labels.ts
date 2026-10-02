@@ -9,7 +9,7 @@ export const sessionStatusLabels = {
   ACTIVE: 'Carregando',
   GRACE: 'Tolerância',
   IDLE: 'Ocupando a vaga',
-  CLOSED: 'Encerrada',
+  CLOSED: 'Concluída',
   INTERRUPTED: 'Interrompida',
 } satisfies Record<SessionStatus, string>
 
@@ -19,11 +19,13 @@ export const sessionStatusTones = {
   ACTIVE: 'charging',
   GRACE: 'idle',
   IDLE: 'fault',
-  CLOSED: 'offline',
-  INTERRUPTED: 'fault',
+  CLOSED: 'charging',
+  INTERRUPTED: 'offline',
 } satisfies Record<SessionStatus, StatusTone>
 
-export const sessionStatuses = Object.keys(sessionStatusLabels) as SessionStatus[]
+export const sessionStatuses = Object.keys(
+  sessionStatusLabels,
+) as SessionStatus[]
 
 export const regimeLabels = {
   PRIVATE: 'Rateio',
@@ -60,4 +62,35 @@ export function formatAnomalyScore(score: number) {
 
 export function formatAnomalySource(modelVersion: string | null) {
   return modelVersion ? `IA · ${modelVersion}` : 'Regra'
+}
+
+type RowStatusSession = {
+  status: SessionStatus
+  idleFeeCents: number
+  isAnomaly: boolean | null
+  anomalyReviewStatus: components['schemas']['AnomalyReviewStatus'] | null
+}
+
+export function getSessionRowStatus(session: RowStatusSession): {
+  label: string
+  tone: StatusTone
+} {
+  if (session.isAnomaly && session.anomalyReviewStatus === 'PENDING_REVIEW') {
+    return { label: 'Revisar', tone: 'fault' }
+  }
+  if (session.status === 'CLOSED' && session.idleFeeCents > 0) {
+    return { label: 'Multa aplicada', tone: 'idle' }
+  }
+  return {
+    label: sessionStatusLabels[session.status],
+    tone: sessionStatusTones[session.status],
+  }
+}
+
+export function isFlagged(
+  session: Pick<RowStatusSession, 'isAnomaly' | 'anomalyReviewStatus'>,
+) {
+  return (
+    Boolean(session.isAnomaly) && session.anomalyReviewStatus !== 'DISMISSED'
+  )
 }

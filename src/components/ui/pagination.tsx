@@ -1,42 +1,83 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-import { Button } from './button'
+import { cn } from '@/utils/cn'
+import { getPageItems } from '@/utils/pagination'
+
 import styles from './pagination.module.css'
 
 type PaginationProps = {
   page: number
   pageSize: number
   total: number
+  itemLabel: string
   onChange: (page: number) => void
 }
 
-export function Pagination({ page, pageSize, total, onChange }: PaginationProps) {
+const countFormatter = new Intl.NumberFormat('pt-BR')
+
+export function Pagination({
+  page,
+  pageSize,
+  total,
+  itemLabel,
+  onChange,
+}: PaginationProps) {
+  if (total === 0) return null
+
   const pageCount = Math.max(1, Math.ceil(total / pageSize))
-  if (pageCount <= 1) return null
+  const first = (page - 1) * pageSize + 1
+  const last = Math.min(total, page * pageSize)
 
   return (
-    <nav className={styles.pagination} aria-label="Paginação">
-      <Button
-        variant="secondary"
-        size="sm"
-        icon={<ChevronLeft size={15} strokeWidth={2} aria-hidden />}
-        disabled={page <= 1}
-        onClick={() => onChange(page - 1)}
-      >
-        Anterior
-      </Button>
+    <div className={styles.pagination}>
       <span className={styles.status}>
-        Página {page} de {pageCount}
+        Mostrando {countFormatter.format(first)}–{countFormatter.format(last)}{' '}
+        de {countFormatter.format(total)} {itemLabel}
       </span>
-      <Button
-        variant="secondary"
-        size="sm"
-        disabled={page >= pageCount}
-        onClick={() => onChange(page + 1)}
-      >
-        Próxima
-        <ChevronRight size={15} strokeWidth={2} aria-hidden />
-      </Button>
-    </nav>
+      {pageCount > 1 ? (
+        <nav className={styles.pages} aria-label="Paginação">
+          <button
+            type="button"
+            className={cn(styles.page, styles.step)}
+            aria-label="Página anterior"
+            disabled={page <= 1}
+            onClick={() => onChange(page - 1)}
+          >
+            <ChevronLeft size={18} strokeWidth={2} aria-hidden />
+          </button>
+          {getPageItems(page, pageCount).map((item, index) =>
+            item === 'gap' ? (
+              <span
+                key={`gap-${index}`}
+                className={styles.gap}
+                aria-hidden="true"
+              >
+                …
+              </span>
+            ) : (
+              <button
+                key={item}
+                type="button"
+                className={styles.page}
+                aria-current={item === page ? 'page' : undefined}
+                aria-label={`Página ${item}`}
+                onClick={() => onChange(item)}
+              >
+                {item}
+              </button>
+            ),
+          )}
+          <button
+            type="button"
+            className={cn(styles.page, styles.step)}
+            aria-label="Próxima página"
+            disabled={page >= pageCount}
+            onClick={() => onChange(page + 1)}
+          >
+            <ChevronRight size={18} strokeWidth={2} aria-hidden />
+          </button>
+        </nav>
+      ) : null}
+    </div>
   )
 }
