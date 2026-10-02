@@ -1,22 +1,116 @@
-.sentTo {
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.submit {
+  width: 100%;
+}
+
+.sentBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  border-radius: 50%;
+  background: var(--energy-tint);
+  color: var(--energy-text);
+  animation: badge-in 0.36s var(--ease-out) both;
+}
+
+.codeCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  border-radius: var(--radius-card);
+  background: var(--surface-card);
+  animation: rise 0.6s var(--ease-out) both;
+}
+
+.codeIntro {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.codeIcon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--energy-tint);
+  color: var(--energy-text);
+}
+
+.codeHint {
   margin: 0;
-  font-size: 14px;
-  line-height: 20px;
-  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--text-body);
   overflow-wrap: anywhere;
 }
 
-.sentTo strong {
+.codeHint strong {
   color: var(--text-title);
 }
 
-.actions {
+.codeFooter {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--space-4);
+  min-height: 24px;
+  font-size: 14px;
+  color: var(--text-muted);
 }
 
-.actions button {
-  font-size: 13px;
+.codeFooter button {
+  font-size: 14px;
+}
+
+.countdown {
+  font-weight: 700;
+}
+
+.countdown span {
+  color: var(--text-title);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes badge-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sentBadge,
+  .codeCard {
+    animation: none;
+  }
 }
