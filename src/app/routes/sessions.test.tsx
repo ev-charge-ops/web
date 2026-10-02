@@ -175,7 +175,7 @@ describe('SessionsRoute', () => {
     expect(
       within(drawer).getByText('2 h 11 min após a tolerância · R$ 30,00'),
     ).toBeInTheDocument()
-    expect(within(drawer).getByText('Modelo de IA · v1')).toBeInTheDocument()
+    expect(within(drawer).getByText('Não se aplica')).toBeInTheDocument()
     expect(
       within(drawer).getByText(
         '38,30 kWh × R$ 0,89 + R$ 30,00 de ocupação, a custo',
