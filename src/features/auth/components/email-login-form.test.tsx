@@ -16,10 +16,13 @@ type User = ReturnType<typeof userEvent.setup>
 function mockRequest(status = 202) {
   const request = vi.fn()
   server.use(
-    http.post(`${env.apiUrl}/auth/email-login/request`, async ({ request: req }) => {
-      request(await req.json())
-      return new HttpResponse(null, { status })
-    }),
+    http.post(
+      `${env.apiUrl}/auth/email-login/request`,
+      async ({ request: req }) => {
+        request(await req.json())
+        return new HttpResponse(null, { status })
+      },
+    ),
   )
   return request
 }
@@ -27,7 +30,7 @@ function mockRequest(status = 202) {
 async function requestCode(user: User, email = 'marina@example.com') {
   await user.type(screen.getByLabelText('E-mail'), email)
   await user.click(screen.getByRole('button', { name: 'Enviar código' }))
-  await screen.findByRole('group', { name: 'Código de acesso' })
+  await screen.findByRole('region', { name: 'Código de acesso' })
 }
 
 describe('EmailLoginForm', () => {
@@ -40,10 +43,13 @@ describe('EmailLoginForm', () => {
     const verify = vi.fn()
     const session = createSession()
     server.use(
-      http.post(`${env.apiUrl}/auth/email-login/verify`, async ({ request: req }) => {
-        verify(await req.json())
-        return HttpResponse.json(session)
-      }),
+      http.post(
+        `${env.apiUrl}/auth/email-login/verify`,
+        async ({ request: req }) => {
+          verify(await req.json())
+          return HttpResponse.json(session)
+        },
+      ),
     )
     const user = userEvent.setup()
     renderApp(<EmailLoginForm />)
@@ -51,6 +57,11 @@ describe('EmailLoginForm', () => {
     await requestCode(user)
     expect(request).toHaveBeenCalledWith({ email: 'marina@example.com' })
     expect(screen.getByText('marina@example.com')).toBeInTheDocument()
+    expect(
+      screen.getByRole('group', {
+        name: 'Digite o código de 6 dígitos enviado para marina@example.com',
+      }),
+    ).toBeInTheDocument()
 
     await user.click(screen.getByLabelText('Dígito 1 de 6'))
     await user.paste('042817')
@@ -111,7 +122,9 @@ describe('EmailLoginForm', () => {
     await user.type(screen.getByLabelText('E-mail'), 'not-an-email')
     await user.click(screen.getByRole('button', { name: 'Enviar código' }))
 
-    expect(await screen.findByText('Informe um e-mail válido')).toBeInTheDocument()
+    expect(
+      await screen.findByText('Informe um e-mail válido'),
+    ).toBeInTheDocument()
     expect(request).not.toHaveBeenCalled()
   })
 
@@ -123,16 +136,15 @@ describe('EmailLoginForm', () => {
 
     await requestCode(user)
 
+    expect(screen.getByText('0:30')).toBeInTheDocument()
     expect(
-      screen.getByRole('button', { name: /Reenviar código em 30s/ }),
-    ).toBeDisabled()
+      screen.queryByRole('button', { name: 'Reenviar código' }),
+    ).not.toBeInTheDocument()
 
     act(() => {
       vi.advanceTimersByTime(29_000)
     })
-    expect(
-      screen.getByRole('button', { name: /Reenviar código em \d+s/ }),
-    ).toBeDisabled()
+    expect(screen.getByText(/Reenviar em/)).toBeInTheDocument()
 
     act(() => {
       vi.advanceTimersByTime(1_500)
@@ -143,22 +155,32 @@ describe('EmailLoginForm', () => {
     await user.click(resend)
 
     expect(
-      await screen.findByText('Enviamos um novo código para marina@example.com.'),
+      await screen.findByText(
+        'Enviamos um novo código para marina@example.com.',
+      ),
     ).toBeInTheDocument()
     expect(request).toHaveBeenCalledTimes(2)
-    expect(
-      screen.getByRole('button', { name: /Reenviar código em 30s/ }),
-    ).toBeDisabled()
+    expect(screen.getByText('0:30')).toBeInTheDocument()
   })
 
-  it('goes back to the email step', async () => {
-    mockRequest()
+  it('asks for a new code when the email changes', async () => {
+    const request = mockRequest()
     const user = userEvent.setup()
     renderApp(<EmailLoginForm />)
 
     await requestCode(user)
-    await user.click(screen.getByRole('button', { name: 'Usar outro e-mail' }))
+    await user.clear(screen.getByLabelText('E-mail'))
+    await user.type(screen.getByLabelText('E-mail'), 'outro@example.com')
 
-    expect(screen.getByLabelText('E-mail')).toBeInTheDocument()
+    expect(
+      screen.queryByRole('region', { name: 'Código de acesso' }),
+    ).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Enviar código' }))
+
+    expect(
+      await screen.findByRole('region', { name: 'Código de acesso' }),
+    ).toBeInTheDocument()
+    expect(request).toHaveBeenLastCalledWith({ email: 'outro@example.com' })
   })
 })

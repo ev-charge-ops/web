@@ -1,51 +1,53 @@
-import { Apple, ExternalLink, Smartphone } from 'lucide-react'
+import { Apple, Smartphone } from 'lucide-react'
 
 import styles from './app-download.module.css'
 
 export const androidBuildsUrl =
   'https://expo.dev/accounts/ev-charge-ops/projects/ev-charge-ops'
 
-type AppDownloadProps = {
-  token: string
-}
-
-export function AppDownload({ token }: AppDownloadProps) {
+export function AppDownload() {
   return (
-    <section className={styles.section} aria-labelledby="app-download-title">
-      <h2 id="app-download-title" className={styles.title}>
-        Baixe o app EV ChargeOps
-      </h2>
-      <p className={styles.description}>
-        As recargas e o seu consumo ficam no aplicativo. Entre com a mesma
-        conta que você acabou de usar.
-      </p>
-      <ul className={styles.options}>
-        <li className={styles.option}>
+    <aside className={styles.aside} aria-labelledby="app-download-title">
+      <img
+        src="/media/car-hero.webp"
+        alt=""
+        aria-hidden="true"
+        className={styles.image}
+      />
+      <div className={styles.copy}>
+        <h2 id="app-download-title" className={styles.title}>
+          Motoristas usam o app EV ChargeOps
+        </h2>
+        <p className={styles.description}>
+          Moradores iniciam e acompanham recargas pelo celular. O portal é para
+          a gestão do condomínio.
+        </p>
+      </div>
+      <div className={styles.stores}>
+        <a
+          className={styles.store}
+          href={androidBuildsUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
           <Smartphone size={18} strokeWidth={2} aria-hidden />
-          <div>
-            <a href={androidBuildsUrl} target="_blank" rel="noreferrer">
-              Baixar para Android (APK)
-            </a>
-            <p className={styles.hint}>Instale a versão mais recente da lista.</p>
-          </div>
-        </li>
-        <li className={styles.option}>
+          <span className={styles.storeText}>
+            <span className={styles.storeName}>Baixar para Android (APK)</span>
+            <span className={styles.storeHint}>
+              Instale a versão mais recente da lista.
+            </span>
+          </span>
+        </a>
+        <div className={styles.store}>
           <Apple size={18} strokeWidth={2} aria-hidden />
-          <div>
-            <span className={styles.label}>iPhone</span>
-            <p className={styles.hint}>
+          <span className={styles.storeText}>
+            <span className={styles.storeName}>iPhone</span>
+            <span className={styles.storeHint}>
               Convite via TestFlight enviado pelo gestor.
-            </p>
-          </div>
-        </li>
-      </ul>
-      <a
-        className={styles.openApp}
-        href={`evchargeops://invite?token=${encodeURIComponent(token)}`}
-      >
-        <ExternalLink size={16} strokeWidth={2} aria-hidden />
-        Abrir no app
-      </a>
-    </section>
+            </span>
+          </span>
+        </div>
+      </div>
+    </aside>
   )
 }

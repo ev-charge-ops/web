@@ -8,6 +8,7 @@ type LogoProps = {
   variant?: LogoVariant
   size?: number
   hasWordmark?: boolean
+  isAnimated?: boolean
   className?: string
 }
 
@@ -20,7 +21,8 @@ const markColors = {
 export function LogoMark({
   variant = 'dark',
   size = 36,
-}: Pick<LogoProps, 'variant' | 'size'>) {
+  isAnimated = false,
+}: Pick<LogoProps, 'variant' | 'size' | 'isAnimated'>) {
   const isCompact = size < 32
   const colors = markColors[variant]
 
@@ -31,7 +33,7 @@ export function LogoMark({
       viewBox="0 0 64 64"
       aria-hidden="true"
       focusable="false"
-      className={styles.mark}
+      className={cn(styles.mark, isAnimated && styles.animated)}
     >
       <rect width="64" height="64" rx="18" fill={colors.tile} />
       <path
@@ -40,10 +42,21 @@ export function LogoMark({
         stroke={colors.ring}
         strokeWidth={isCompact ? 6 : 5}
         strokeLinecap="round"
+        className={styles.ring}
       />
-      <path d="M34 20 L24 34 H31 L29 44 L40 29 H33 Z" fill={colors.bolt} />
+      <path
+        d="M34 20 L24 34 H31 L29 44 L40 29 H33 Z"
+        fill={colors.bolt}
+        className={styles.bolt}
+      />
       {isCompact ? null : (
-        <circle cx="45.02" cy="21.07" r="3.4" fill={colors.bolt} />
+        <circle
+          cx="45.02"
+          cy="21.07"
+          r="3.4"
+          fill={colors.bolt}
+          className={styles.node}
+        />
       )}
     </svg>
   )
@@ -53,6 +66,7 @@ export function Logo({
   variant = 'dark',
   size = 36,
   hasWordmark = true,
+  isAnimated,
   className,
 }: LogoProps) {
   return (
@@ -62,7 +76,7 @@ export function Logo({
       data-variant={variant}
       className={cn(styles.logo, styles[variant], className)}
     >
-      <LogoMark variant={variant} size={size} />
+      <LogoMark variant={variant} size={size} isAnimated={isAnimated} />
       {hasWordmark ? (
         <span className={styles.wordmark} aria-hidden="true">
           EV ChargeOps

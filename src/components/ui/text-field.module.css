@@ -32,6 +32,29 @@
   transition: border-color var(--duration-fast) var(--ease-standard);
 }
 
+.controlWrap {
+  position: relative;
+  display: flex;
+}
+
+.controlWrap .control {
+  flex: 1;
+  min-width: 0;
+}
+
+.withTrailing {
+  padding-right: 52px;
+}
+
+.trailing {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  bottom: 4px;
+  display: flex;
+  align-items: center;
+}
+
 .control::placeholder {
   color: var(--text-faint);
   font-weight: 500;

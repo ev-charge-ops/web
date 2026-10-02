@@ -37,8 +37,10 @@ export const paths = {
     },
     emailLogin: {
       path: '/login/email',
-      getHref: (token: string) =>
-        `/login/email?token=${encodeURIComponent(token)}`,
+      getHref: (redirectTo?: string | null) =>
+        redirectTo && redirectTo !== '/'
+          ? `/login/email?redirectTo=${encodeURIComponent(redirectTo)}`
+          : '/login/email',
     },
     forgotPassword: {
       path: '/forgot-password',
