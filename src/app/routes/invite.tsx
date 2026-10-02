@@ -1,24 +1,39 @@
 import { useSearchParams } from 'react-router'
 
-import { AuthLayout } from '@/components/layouts/auth-layout'
-import { Alert } from '@/components/ui/alert'
+import { Logo } from '@/components/ui/logo'
+import { env } from '@/config/env'
 import { OAuthButtons } from '@/features/auth/components/oauth-buttons'
+import { AppDownload } from '@/features/invites/components/app-download'
 import { InviteAcceptance } from '@/features/invites/components/invite-acceptance'
+import { InviteMessage } from '@/features/invites/components/invite-message'
+
+import styles from './invite.module.css'
 
 export function InviteRoute() {
   const [searchParams] = useSearchParams()
   const token = searchParams.get('token')
 
   return (
-    <AuthLayout
-      title="Convite para o EV ChargeOps"
-      description="Aceite o convite do seu condomínio para recarregar pelo app."
-    >
-      {token ? (
-        <InviteAcceptance token={token} oauthButtons={<OAuthButtons />} />
-      ) : (
-        <Alert>Link de convite inválido. Abra o link completo enviado por e-mail.</Alert>
-      )}
-    </AuthLayout>
+    <div className={styles.page}>
+      <main className={styles.card}>
+        <Logo size={52} isAnimated className={styles.logo} />
+        {token ? (
+          <InviteAcceptance
+            token={token}
+            oauthButtons={
+              env.googleClientId || env.appleServicesId ? (
+                <OAuthButtons />
+              ) : undefined
+            }
+          />
+        ) : (
+          <InviteMessage
+            title="Link de convite inválido"
+            description="Abra o link completo enviado por e-mail."
+          />
+        )}
+      </main>
+      <AppDownload />
+    </div>
   )
 }
