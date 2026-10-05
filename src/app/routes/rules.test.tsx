@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
@@ -20,7 +20,10 @@ function mockTariff() {
     http.patch(tariffUrl, async ({ request }) => {
       body = await request.json()
       return HttpResponse.json(
-        createTariff({ ...(body as object), validFrom: '2026-10-07T15:00:00.000Z' }),
+        createTariff({
+          ...(body as object),
+          validFrom: '2026-10-07T15:00:00.000Z',
+        }),
       )
     }),
   )
@@ -35,21 +38,50 @@ describe('RulesRoute', () => {
     expect(
       await screen.findByLabelText('Tarifa de energia (R$ por kWh)'),
     ).toHaveValue('0,89')
-    expect(screen.getByLabelText('Tarifa base de visitantes (R$ por kWh)')).toHaveValue(
-      '1,89',
+    expect(
+      screen.getByLabelText('Tarifa base de visitantes (R$ por kWh)'),
+    ).toHaveValue('1,89')
+    expect(screen.getByLabelText('Taxa de acesso mensal (R$)')).toHaveValue(
+      '35,00',
     )
-    expect(screen.getByLabelText('Taxa de acesso mensal (R$)')).toHaveValue('35,00')
-    expect(screen.getByLabelText('Tolerância após a recarga (minutos)')).toHaveValue(
-      '10',
-    )
-    expect(screen.getByLabelText('Taxa de ocupação (R$ por minuto)')).toHaveValue(
-      '0,25',
-    )
-    expect(screen.getByLabelText('Teto da ocupação por sessão (R$)')).toHaveValue(
-      '30,00',
-    )
+    expect(
+      screen.getByLabelText('Tolerância após a recarga (minutos)'),
+    ).toHaveValue('10')
+    expect(
+      screen.getByLabelText('Taxa de ocupação (R$ por minuto)'),
+    ).toHaveValue('0,25')
+    expect(
+      screen.getByLabelText('Teto da ocupação por sessão (R$)'),
+    ).toHaveValue('30,00')
     expect(screen.getByText(/Em vigor desde 01\/01\/2026/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Descartar' })).toBeDisabled()
+  })
+
+  it('simulates a 15 kWh session with the rules being edited', async () => {
+    mockTariff()
+    const user = userEvent.setup()
+    renderApp(<RulesRoute />, { route: '/rules' })
+
+    const simulation = await screen.findByRole('complementary', {
+      name: 'Simulação: recarga de 15 kWh',
+    })
+    expect(
+      await within(simulation).findByText('Visitante agora · L2-01'),
+    ).toBeInTheDocument()
+    expect(within(simulation).getByText('13,35')).toBeInTheDocument()
+    expect(within(simulation).getByText('22,65')).toBeInTheDocument()
+    expect(within(simulation).getByText('R$ 2,50')).toBeInTheDocument()
+    expect(
+      screen.getByText(/L1-01 e L1-02 · rateio mensal por unidade/),
+    ).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Aumentar R$ 0,01' }))
+
+    expect(screen.getByLabelText('Tarifa de energia (R$ por kWh)')).toHaveValue(
+      '0,90',
+    )
+    expect(within(simulation).getByText('13,50')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Descartar' })).toBeEnabled()
   })
 
   it('validates the values before saving', async () => {
@@ -72,7 +104,9 @@ describe('RulesRoute', () => {
       await screen.findByText('Informe a tarifa em reais, como 0,89'),
     ).toBeInTheDocument()
     expect(screen.getByText('Use no máximo 240 minutos')).toBeInTheDocument()
-    expect(screen.getByText(/^Use no máximo R\$\s1\.000,00$/)).toBeInTheDocument()
+    expect(
+      screen.getByText(/^Use no máximo R\$\s1\.000,00$/),
+    ).toBeInTheDocument()
     expect(tariff.getBody()).toBeUndefined()
   })
 
@@ -84,7 +118,9 @@ describe('RulesRoute', () => {
     const rate = await screen.findByLabelText('Tarifa de energia (R$ por kWh)')
     await user.clear(rate)
     await user.type(rate, '0,92')
-    await user.clear(screen.getByLabelText('Tarifa base de visitantes (R$ por kWh)'))
+    await user.clear(
+      screen.getByLabelText('Tarifa base de visitantes (R$ por kWh)'),
+    )
     const grace = screen.getByLabelText('Tolerância após a recarga (minutos)')
     await user.clear(grace)
     await user.type(grace, '15')
@@ -152,7 +188,9 @@ describe('RulesRoute', () => {
     const user = userEvent.setup()
     renderApp(<RulesRoute />, { route: '/rules' })
 
-    await user.click(await screen.findByRole('button', { name: 'Tentar novamente' }))
+    await user.click(
+      await screen.findByRole('button', { name: 'Tentar novamente' }),
+    )
 
     expect(
       await screen.findByLabelText('Tarifa de energia (R$ por kWh)'),

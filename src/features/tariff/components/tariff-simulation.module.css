@@ -1,0 +1,132 @@
+.card {
+  display: flex;
+  flex: 1 1 340px;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+  padding: var(--space-7);
+  border-radius: var(--radius-xl);
+  background: var(--surface-card);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.title {
+  margin: 0;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-title);
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.case {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--surface-inset);
+}
+
+.caseHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.caseTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+.formula {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.amount {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.currency {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.value {
+  font-size: 40px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-title);
+}
+
+.idle {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--warning-tint);
+}
+
+.idleTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--warning-text);
+}
+
+.idleBody {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-body);
+}
+
+.idleBody strong {
+  color: var(--text-title);
+}
+
+.idleTotals {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px var(--space-4);
+  margin: 0;
+  padding-top: var(--space-3);
+  border-top: 1px solid rgba(143, 90, 11, 0.18);
+  font-size: 14px;
+}
+
+.idleTotals dt {
+  color: var(--text-body);
+}
+
+.idleTotals dd {
+  margin: 0;
+  font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-title);
+}
+
+.footnote {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
