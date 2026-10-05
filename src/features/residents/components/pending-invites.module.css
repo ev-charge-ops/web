@@ -1,0 +1,134 @@
+.card {
+  padding: var(--space-3) 0;
+  border-radius: var(--radius-xl);
+  background: var(--surface-card);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-7) var(--space-3);
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+.hint {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin: 0 var(--space-7);
+  padding: var(--space-4) 0;
+}
+
+.row + .row {
+  border-top: 1px solid var(--hairline);
+}
+
+.icon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--status-info-bg);
+  color: var(--status-info);
+}
+
+.icon.soon {
+  background: var(--warning-tint);
+  color: var(--warning-text);
+}
+
+.icon.expired {
+  background: var(--status-fault-bg);
+  color: var(--status-fault);
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 200px;
+}
+
+.email {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-title);
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.meta.soon {
+  font-weight: 600;
+  color: var(--warning-text);
+}
+
+.meta.expired {
+  font-weight: 600;
+  color: var(--status-fault);
+}
+
+.resend,
+.revoke {
+  height: 40px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-pulse),
+    transform var(--duration-fast) var(--ease-pulse);
+}
+
+.resend {
+  background: var(--surface-inset);
+  color: var(--text-title);
+}
+
+.resend:hover {
+  background: var(--surface-raised);
+}
+
+.revoke {
+  background: transparent;
+  color: var(--status-fault);
+}
+
+.revoke:hover {
+  background: var(--status-fault-bg);
+}
+
+.resend:active,
+.revoke:active {
+  transform: scale(var(--press-scale));
+}
