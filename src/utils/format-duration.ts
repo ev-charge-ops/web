@@ -15,3 +15,10 @@ export function formatClockDuration(totalMinutes: number) {
   const minutes = Math.max(0, Math.round(totalMinutes))
   return `${Math.floor(minutes / 60)}h${String(minutes % 60).padStart(2, '0')}`
 }
+
+export function formatCountdown(milliseconds: number) {
+  const totalSeconds = Math.max(0, Math.round(milliseconds / 1000))
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+}

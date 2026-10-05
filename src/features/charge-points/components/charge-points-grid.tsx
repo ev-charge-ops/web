@@ -4,14 +4,18 @@ import { Card } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
 
 import { useChargePoints } from '../api/get-charge-points'
-import { ChargePointCard } from './charge-point-card'
+import { ChargePointCard, type PointLive } from './charge-point-card'
 import styles from './charge-points-grid.module.css'
 
 type ChargePointsGridProps = {
   organizationId: string
+  live?: Map<string, PointLive>
 }
 
-export function ChargePointsGrid({ organizationId }: ChargePointsGridProps) {
+export function ChargePointsGrid({
+  organizationId,
+  live,
+}: ChargePointsGridProps) {
   const chargePoints = useChargePoints(organizationId)
 
   if (chargePoints.isPending) {
@@ -43,7 +47,9 @@ export function ChargePointsGrid({ organizationId }: ChargePointsGridProps) {
   if (chargePoints.data.length === 0) {
     return (
       <Card>
-        <p className={styles.empty}>Nenhum ponto de recarga neste condomínio.</p>
+        <p className={styles.empty}>
+          Nenhum ponto de recarga neste condomínio.
+        </p>
       </Card>
     )
   }
@@ -51,7 +57,11 @@ export function ChargePointsGrid({ organizationId }: ChargePointsGridProps) {
   return (
     <section aria-label="Pontos de recarga" className={styles.grid}>
       {chargePoints.data.map((chargePoint) => (
-        <ChargePointCard key={chargePoint.id} chargePoint={chargePoint} />
+        <ChargePointCard
+          key={chargePoint.id}
+          chargePoint={chargePoint}
+          live={live?.get(chargePoint.id)}
+        />
       ))}
     </section>
   )

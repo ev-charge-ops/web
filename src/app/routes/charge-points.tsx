@@ -1,37 +1,128 @@
+import { Info } from 'lucide-react'
+
 import { Alert } from '@/components/ui/alert'
 import { PageTitle } from '@/components/ui/page-title'
 import { Spinner } from '@/components/ui/spinner'
+import { useChargePoints } from '@/features/charge-points/api/get-charge-points'
+import type { PointLive } from '@/features/charge-points/components/charge-point-card'
 import { ChargePointsGrid } from '@/features/charge-points/components/charge-points-grid'
 import { DynamicPriceCard } from '@/features/charge-points/components/dynamic-price-card'
+import { FullLoadCard } from '@/features/charge-points/components/full-load-card'
 import { ManagedOrganization } from '@/features/organizations/components/managed-organization'
-import { useOverview } from '@/features/overview/api/get-overview'
-import { CapacityCard } from '@/features/overview/components/capacity-card'
+import {
+  overviewLiveRefreshMs,
+  useOverview,
+  type OrganizationOverview,
+} from '@/features/overview/api/get-overview'
+import { ElectricalCapacityCard } from '@/features/overview/components/electrical-capacity-card'
+import { formatPercent } from '@/utils/format-percent'
+import { formatPower } from '@/utils/format-power'
 import { getCurrentMonth } from '@/utils/month'
 
 import styles from './charge-points.module.css'
 
 const pageTitle = 'Pontos e capacidade'
+const refreshSeconds = overviewLiveRefreshMs / 1000
 
-function SiteCapacity({ organizationId }: { organizationId: string }) {
-  const overview = useOverview(organizationId, getCurrentMonth())
-
-  if (overview.isPending) {
-    return (
-      <div className={styles.state}>
-        <Spinner label="Carregando capacidade" />
-      </div>
-    )
-  }
-
-  if (overview.error) {
-    return <Alert>Não foi possível carregar a capacidade elétrica.</Alert>
-  }
+function CapacityTiles({
+  capacity,
+}: {
+  capacity: OrganizationOverview['capacity']
+}) {
+  const tiles = [
+    { label: 'Contratada', value: capacity.contractedDemandKw },
+    { label: 'Reserva comum', value: capacity.commonAreaReserveKw },
+    {
+      label: 'Para recarga',
+      value: Math.max(
+        0,
+        capacity.contractedDemandKw - capacity.commonAreaReserveKw,
+      ),
+    },
+  ]
 
   return (
-    <div className={styles.aside}>
-      <CapacityCard capacity={overview.data.capacity} />
-      <DynamicPriceCard chargePoints={overview.data.chargePoints} />
-    </div>
+    <dl className={styles.tiles}>
+      {tiles.map(({ label, value }) => (
+        <div className={styles.tile} key={label}>
+          <dt>{label}</dt>
+          <dd>{formatPower(value)}</dd>
+        </div>
+      ))}
+      <div className={styles.tile}>
+        <dt>Pico médio diário</dt>
+        <dd>
+          {formatPower(capacity.averagePeakDemandKw)}
+          <span className={styles.tileHint}>
+            {formatPercent(capacity.averagePeakUtilizationPercent)}
+          </span>
+        </dd>
+      </div>
+    </dl>
+  )
+}
+
+function ChargePointsPage({ organizationId }: { organizationId: string }) {
+  const overview = useOverview(organizationId, getCurrentMonth(), {
+    refetchInterval: overviewLiveRefreshMs,
+  })
+  const chargePoints = useChargePoints(organizationId)
+  const pointCount = chargePoints.data?.length
+  const live = new Map<string, PointLive>(
+    (overview.data?.chargePoints ?? []).map((point) => [
+      point.id,
+      {
+        currentPowerKw: point.currentPowerKw,
+        activeSession: point.activeSession,
+      },
+    ]),
+  )
+
+  return (
+    <>
+      <PageTitle
+        eyebrow={
+          pointCount === undefined
+            ? `Atualizado a cada ${refreshSeconds} s`
+            : `${pointCount} ${pointCount === 1 ? 'ponto' : 'pontos'} · atualizado a cada ${refreshSeconds} s`
+        }
+        title={pageTitle}
+      />
+      {overview.isPending ? (
+        <div className={styles.state}>
+          <Spinner label="Carregando capacidade" />
+        </div>
+      ) : overview.error ? (
+        <Alert>Não foi possível carregar a capacidade elétrica.</Alert>
+      ) : (
+        <>
+          <div className={styles.pair}>
+            <ElectricalCapacityCard
+              capacity={overview.data.capacity}
+              chargePoints={overview.data.chargePoints}
+              subtitle={`Alocação ao vivo · atualizada a cada ${refreshSeconds} s`}
+              hasAvailableLegend
+            >
+              <CapacityTiles capacity={overview.data.capacity} />
+            </ElectricalCapacityCard>
+            <FullLoadCard
+              capacity={overview.data.capacity}
+              chargePoints={overview.data.chargePoints}
+            />
+          </div>
+          <DynamicPriceCard chargePoints={overview.data.chargePoints} />
+        </>
+      )}
+      <ChargePointsGrid organizationId={organizationId} live={live} />
+      <p className={styles.note}>
+        <Info size={20} strokeWidth={2} aria-hidden />
+        <span>
+          <strong>Cadastro de pontos pela equipe de implantação</strong>
+          Para incluir, trocar ou remover um carregador, fale com o suporte. Os
+          dados de potência e status chegam pela telemetria dos carregadores.
+        </span>
+      </p>
+    </>
   )
 }
 
@@ -39,21 +130,10 @@ export function ChargePointsRoute() {
   return (
     <ManagedOrganization title={pageTitle}>
       {(organization) => (
-        <>
-          <PageTitle
-            eyebrow={organization.name}
-            title={pageTitle}
-            description={`Pontos de recarga de ${organization.name} com status, carregador e preço do kWh agora. A demanda somada nunca passa do limite contratado porque o balanceamento reduz a potência antes.`}
-          />
-          <div className={styles.layout}>
-            <ChargePointsGrid organizationId={organization.id} />
-            <SiteCapacity organizationId={organization.id} />
-          </div>
-          <p className={styles.note}>
-            O cadastro e a troca de carregadores são feitos pela equipe de
-            implantação. Fale com o suporte para incluir ou alterar um ponto.
-          </p>
-        </>
+        <ChargePointsPage
+          key={organization.id}
+          organizationId={organization.id}
+        />
       )}
     </ManagedOrganization>
   )

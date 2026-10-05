@@ -1,10 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { CalendarCheck, Info, Sparkles } from 'lucide-react'
+import { useForm, useWatch } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { TextField } from '@/components/ui/text-field'
+import { StatusPill } from '@/components/ui/status-pill'
 import { useToast } from '@/components/ui/use-toast'
+import type { components } from '@/lib/api-schema'
+import { formatDemandFactor, formatDemandSource } from '@/utils/demand'
 import { formatDate } from '@/utils/format-date'
 
 import type { Tariff } from '../api/get-tariff'
@@ -15,29 +17,74 @@ import {
   type UpdateTariffInput,
 } from '../api/update-tariff'
 import { getUpdateTariffErrorMessage } from '../utils/error-messages'
-import { toTariffFormValues } from '../utils/form-values'
+import {
+  centsToInput,
+  parseMoneyInput,
+  toTariffFormValues,
+} from '../utils/form-values'
+import { TariffField } from './tariff-field'
 import styles from './tariff-form.module.css'
+import { TariffSimulation } from './tariff-simulation'
+
+export type TariffPoint = {
+  code: string
+  type: components['schemas']['ChargePointType']
+  pricing: Pick<
+    components['schemas']['ChargePointPricingDto'],
+    'demandFactor' | 'demandFactorSource' | 'demandModelVersion'
+  > | null
+}
 
 type TariffFormProps = {
   organizationId: string
   tariff: Tariff
+  chargePoints: TariffPoint[]
 }
 
-export function TariffForm({ organizationId, tariff }: TariffFormProps) {
+function joinCodes(codes: string[]) {
+  if (codes.length <= 1) return codes.join('')
+  return `${codes.slice(0, -1).join(', ')} e ${codes.at(-1)}`
+}
+
+export function TariffForm({
+  organizationId,
+  tariff,
+  chargePoints,
+}: TariffFormProps) {
   const { showToast } = useToast()
   const updateTariff = useUpdateTariff(organizationId)
   const {
     register,
     handleSubmit,
     reset,
+    control,
+    getValues,
+    setValue,
     formState: { errors, isDirty },
   } = useForm<UpdateTariffFormValues, unknown, UpdateTariffInput>({
     resolver: zodResolver(updateTariffInputSchema),
     defaultValues: toTariffFormValues(tariff),
   })
+  const values = useWatch({ control }) as UpdateTariffFormValues
 
-  const submit = handleSubmit((values) =>
-    updateTariff.mutate(values, {
+  const residentPoints = chargePoints.filter(
+    (point) => point.type === 'PRIVATE',
+  )
+  const visitorPoints = chargePoints.filter(
+    (point) => point.type === 'COMMERCIAL',
+  )
+  const visitorPricing = visitorPoints.find((point) => point.pricing)
+
+  const stepUtilityRate = (deltaCents: number) => {
+    const current = parseMoneyInput(getValues('utilityRate')) ?? 0
+    setValue('utilityRate', centsToInput(Math.max(0, current + deltaCents)), {
+      shouldDirty: true,
+      shouldValidate: true,
+    })
+  }
+
+  const submit = handleSubmit((input) =>
+    updateTariff.mutate(input, {
       onSuccess: (saved) => {
         reset(toTariffFormValues(saved))
         showToast({
@@ -46,87 +93,172 @@ export function TariffForm({ organizationId, tariff }: TariffFormProps) {
         })
       },
       onError: (error) =>
-        showToast({ tone: 'error', message: getUpdateTariffErrorMessage(error) }),
+        showToast({
+          tone: 'error',
+          message: getUpdateTariffErrorMessage(error),
+        }),
     }),
   )
 
   return (
     <form className={styles.form} noValidate onSubmit={submit}>
-      <div className={styles.groups}>
-        <Card className={styles.group}>
-          <div>
-            <h2 className={styles.title}>Cobrança</h2>
-            <p className={styles.hint}>
-              Energia a custo nos pontos dos moradores, sem margem para o
-              condomínio.
+      <div className={styles.layout}>
+        <div className={styles.groups}>
+          <section className={styles.group} aria-labelledby="tariff-private">
+            <div className={styles.groupHead}>
+              <div className={styles.heading}>
+                <h2 id="tariff-private" className={styles.title}>
+                  Pontos privados
+                </h2>
+                <span className={styles.subtitle}>
+                  {residentPoints.length > 0
+                    ? `${joinCodes(residentPoints.map((point) => point.code))} · rateio mensal por unidade`
+                    : 'Rateio mensal por unidade'}
+                </span>
+              </div>
+              <StatusPill tone="charging">Sem margem</StatusPill>
+            </div>
+            <div className={styles.fields}>
+              <TariffField
+                label="Tarifa de energia (R$ por kWh)"
+                prefix="R$"
+                inputMode="decimal"
+                error={errors.utilityRate?.message}
+                stepper={{
+                  label: 'R$ 0,01',
+                  onDecrease: () => stepUtilityRate(-1),
+                  onIncrease: () => stepUtilityRate(1),
+                }}
+                {...register('utilityRate')}
+              />
+              <TariffField
+                label="Taxa de acesso mensal (R$)"
+                prefix="R$"
+                suffix="por unidade"
+                inputMode="decimal"
+                error={errors.accessFee?.message}
+                {...register('accessFee')}
+              />
+              <TariffField
+                label="Tolerância após a recarga (minutos)"
+                suffix="min"
+                inputMode="numeric"
+                error={errors.gracePeriodMinutes?.message}
+                {...register('gracePeriodMinutes')}
+              />
+              <TariffField
+                label="Taxa de ocupação (R$ por minuto)"
+                prefix="R$"
+                suffix="/min"
+                inputMode="decimal"
+                error={errors.idleFeePerMinute?.message}
+                {...register('idleFeePerMinute')}
+              />
+              <TariffField
+                label="Teto da ocupação por sessão (R$)"
+                prefix="R$"
+                suffix="por sessão"
+                inputMode="decimal"
+                error={errors.idleFeeCap?.message}
+                {...register('idleFeeCap')}
+              />
+            </div>
+            <p className={styles.note}>
+              <Info size={18} strokeWidth={2} aria-hidden />
+              <span>
+                Energia repassada a custo, sem margem (ANEEL RN 1.000/2021).
+                Tolerância e ocupação valem para todos os pontos.
+              </span>
             </p>
-          </div>
-          <TextField
-            label="Tarifa de energia (R$ por kWh)"
-            inputMode="decimal"
-            hint="Tarifa da distribuidora, travada no início de cada sessão."
-            error={errors.utilityRate?.message}
-            {...register('utilityRate')}
-          />
-          <TextField
-            label="Tarifa base de visitantes (R$ por kWh)"
-            inputMode="decimal"
-            hint="Multiplicada pelo fator de demanda nos pontos de visitantes. Deixe vazio se não houver."
-            error={errors.baseRate?.message}
-            {...register('baseRate')}
-          />
-          <TextField
-            label="Taxa de acesso mensal (R$)"
-            inputMode="decimal"
-            hint="Cobrada de cada unidade com veículo vinculado."
-            error={errors.accessFee?.message}
-            {...register('accessFee')}
-          />
-        </Card>
+          </section>
 
-        <Card className={styles.group}>
-          <div>
-            <h2 className={styles.title}>Tolerância e ocupação</h2>
-            <p className={styles.hint}>Libera a vaga depois que a recarga termina.</p>
-          </div>
-          <TextField
-            label="Tolerância após a recarga (minutos)"
-            inputMode="numeric"
-            hint="Sem cobrança de ocupação nesse intervalo."
-            error={errors.gracePeriodMinutes?.message}
-            {...register('gracePeriodMinutes')}
-          />
-          <TextField
-            label="Taxa de ocupação (R$ por minuto)"
-            inputMode="decimal"
-            hint="Por minuto excedente depois da tolerância."
-            error={errors.idleFeePerMinute?.message}
-            {...register('idleFeePerMinute')}
-          />
-          <TextField
-            label="Teto da ocupação por sessão (R$)"
-            inputMode="decimal"
-            hint="Valor máximo de ocupação cobrado em uma sessão."
-            error={errors.idleFeeCap?.message}
-            {...register('idleFeeCap')}
-          />
-        </Card>
+          <section className={styles.group} aria-labelledby="tariff-visitors">
+            <div className={styles.groupHead}>
+              <div className={styles.heading}>
+                <h2 id="tariff-visitors" className={styles.title}>
+                  {visitorPoints.length === 1
+                    ? 'Ponto de visitantes'
+                    : 'Pontos de visitantes'}
+                </h2>
+                <span className={styles.subtitle}>
+                  {visitorPoints.length > 0
+                    ? `${joinCodes(visitorPoints.map((point) => point.code))} · pago com cartão, pré-autorização e captura ao encerrar`
+                    : 'Nenhum ponto de visitantes neste condomínio'}
+                </span>
+              </div>
+              <StatusPill tone="info">Comercial</StatusPill>
+            </div>
+            <div className={styles.fields}>
+              <TariffField
+                label="Tarifa base de visitantes (R$ por kWh)"
+                prefix="R$"
+                suffix="/kWh"
+                inputMode="decimal"
+                placeholder="Igual à de energia"
+                error={errors.baseRate?.message}
+                {...register('baseRate')}
+              />
+              <div className={styles.factorField}>
+                <span className={styles.factorLabel}>
+                  Fator de demanda (IA)
+                </span>
+                <div className={styles.factorBox}>
+                  <Sparkles size={18} strokeWidth={2} aria-hidden />
+                  <span className={styles.factorText}>
+                    {visitorPricing?.pricing
+                      ? formatDemandSource(
+                          visitorPricing.pricing.demandFactorSource,
+                          visitorPricing.pricing.demandModelVersion,
+                        )
+                      : 'Aplicado nos pontos de visitantes'}
+                  </span>
+                  {visitorPricing?.pricing ? (
+                    <span className={styles.factorChip}>
+                      {formatDemandFactor(visitorPricing.pricing.demandFactor)}{' '}
+                      agora
+                    </span>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+            <p className={styles.infoNote}>
+              O preço do visitante é a tarifa base multiplicada pelo fator de
+              demanda, previsto pelo modelo a partir do histórico de uso. Vale
+              só para visitantes; moradores pagam sempre a tarifa a custo.
+            </p>
+          </section>
+        </div>
+
+        <TariffSimulation
+          values={values}
+          residentPointCode={residentPoints[0]?.code}
+          visitorPoint={
+            visitorPricing?.pricing
+              ? {
+                  code: visitorPricing.code,
+                  demandFactor: visitorPricing.pricing.demandFactor,
+                }
+              : undefined
+          }
+        />
       </div>
 
       <div className={styles.footer}>
         <span className={styles.validFrom}>
-          Em vigor desde {formatDate(tariff.validFrom)}. Sessões já iniciadas
-          mantêm a tarifa travada.
+          <CalendarCheck size={20} strokeWidth={2} aria-hidden />
+          Em vigor desde {formatDate(tariff.validFrom)}
         </span>
         <div className={styles.actions}>
           <Button
             variant="secondary"
+            size="lg"
+            className={styles.discard}
             disabled={!isDirty || updateTariff.isPending}
             onClick={() => reset(toTariffFormValues(tariff))}
           >
             Descartar
           </Button>
-          <Button type="submit" isLoading={updateTariff.isPending}>
+          <Button type="submit" size="lg" isLoading={updateTariff.isPending}>
             Salvar regras
           </Button>
         </div>
