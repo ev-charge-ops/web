@@ -1,6 +1,6 @@
 import { BackgroundVideo } from '@/components/ui/background-video'
 import { useNow } from '@/hooks/use-now'
-import { formatDuration } from '@/utils/format-duration'
+import { formatCountdown, formatDuration } from '@/utils/format-duration'
 import { formatPower } from '@/utils/format-power'
 
 import type { OverviewChargePoint } from '../api/get-overview'
@@ -8,13 +8,6 @@ import styles from './live-now-card.module.css'
 
 type LiveNowCardProps = {
   chargePoints: OverviewChargePoint[]
-}
-
-function formatCountdown(milliseconds: number) {
-  const totalSeconds = Math.max(0, Math.round(milliseconds / 1000))
-  const minutes = Math.floor(totalSeconds / 60)
-  const seconds = totalSeconds % 60
-  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 }
 
 function describePoint(point: OverviewChargePoint, now: number) {
