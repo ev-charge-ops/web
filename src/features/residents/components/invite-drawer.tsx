@@ -1,13 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CircleDashed } from 'lucide-react'
-import { useForm } from 'react-hook-form'
+import { Send } from 'lucide-react'
+import { useId } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 
 import { Alert } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { Drawer } from '@/components/ui/drawer'
 import { TextField } from '@/components/ui/text-field'
 import { useToast } from '@/components/ui/use-toast'
+import { useAuth } from '@/lib/use-auth'
 
 import {
   createInviteInputSchema,
@@ -17,36 +18,39 @@ import {
 import { getCreateInviteErrorMessage } from '../utils/error-messages'
 import styles from './invite-drawer.module.css'
 
-const residentSteps = [
-  { label: 'Nome completo', hint: 'Identifica o morador' },
-  { label: 'Senha ou conta Google/Apple', hint: 'Acesso ao app' },
-  { label: 'Aceite do convite', hint: 'Vincula a unidade' },
-]
-
 const emptyValues: CreateInviteInput = { email: '', unitLabel: '' }
+
+const inviteValidityDays = 7
 
 type InviteDrawerProps = {
   organizationId: string
+  organizationName: string
   isOpen: boolean
   onClose: () => void
 }
 
 export function InviteDrawer({
   organizationId,
+  organizationName,
   isOpen,
   onClose,
 }: InviteDrawerProps) {
+  const formId = useId()
+  const { user } = useAuth()
   const { showToast } = useToast()
   const createInvite = useCreateInvite(organizationId)
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<CreateInviteInput>({
     resolver: zodResolver(createInviteInputSchema),
     defaultValues: emptyValues,
   })
+  const unitLabel = useWatch({ control, name: 'unitLabel' }).trim()
+  const headline = `${user?.name ?? 'O gestor'} convidou você para o ${organizationName}`
 
   const close = () => {
     reset(emptyValues)
@@ -70,10 +74,21 @@ export function InviteDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={close}
+      eyebrow={organizationName}
       title="Convidar morador"
-      description="Você informa o e-mail e a unidade. O morador cria a conta pelo link do convite e usa o app para recarregar."
+      footer={
+        <Button
+          type="submit"
+          form={formId}
+          size="lg"
+          icon={<Send size={18} strokeWidth={2} aria-hidden />}
+          isLoading={createInvite.isPending}
+        >
+          Enviar convite
+        </Button>
+      }
     >
-      <form className={styles.form} noValidate onSubmit={submit}>
+      <form id={formId} className={styles.form} noValidate onSubmit={submit}>
         {createInvite.error ? (
           <Alert>{getCreateInviteErrorMessage(createInvite.error)}</Alert>
         ) : null}
@@ -82,7 +97,6 @@ export function InviteDrawer({
           type="email"
           autoComplete="off"
           placeholder="morador@email.com"
-          hint="O convite vale por 7 dias e pode ser reenviado."
           error={errors.email?.message}
           autoFocus
           {...register('email')}
@@ -93,36 +107,37 @@ export function InviteDrawer({
           error={errors.unitLabel?.message}
           {...register('unitLabel')}
         />
-
-        <Card flush>
-          <div className={styles.listHead}>O morador preenche no convite</div>
-          {residentSteps.map(({ label, hint }) => (
-            <div className={styles.listRow} key={label}>
-              <CircleDashed
-                size={15}
-                strokeWidth={2}
-                aria-hidden
-                className={styles.listIcon}
-              />
-              <span className={styles.listLabel}>{label}</span>
-              <span className={styles.listHint}>{hint}</span>
-            </div>
-          ))}
-        </Card>
-
-        <div className={styles.footer}>
-          <Button variant="secondary" onClick={close} className={styles.cancel}>
-            Cancelar
-          </Button>
-          <Button
-            type="submit"
-            isLoading={createInvite.isPending}
-            className={styles.submit}
-          >
-            Enviar convite
-          </Button>
+        <div className={styles.role}>
+          <span className={styles.roleLabel}>Função</span>
+          <span className={styles.roleValue}>Morador</span>
+          <span className={styles.roleHint}>
+            Pode iniciar recargas pelo app e ver o próprio extrato.
+          </span>
         </div>
       </form>
+      <div className={styles.preview}>
+        <span className={styles.previewLabel}>Prévia do e-mail</span>
+        <div className={styles.mail}>
+          <span className={styles.subject}>
+            <strong>Assunto:</strong> {headline}
+          </span>
+          <span className={styles.rule} aria-hidden="true" />
+          <span>Olá!</span>
+          <span>
+            {headline} no EV ChargeOps, a plataforma que organiza as recargas de
+            veículos elétricos e o rateio dos custos de energia.
+          </span>
+          {unitLabel ? <span>Sua unidade: {unitLabel}.</span> : null}
+          <span>
+            Aceite o convite para criar seu acesso. Depois, use o app EV
+            ChargeOps no celular ou a versão web para acompanhar suas recargas.
+          </span>
+          <span className={styles.note}>
+            Este convite expira em {inviteValidityDays} dias. Se você não
+            esperava este convite, ignore este e-mail.
+          </span>
+        </div>
+      </div>
     </Drawer>
   )
 }

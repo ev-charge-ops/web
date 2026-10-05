@@ -1,70 +1,90 @@
-import { Alert } from '@/components/ui/alert'
-import { Card } from '@/components/ui/card'
-import { Spinner } from '@/components/ui/spinner'
-import { StatusPill } from '@/components/ui/status-pill'
-import { formatDate } from '@/utils/format-date'
+import type { ReactNode } from 'react'
 
-import { useMembers } from '../api/get-members'
+import { StatusPill } from '@/components/ui/status-pill'
+import tableStyles from '@/components/ui/table.module.css'
+import { cn } from '@/utils/cn'
+import { getInitials } from '@/utils/initials'
+
+import type { OrganizationMember } from '../api/get-members'
 import { membershipRoleLabels } from '../utils/labels'
-import styles from '@/components/ui/table.module.css'
+import styles from './residents-table.module.css'
+
+const monthYearFormatter = new Intl.DateTimeFormat('pt-BR', {
+  month: '2-digit',
+  year: 'numeric',
+  timeZone: 'America/Sao_Paulo',
+})
 
 type MembersTableProps = {
-  organizationId: string
+  members: OrganizationMember[]
+  currentUserId?: string
+  emptyMessage: string
+  footer?: ReactNode
 }
 
-export function MembersTable({ organizationId }: MembersTableProps) {
-  const members = useMembers(organizationId)
-
+export function MembersTable({
+  members,
+  currentUserId,
+  emptyMessage,
+  footer,
+}: MembersTableProps) {
   return (
-    <Card flush>
-      <div className={styles.head}>
-        <h2 className={styles.title}>Moradores</h2>
-        {members.data ? (
-          <span className={styles.count}>{members.data.length}</span>
-        ) : null}
-      </div>
-      {members.isPending ? (
-        <div className={styles.state}>
-          <Spinner label="Carregando moradores" />
-        </div>
-      ) : members.error ? (
-        <div className={styles.state}>
-          <Alert>Não foi possível carregar os moradores.</Alert>
-        </div>
-      ) : members.data.length === 0 ? (
-        <p className={styles.empty}>Nenhum morador ainda.</p>
+    <section className={styles.card} aria-label="Lista de moradores">
+      {members.length === 0 ? (
+        <p className={styles.empty}>{emptyMessage}</p>
       ) : (
-        <div className={styles.wrap}>
-          <table className={styles.table} aria-label="Moradores">
+        <div className={tableStyles.wrap}>
+          <table
+            className={cn(tableStyles.table, styles.table)}
+            aria-label="Moradores"
+          >
             <thead>
               <tr>
                 <th scope="col">Nome</th>
-                <th scope="col">E-mail</th>
                 <th scope="col">Unidade</th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Desde</th>
                 <th scope="col">Papel</th>
-                <th scope="col">Entrada</th>
               </tr>
             </thead>
             <tbody>
-              {members.data.map((member) => (
+              {members.map((member) => (
                 <tr key={member.userId}>
-                  <td className={styles.strong}>{member.name}</td>
-                  <td className={styles.muted}>{member.email}</td>
-                  <td className={styles.mono}>{member.unitLabel ?? '—'}</td>
+                  <td>
+                    <span className={styles.who}>
+                      <span
+                        className={cn(
+                          styles.avatar,
+                          member.userId === currentUserId && styles.self,
+                        )}
+                        aria-hidden="true"
+                      >
+                        {getInitials(member.name)}
+                      </span>
+                      {member.name}
+                    </span>
+                  </td>
+                  <td>{member.unitLabel ?? '—'}</td>
+                  <td>{member.email}</td>
+                  <td>
+                    <span className={tableStyles.num}>
+                      {monthYearFormatter.format(new Date(member.joinedAt))}
+                    </span>
+                  </td>
                   <td>
                     <StatusPill
-                      tone={member.role === 'MANAGER' ? 'info' : 'offline'}
+                      tone={member.role === 'MANAGER' ? 'info' : 'charging'}
                     >
                       {membershipRoleLabels[member.role]}
                     </StatusPill>
                   </td>
-                  <td className={styles.mono}>{formatDate(member.joinedAt)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       )}
-    </Card>
+      {footer ? <p className={styles.footer}>{footer}</p> : null}
+    </section>
   )
 }
