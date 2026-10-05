@@ -1,0 +1,130 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+  padding: var(--space-7);
+  border-radius: var(--radius-sheet);
+  background: var(--surface-card);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 64px 1fr 64px;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+.sum {
+  padding-top: 10px;
+  border-top: 1px solid var(--hairline);
+}
+
+.code {
+  white-space: nowrap;
+}
+
+.track {
+  height: 10px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--surface-inset);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--energy);
+  animation: fill 0.9s var(--ease-out) both;
+}
+
+.commercial {
+  background: var(--gray-900);
+}
+
+.caption {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.value {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.unit {
+  color: var(--text-muted);
+}
+
+.verdict {
+  margin: 0;
+  padding: var(--space-4) 14px;
+  border-radius: var(--radius-input);
+  background: var(--energy-tint);
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 700;
+  color: var(--energy-text);
+}
+
+.verdict.over {
+  background: var(--warning-tint);
+  color: var(--warning-text);
+}
+
+.note {
+  margin: 0;
+  padding: var(--space-4) 14px;
+  border-radius: var(--radius-input);
+  background: var(--surface-inset);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-body);
+}
+
+@keyframes fill {
+  from {
+    width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    animation: none;
+  }
+}

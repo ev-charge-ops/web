@@ -4,23 +4,28 @@ import type { components } from '@/lib/api-schema'
 type Schemas = components['schemas']
 
 export const chargePointStatusLabels = {
-  AVAILABLE: 'Disponível',
+  AVAILABLE: 'Livre',
   CHARGING: 'Carregando',
   IDLE: 'Ocupado',
   OFFLINE: 'Offline',
 } satisfies Record<Schemas['ChargePointStatus'], string>
 
 export const chargePointStatusTones = {
-  AVAILABLE: 'charging',
+  AVAILABLE: 'offline',
   CHARGING: 'charging',
   IDLE: 'idle',
-  OFFLINE: 'offline',
+  OFFLINE: 'fault',
 } satisfies Record<Schemas['ChargePointStatus'], StatusTone>
 
 export const chargePointTypeLabels = {
-  PRIVATE: 'Moradores · rateio',
-  COMMERCIAL: 'Visitantes · cartão',
+  PRIVATE: 'Privado · rateio',
+  COMMERCIAL: 'Comercial · cartão',
 } satisfies Record<Schemas['ChargePointType'], string>
+
+export const chargePointTypeTones = {
+  PRIVATE: 'charging',
+  COMMERCIAL: 'info',
+} satisfies Record<Schemas['ChargePointType'], StatusTone>
 
 export const connectorLabels = {
   TYPE_2: 'Tipo 2 (AC)',
