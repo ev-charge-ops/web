@@ -18,8 +18,8 @@
   white-space: nowrap;
   cursor: pointer;
   transition:
-    background var(--duration-base) var(--ease-pulse),
-    color var(--duration-base) var(--ease-pulse);
+    background 120ms var(--ease-pulse),
+    color 120ms var(--ease-pulse);
 }
 
 .tab:hover {
