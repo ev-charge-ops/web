@@ -149,6 +149,7 @@ describe('CostSharingRoute', () => {
       await screen.findByText(`CSV do rateio de ${formatMonth(month)} baixado.`),
     ).toBeInTheDocument()
     expect(exportedMonth).toBe(month)
+    expect(screen.getByRole('button', { name: 'Baixado' })).toBeDisabled()
     expect(click).toHaveBeenCalledOnce()
     const link = click.mock.contexts[0] as HTMLAnchorElement
     expect(link.download).toBe(`rateio-${month}.csv`)
