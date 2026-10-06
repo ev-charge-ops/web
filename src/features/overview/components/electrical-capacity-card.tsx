@@ -178,7 +178,10 @@ export function ElectricalCapacityCard({
               className={cn(styles.swatch, styles.reserve)}
               aria-hidden="true"
             />
-            Reserva comum · {formatPower(capacity.commonAreaReserveKw)}
+            Reserva comum
+            {hasAvailableLegend
+              ? ` · ${formatPower(capacity.commonAreaReserveKw)}`
+              : ''}
           </li>
         </ul>
       </div>

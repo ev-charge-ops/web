@@ -55,7 +55,9 @@ function mockOverviewApi({
     http.get(`${organizationUrl}/overview`, ({ request }) => {
       const month = new URL(request.url).searchParams.get('month')
       overviewMonths.push(month)
-      return HttpResponse.json(month === previousMonth ? previousOverview : overview)
+      return HttpResponse.json(
+        month === previousMonth ? previousOverview : overview,
+      )
     }),
     http.get(`${organizationUrl}/statements`, ({ request }) => {
       const month = new URL(request.url).searchParams.get('month')
@@ -85,12 +87,16 @@ describe('HomeRoute', () => {
     expect(
       await screen.findByRole('heading', { name: '2 de 3 pontos em uso' }),
     ).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Visão geral', level: 1 })).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'Visão geral', level: 1 }),
+    ).toBeInTheDocument()
     expect(screen.getByText(formatMonthTitle(currentMonth))).toBeInTheDocument()
     expect(overviewMonths).toContain(currentMonth)
 
     const live = screen.getByRole('list', { name: 'Pontos em uso agora' })
-    expect(within(live).getByText('L1-02 carregando · 6,8 kW')).toBeInTheDocument()
+    expect(
+      within(live).getByText('L1-02 carregando · 6,8 kW'),
+    ).toBeInTheDocument()
     expect(
       within(live).getByText(/^L2-01 em tolerância · 0[78]:\d\d$/),
     ).toBeInTheDocument()
@@ -101,7 +107,9 @@ describe('HomeRoute', () => {
     )
     expect(within(capacity).getByText('Folga')).toBeInTheDocument()
     expect(within(capacity).getByText('6,8')).toBeInTheDocument()
-    expect(within(capacity).getByText('de 63,5 kW para recarga')).toBeInTheDocument()
+    expect(
+      within(capacity).getByText('de 63,5 kW para recarga'),
+    ).toBeInTheDocument()
     expect(within(capacity).getByText('L1-02 · 6,8 kW')).toBeInTheDocument()
     expect(
       within(capacity).getByRole('meter', {
@@ -118,36 +126,48 @@ describe('HomeRoute', () => {
 
     const sessions = screen.getByRole('region', { name: 'Sessões' })
     expect(within(sessions).getByText('4')).toBeInTheDocument()
-    expect(within(sessions).getByText('+ 7 de visitantes (cartão)')).toBeInTheDocument()
+    expect(
+      within(sessions).getByText('+ 7 de visitantes (cartão)'),
+    ).toBeInTheDocument()
 
     const cost = screen.getByRole('region', { name: 'Energia repassada' })
     expect(within(cost).getByText('45,26')).toBeInTheDocument()
-    expect(await within(cost).findByText(/a custo · R\$\s0,89\/kWh/)).toBeInTheDocument()
+    expect(
+      await within(cost).findByText(/a custo · R\$\s0,89\/kWh/),
+    ).toBeInTheDocument()
 
     const anomalies = screen.getByRole('region', { name: 'Anomalias' })
     expect(within(anomalies).getByText('3')).toBeInTheDocument()
     expect(within(anomalies).getByText('1 para revisar')).toBeInTheDocument()
-    expect(
-      await within(anomalies).findByText(`+2 vs. ${previousMonthName}`),
-    ).toBeInTheDocument()
+    expect(anomalies).not.toHaveTextContent('vs.')
 
     expect(
-      within(screen.getByRole('list', { name: 'Energia por semana' })).getAllByRole(
-        'listitem',
-      ),
+      within(
+        screen.getByRole('list', { name: 'Energia por semana' }),
+      ).getAllByRole('listitem'),
     ).toHaveLength(5)
-    expect(screen.getByRole('listitem', { name: 'Dias 8–14: 372,8 kWh' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('listitem', { name: 'Dias 8–14: 372,8 kWh' }),
+    ).toBeInTheDocument()
   })
 
   it('lists the detected anomalies with the review action', async () => {
     mockOverviewApi()
     renderApp(<HomeRoute />)
 
-    const list = await screen.findByRole('list', { name: 'Anomalias detectadas' })
-    expect(within(list).getByText('Sessão atípica · unidade B · 23')).toBeInTheDocument()
-    expect(within(list).getByText(/^L1-02 · .* · score 0,91$/)).toBeInTheDocument()
+    const list = await screen.findByRole('list', {
+      name: 'Anomalias detectadas',
+    })
     expect(
-      within(list).getByRole('button', { name: 'Revisar a sessão de Verônica Alencar' }),
+      within(list).getByText('Sessão atípica · unidade B · 23'),
+    ).toBeInTheDocument()
+    expect(
+      within(list).getByText(/^L1-02 · .* · score 0,91$/),
+    ).toBeInTheDocument()
+    expect(
+      within(list).getByRole('button', {
+        name: 'Revisar a sessão de Verônica Alencar',
+      }),
     ).toBeInTheDocument()
     expect(
       screen.getByText(
@@ -200,7 +220,9 @@ describe('HomeRoute', () => {
     expect(
       within(drawer).getByText('Sessão atípica · unidade B · 23'),
     ).toBeInTheDocument()
-    await user.click(within(drawer).getByRole('button', { name: 'Confirmar anomalia' }))
+    await user.click(
+      within(drawer).getByRole('button', { name: 'Confirmar anomalia' }),
+    )
 
     expect(await screen.findByText('Anomalia confirmada.')).toBeInTheDocument()
     expect(reviewBody).toEqual({ status: 'CONFIRMED' })
@@ -226,7 +248,9 @@ describe('HomeRoute', () => {
     })
     renderApp(<HomeRoute />)
 
-    const list = await screen.findByRole('list', { name: 'Anomalias detectadas' })
+    const list = await screen.findByRole('list', {
+      name: 'Anomalias detectadas',
+    })
     expect(within(list).getByText(/score 0,91 \(regra\)$/)).toBeInTheDocument()
   })
 
@@ -246,7 +270,9 @@ describe('HomeRoute', () => {
     })
     renderApp(<HomeRoute />)
 
-    const capacity = await screen.findByRole('region', { name: 'Capacidade elétrica' })
+    const capacity = await screen.findByRole('region', {
+      name: 'Capacidade elétrica',
+    })
     expect(within(capacity).getByText('Perto do limite')).toBeInTheDocument()
     expect(capacity).toHaveTextContent('Avalie aumentar a demanda contratada.')
   })
@@ -287,8 +313,9 @@ describe('HomeRoute', () => {
     await screen.findByRole('heading', { name: '2 de 3 pontos em uso' })
     await user.click(screen.getByRole('button', { name: 'Mês anterior' }))
 
-    expect(await screen.findByText(formatMonthTitle(previousMonth))).toBeInTheDocument()
-    expect(overviewMonths).toContain(shiftMonth(previousMonth, -1))
+    expect(
+      await screen.findByText(formatMonthTitle(previousMonth)),
+    ).toBeInTheDocument()
     expect(overviewMonths).toContain(previousMonth)
   })
 
@@ -309,7 +336,9 @@ describe('HomeRoute', () => {
     const user = userEvent.setup()
     renderApp(<HomeRoute />)
 
-    await user.click(await screen.findByRole('button', { name: 'Tentar novamente' }))
+    await user.click(
+      await screen.findByRole('button', { name: 'Tentar novamente' }),
+    )
 
     expect(
       await screen.findByRole('region', { name: 'Capacidade elétrica' }),
