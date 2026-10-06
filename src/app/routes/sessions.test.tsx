@@ -284,6 +284,32 @@ describe('SessionsRoute', () => {
     )
   })
 
+  it('moves the open drawer between rows with the arrow keys', async () => {
+    mockSessions()
+    const user = userEvent.setup()
+    renderApp(<SessionsRoute />, { route: '/sessions' })
+
+    await user.click(
+      await screen.findByRole('button', {
+        name: /Ver detalhes da sessão de Marcelo Tavares/,
+      }),
+    )
+    expect(
+      screen.getByRole('dialog', { name: 'Detalhes da sessão' }),
+    ).toHaveTextContent('A · 12 · Marcelo Tavares')
+
+    await user.keyboard('{ArrowDown}')
+
+    expect(
+      screen.getByRole('button', {
+        name: /Ver detalhes da sessão de Verônica Alencar/,
+      }),
+    ).toHaveFocus()
+    expect(
+      screen.getByRole('dialog', { name: 'Detalhes da sessão' }),
+    ).toHaveTextContent('B · 23 · Verônica Alencar')
+  })
+
   it('loads the drawer from the organization session detail', async () => {
     mockSessions()
     const requested: string[] = []

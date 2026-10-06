@@ -287,7 +287,8 @@ export function SessionDrawer({
   const detail = useOrganizationSession(organizationId, summary.id)
   const reviewMutation = useReviewSessionAnomaly(organizationId)
   const { showToast } = useToast()
-  const [isReviewing, setIsReviewing] = useState(false)
+  const [reviewingId, setReviewingId] = useState<string | null>(null)
+  const isReviewing = reviewingId === summary.id
   const [note, setNote] = useState('')
   const session = detail.data
   const pendingStatus = reviewMutation.isPending
@@ -297,7 +298,7 @@ export function SessionDrawer({
   const startReview = () => {
     setNote(session?.anomalyReviewNote ?? '')
     reviewMutation.reset()
-    setIsReviewing(true)
+    setReviewingId(summary.id)
   }
 
   const submit = (status: AnomalyReviewDecision) =>
@@ -306,7 +307,7 @@ export function SessionDrawer({
       {
         onSuccess: () => {
           showToast({ tone: 'success', message: successMessages[status] })
-          setIsReviewing(false)
+          setReviewingId(null)
         },
       },
     )
