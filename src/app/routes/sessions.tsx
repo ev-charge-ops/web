@@ -228,7 +228,6 @@ function SessionsPage({ organizationId }: { organizationId: string }) {
       </section>
       {selected ? (
         <SessionDrawer
-          key={selected.id}
           organizationId={organizationId}
           session={selected}
           isOpen={isDrawerOpen}

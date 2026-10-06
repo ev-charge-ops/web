@@ -1,3 +1,4 @@
+import { AnimatedNumber } from '@/components/ui/animated-number'
 import { cn } from '@/utils/cn'
 import { formatTime } from '@/utils/format-date'
 import { formatClockDuration } from '@/utils/format-duration'
@@ -33,7 +34,6 @@ export function AnomalyScoreCard({ session }: AnomalyScoreCardProps) {
 
   const isFlagged =
     Boolean(session.isAnomaly) && session.anomalyReviewStatus !== 'DISMISSED'
-  const score = formatAnomalyScore(session.anomalyScore)
   const signals = [
     {
       label: 'Início',
@@ -64,7 +64,13 @@ export function AnomalyScoreCard({ session }: AnomalyScoreCardProps) {
               : 'Dentro do padrão do condomínio'}
           </span>
         </div>
-        <span className={styles.score}>{score}</span>
+        <AnimatedNumber
+          className={styles.score}
+          value={session.anomalyScore}
+          format={formatAnomalyScore}
+          durationMs={1600}
+          delayMs={600}
+        />
       </div>
       <div className={styles.meter} aria-hidden="true">
         <span

@@ -65,7 +65,7 @@
   border-radius: var(--radius-pill);
   background: var(--text-faint);
   transform-origin: left;
-  animation: grow 0.6s var(--ease-out) 0.4s both;
+  animation: grow 0.6s var(--ease-out) 0.2s both;
 }
 
 .flagged .fill {
@@ -73,6 +73,7 @@
 }
 
 .signals {
+  animation: signals-in 0.6s var(--ease-out) 0.2s both;
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 9px var(--space-4);
@@ -104,6 +105,17 @@
   color: var(--text-body);
 }
 
+@keyframes signals-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @keyframes grow {
   from {
     transform: scaleX(0);
@@ -114,7 +126,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fill {
+  .fill,
+  .signals {
     animation: none;
   }
 }

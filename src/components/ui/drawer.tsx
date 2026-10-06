@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { createPortal } from 'react-dom'
 
 import { useDismissOnEscape } from '@/hooks/use-dismiss-on-escape'
 import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
@@ -58,7 +59,7 @@ export function Drawer({ isOpen, onClose, ...content }: DrawerProps) {
     ? content
     : lastContent.current
 
-  return (
+  return createPortal(
     <div
       className={styles.drawer}
       data-state={isOpen ? 'open' : 'closing'}
@@ -103,6 +104,7 @@ export function Drawer({ isOpen, onClose, ...content }: DrawerProps) {
         <div className={styles.body}>{children}</div>
         {footer ? <div className={styles.footer}>{footer}</div> : null}
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

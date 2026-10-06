@@ -1,4 +1,3 @@
-import { Download } from 'lucide-react'
 import { useSearchParams } from 'react-router'
 
 import { Alert } from '@/components/ui/alert'
@@ -6,12 +5,14 @@ import { Button } from '@/components/ui/button'
 import { MonthPicker } from '@/components/ui/month-picker'
 import { PageTitle } from '@/components/ui/page-title'
 import { Spinner } from '@/components/ui/spinner'
-import { useToast } from '@/components/ui/use-toast'
 import { paths } from '@/config/paths'
-import { useExportStatementCsv } from '@/features/cost-sharing/api/export-statement-csv'
 import { useStatement } from '@/features/cost-sharing/api/get-statement'
+import { ExportCsvButton } from '@/features/cost-sharing/components/export-csv-button'
 import { ManagedOrganization } from '@/features/organizations/components/managed-organization'
-import { overviewLiveRefreshMs, useOverview } from '@/features/overview/api/get-overview'
+import {
+  overviewLiveRefreshMs,
+  useOverview,
+} from '@/features/overview/api/get-overview'
 import { ElectricalCapacityCard } from '@/features/overview/components/electrical-capacity-card'
 import { LiveNowCard } from '@/features/overview/components/live-now-card'
 import { OverviewKpis } from '@/features/overview/components/overview-kpis'
@@ -19,7 +20,6 @@ import { WeeklyEnergyChart } from '@/features/overview/components/weekly-energy-
 import { RecentAnomalies } from '@/features/sessions/components/recent-anomalies'
 import { useTariff } from '@/features/tariff/api/get-tariff'
 import {
-  formatMonth,
   formatMonthName,
   formatMonthTitle,
   getCurrentMonth,
@@ -43,7 +43,6 @@ function Overview({
   const overview = useOverview(organizationId, month, {
     refetchInterval: isCurrentMonth ? overviewLiveRefreshMs : false,
   })
-  const previousOverview = useOverview(organizationId, previousMonth)
   const statement = useStatement(organizationId, month)
   const previousStatement = useStatement(organizationId, previousMonth)
   const tariff = useTariff(organizationId)
@@ -60,7 +59,11 @@ function Overview({
     return (
       <Alert
         action={
-          <Button variant="secondary" size="sm" onClick={() => overview.refetch()}>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => overview.refetch()}
+          >
             Tentar novamente
           </Button>
         }
@@ -87,7 +90,6 @@ function Overview({
         visitorSessionsCount={overview.data.visitorSessionsCount}
         utilityRateCents={tariff.data?.utilityRateCents}
         anomaliesCount={overview.data.anomaliesCount}
-        previousAnomaliesCount={previousOverview.data?.anomaliesCount}
         pendingReviewCount={overview.data.anomaliesPendingReviewCount}
       />
       <div className={styles.pair}>
@@ -105,29 +107,16 @@ function Overview({
 
 function OverviewPage({ organizationId }: { organizationId: string }) {
   const [searchParams, setSearchParams] = useSearchParams()
-  const { showToast } = useToast()
   const currentMonth = getCurrentMonth()
   const monthParam = searchParams.get('month')
-  const month = isMonth(monthParam) && monthParam <= currentMonth ? monthParam : currentMonth
-  const exportCsv = useExportStatementCsv(organizationId)
+  const month =
+    isMonth(monthParam) && monthParam <= currentMonth
+      ? monthParam
+      : currentMonth
 
   const changeMonth = (next: string) =>
     setSearchParams(next === currentMonth ? {} : { month: next }, {
       replace: true,
-    })
-
-  const download = () =>
-    exportCsv.mutate(month, {
-      onSuccess: (exported) =>
-        showToast({
-          tone: 'success',
-          message: `CSV do rateio de ${formatMonth(exported)} baixado.`,
-        }),
-      onError: () =>
-        showToast({
-          tone: 'error',
-          message: 'Não foi possível exportar o CSV. Tente novamente.',
-        }),
     })
 
   return (
@@ -145,13 +134,7 @@ function OverviewPage({ organizationId }: { organizationId: string }) {
               isCompact
               onChange={changeMonth}
             />
-            <Button
-              icon={<Download size={18} strokeWidth={2} aria-hidden />}
-              isLoading={exportCsv.isPending}
-              onClick={download}
-            >
-              Exportar CSV
-            </Button>
+            <ExportCsvButton organizationId={organizationId} month={month} />
           </>
         }
       />
