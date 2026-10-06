@@ -16,31 +16,34 @@ export function UserMenu({ user }: UserMenuProps) {
 
   return (
     <div className={styles.menu}>
-      <span className={styles.avatar} aria-hidden="true">
-        {getInitials(user.name)}
-      </span>
-      <span className={styles.text}>
-        <span className={styles.name} title={user.name}>
-          {user.name}
+      <div className={styles.profile}>
+        <span className={styles.avatar} aria-hidden="true">
+          {getInitials(user.name)}
         </span>
-        <span className={styles.email} title={user.email}>
-          {user.email}
+        <span className={styles.text}>
+          <span className={styles.name} title={user.name}>
+            {user.name}
+          </span>
+          <span className={styles.email} title={user.email}>
+            {user.email}
+          </span>
         </span>
-      </span>
+      </div>
       <button
         type="button"
         className={styles.logout}
-        aria-label="Sair"
-        title="Sair"
         disabled={logout.isPending}
         aria-busy={logout.isPending || undefined}
         onClick={() => logout.mutate()}
       >
-        {logout.isPending ? (
-          <Spinner size="sm" />
-        ) : (
-          <LogOut size={18} strokeWidth={2} aria-hidden />
-        )}
+        <span className={styles.icon}>
+          {logout.isPending ? (
+            <Spinner size="sm" label="Saindo" />
+          ) : (
+            <LogOut size={20} strokeWidth={2} aria-hidden />
+          )}
+        </span>
+        Sair
       </button>
     </div>
   )
