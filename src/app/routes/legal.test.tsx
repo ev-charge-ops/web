@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { renderApp } from '@/testing/test-utils'
 
 import { PrivacyRoute } from './privacy'
+import { SupportRoute } from './support'
 import { TermsRoute } from './terms'
 
 describe('legal routes', () => {
@@ -46,5 +47,50 @@ describe('legal routes', () => {
     expect(
       within(documents).getByRole('link', { name: 'Política de privacidade' }),
     ).toHaveAttribute('href', '/privacidade')
+    expect(
+      within(documents).getByRole('link', { name: 'Suporte' }),
+    ).toHaveAttribute('href', '/suporte')
+  })
+
+  it('covers payments, location, account deletion and data sources in the privacy policy', () => {
+    renderApp(<PrivacyRoute />, { route: '/privacidade' })
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Exclusão da conta' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Notificações' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText(/Localização precisa:/)).toBeInTheDocument()
+    expect(screen.getAllByText(/Stripe/).length).toBeGreaterThan(0)
+    expect(
+      screen.getByRole('link', { name: 'Open Charge Map' }),
+    ).toHaveAttribute('href', 'https://openchargemap.org')
+  })
+
+  it('renders the support page with the contact email and the FAQ', () => {
+    renderApp(<SupportRoute />, { route: '/suporte' })
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Suporte' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getAllByRole('link', { name: 'suporte@evchargeops.com.br' })[0],
+    ).toHaveAttribute('href', 'mailto:suporte@evchargeops.com.br')
+    for (const question of [
+      'Como inicio uma recarga?',
+      'Como funcionam os pagamentos e reembolsos?',
+      'Como excluo minha conta?',
+      'Como meus dados são tratados?',
+      'Os carregadores são reais?',
+    ]) {
+      expect(
+        screen.getByRole('heading', { level: 2, name: question }),
+      ).toBeInTheDocument()
+    }
+    expect(
+      screen.getByText(/Conta → Privacidade e dados → Excluir conta/),
+    ).toBeInTheDocument()
+    expect(screen.queryByText(/Versão de/)).not.toBeInTheDocument()
   })
 })
