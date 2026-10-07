@@ -1,4 +1,9 @@
-import { queryOptions, useQuery } from '@tanstack/react-query'
+import {
+  queryOptions,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
+import { useCallback } from 'react'
 
 import { ApiError, apiClient } from '@/lib/api-client'
 import type { AuthUser } from '@/lib/use-auth'
@@ -17,4 +22,12 @@ export const getMeQueryOptions = () =>
 
 export function useMe() {
   return useQuery(getMeQueryOptions())
+}
+
+export function useRefreshMe() {
+  const queryClient = useQueryClient()
+  return useCallback(
+    () => queryClient.fetchQuery({ ...getMeQueryOptions(), staleTime: 0 }),
+    [queryClient],
+  )
 }
