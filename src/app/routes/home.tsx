@@ -1,11 +1,63 @@
-import { MetricTile } from '@/components/ui/metric-tile'
+import { Alert } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 import { PageTitle } from '@/components/ui/page-title'
+import { Spinner } from '@/components/ui/spinner'
 import { StatusPill } from '@/components/ui/status-pill'
+import { paths } from '@/config/paths'
 import { useMe } from '@/features/auth/api/get-me'
 import { roleLabels } from '@/features/auth/utils/role-labels'
+import { DynamicPriceCard } from '@/features/charge-points/components/dynamic-price-card'
+import { ManagedOrganization } from '@/features/organizations/components/managed-organization'
+import { useOverview } from '@/features/overview/api/get-overview'
+import { CapacityCard } from '@/features/overview/components/capacity-card'
+import { OverviewMetrics } from '@/features/overview/components/overview-metrics'
+import { WeeklyEnergyChart } from '@/features/overview/components/weekly-energy-chart'
+import { RecentAnomalies } from '@/features/sessions/components/recent-anomalies'
 import { useAuth } from '@/lib/use-auth'
+import { formatMonth, getCurrentMonth } from '@/utils/month'
 
 import styles from './home.module.css'
+
+function Overview({ organizationId }: { organizationId: string }) {
+  const month = getCurrentMonth()
+  const overview = useOverview(organizationId, month)
+
+  return (
+    <>
+      {overview.isPending ? (
+        <div className={styles.state}>
+          <Spinner label="Carregando indicadores" />
+        </div>
+      ) : overview.error ? (
+        <Alert
+          action={
+            <Button variant="outline" size="sm" onClick={() => overview.refetch()}>
+              Tentar novamente
+            </Button>
+          }
+        >
+          Não foi possível carregar os indicadores do condomínio.
+        </Alert>
+      ) : (
+        <>
+          <OverviewMetrics overview={overview.data} />
+          <div className={styles.split}>
+            <WeeklyEnergyChart overview={overview.data} />
+            <CapacityCard capacity={overview.data.capacity} />
+          </div>
+        </>
+      )}
+      <div className={styles.halves}>
+        <DynamicPriceCard organizationId={organizationId} />
+        <RecentAnomalies
+          organizationId={organizationId}
+          month={month}
+          sessionsHref={paths.sessions.getHref()}
+        />
+      </div>
+    </>
+  )
+}
 
 export function HomeRoute() {
   const { user: sessionUser } = useAuth()
@@ -16,19 +68,18 @@ export function HomeRoute() {
     <>
       <PageTitle
         title={user ? `Olá, ${user.name}` : 'Visão geral'}
-        description="Os indicadores do condomínio aparecem aqui assim que a medição estiver conectada."
+        description={`Resumo de ${formatMonth(getCurrentMonth())}: energia medida, valor a ratear, capacidade elétrica e o que o modelo de IA está vendo agora.`}
         tag={
           user ? (
             <StatusPill tone="info">{roleLabels[user.role]}</StatusPill>
           ) : null
         }
       />
-      <div className={styles.metrics}>
-        <MetricTile eyebrow="Energia no mês" value="—" unit="kWh" hint="Sem medições ainda" />
-        <MetricTile eyebrow="Valor a ratear" value="—" hint="Aguardando fechamento" />
-        <MetricTile eyebrow="Pontos ativos" value="—" hint="Nenhum ponto cadastrado" />
-        <MetricTile eyebrow="Moradores" value="—" hint="Nenhum convite enviado" />
-      </div>
+      <ManagedOrganization>
+        {(organization) => (
+          <Overview key={organization.id} organizationId={organization.id} />
+        )}
+      </ManagedOrganization>
     </>
   )
 }
