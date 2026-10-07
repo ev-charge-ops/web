@@ -3,7 +3,11 @@ import { Suspense, useState, type ReactNode } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { MainError } from '@/components/errors/main-error'
+import { Spinner } from '@/components/ui/spinner'
+import { ToastProvider } from '@/components/ui/toast'
 import { createQueryClient } from '@/lib/react-query'
+
+import styles from './provider.module.css'
 
 type AppProviderProps = {
   children: ReactNode
@@ -13,9 +17,17 @@ export function AppProvider({ children }: AppProviderProps) {
   const [queryClient] = useState(createQueryClient)
 
   return (
-    <Suspense fallback={null}>
+    <Suspense
+      fallback={
+        <div className={styles.fallback}>
+          <Spinner size="lg" />
+        </div>
+      }
+    >
       <ErrorBoundary FallbackComponent={MainError}>
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        <QueryClientProvider client={queryClient}>
+          <ToastProvider>{children}</ToastProvider>
+        </QueryClientProvider>
       </ErrorBoundary>
     </Suspense>
   )
