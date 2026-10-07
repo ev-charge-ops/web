@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.softmoon.evchargeops",
+      "sha256_cert_fingerprints": [
+        "EA:D8:6E:16:FE:69:B0:73:2E:52:63:46:59:36:D7:32:90:82:05:D9:C7:AD:BB:E3:C3:35:24:04:74:80:49:07"
+      ]
+    }
+  }
+]
