@@ -1,10 +1,10 @@
-import { useId, type InputHTMLAttributes } from 'react'
+import { useId, type ComponentProps } from 'react'
 
 import { cn } from '@/utils/cn'
 
 import styles from './text-field.module.css'
 
-type TextFieldProps = InputHTMLAttributes<HTMLInputElement> & {
+type TextFieldProps = ComponentProps<'input'> & {
   label: string
   hint?: string
   error?: string

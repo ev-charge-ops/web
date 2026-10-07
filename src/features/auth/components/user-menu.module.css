@@ -1,0 +1,22 @@
+.menu {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.name {
+  overflow: hidden;
+  max-width: 220px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-title);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .name {
+    display: none;
+  }
+}
