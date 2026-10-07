@@ -121,6 +121,7 @@ export function createSessionDetail(
     anomalyScore: session.anomalyScore,
     isAnomaly: session.isAnomaly,
     simulationSpeed: 1,
+    payment: null,
     readings: [],
     ...overrides,
   }

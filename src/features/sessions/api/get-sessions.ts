@@ -11,6 +11,8 @@ export type SessionStatus = components['schemas']['ChargingSessionStatus']
 export type SessionFilters = {
   month?: string
   status?: SessionStatus
+  chargePointId?: string
+  anomaly?: boolean
   page?: number
   pageSize?: number
 }

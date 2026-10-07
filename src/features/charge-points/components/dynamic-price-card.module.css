@@ -112,13 +112,6 @@
   color: var(--text-subtle);
 }
 
-.state {
-  display: flex;
-  justify-content: center;
-  padding: var(--space-7) var(--gutter-card);
-  border-top: 1px solid var(--hairline);
-}
-
 .empty {
   margin: 0;
   padding: var(--space-7) var(--gutter-card);
