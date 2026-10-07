@@ -1,7 +1,6 @@
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
-import type { ReactNode } from 'react'
 import { Route, Routes } from 'react-router'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
@@ -15,21 +14,7 @@ import { renderApp } from '@/testing/test-utils'
 
 import { InviteRoute } from './invite'
 
-vi.mock('@react-oauth/google', () => ({
-  GoogleOAuthProvider: ({ children }: { children: ReactNode }) => children,
-  GoogleLogin: ({
-    onSuccess,
-  }: {
-    onSuccess: (response: { credential?: string }) => void
-  }) => (
-    <button
-      type="button"
-      onClick={() => onSuccess({ credential: 'google-id-token' })}
-    >
-      Continuar com o Google
-    </button>
-  ),
-}))
+vi.mock('@react-oauth/google', () => import('@/testing/mocks/google-oauth'))
 
 const inviteUrl = `${env.apiUrl}/invites/${inviteToken}`
 
@@ -85,7 +70,7 @@ describe('InviteRoute', () => {
     mockPreview()
     let accepted = false
     server.use(
-      http.post(`${env.apiUrl}/auth/oauth/google`, () =>
+      http.post(`${env.apiUrl}/auth/oauth/google/code`, () =>
         HttpResponse.json(createSession(invitedUser)),
       ),
       http.post(`${inviteUrl}/accept-authenticated`, () => {
