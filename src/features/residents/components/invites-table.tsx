@@ -15,7 +15,7 @@ import { useResendInvite } from '../api/resend-invite'
 import { useRevokeInvite } from '../api/revoke-invite'
 import { getInviteActionErrorMessage } from '../utils/error-messages'
 import { inviteStatusLabels, inviteStatusTones } from '../utils/labels'
-import styles from './table.module.css'
+import styles from '@/components/ui/table.module.css'
 
 type PendingAction = { type: 'resend' | 'revoke'; invite: Invite }
 
