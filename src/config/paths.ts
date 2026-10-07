@@ -7,6 +7,10 @@ export const paths = {
     path: '/residents',
     getHref: () => '/residents',
   },
+  sessions: {
+    path: '/sessions',
+    getHref: () => '/sessions',
+  },
   invite: {
     path: '/invite',
     getHref: (token: string) => `/invite?token=${encodeURIComponent(token)}`,

@@ -6,7 +6,7 @@ import { formatDate } from '@/utils/format-date'
 
 import { useMembers } from '../api/get-members'
 import { membershipRoleLabels } from '../utils/labels'
-import styles from './table.module.css'
+import styles from '@/components/ui/table.module.css'
 
 type MembersTableProps = {
   organizationId: string
