@@ -1,5 +1,5 @@
 import { Mail } from 'lucide-react'
-import { Link, Navigate, useSearchParams } from 'react-router'
+import { Navigate, useSearchParams } from 'react-router'
 
 import { AuthLayout } from '@/components/layouts/auth-layout'
 import { FullPageSpinner } from '@/components/layouts/full-page-spinner'
@@ -27,18 +27,7 @@ export function LoginRoute() {
   }
 
   return (
-    <AuthLayout
-      title="Entrar"
-      description="Portal do gestor e do síndico"
-      footer={
-        <>
-          <Link to={paths.legal.privacy.getHref()}>
-            Política de Privacidade
-          </Link>
-          <Link to={paths.legal.terms.getHref()}>Termos de Uso</Link>
-        </>
-      }
-    >
+    <AuthLayout title="Entrar" description="Portal do gestor e do síndico">
       <LoginForm />
       <Divider>ou</Divider>
       <OAuthButtons />
