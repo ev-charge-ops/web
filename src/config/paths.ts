@@ -31,4 +31,14 @@ export const paths = {
         `/verify-email?token=${encodeURIComponent(token)}`,
     },
   },
+  legal: {
+    privacy: {
+      path: '/privacidade',
+      getHref: () => '/privacidade',
+    },
+    terms: {
+      path: '/termos',
+      getHref: () => '/termos',
+    },
+  },
 } as const
