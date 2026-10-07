@@ -1,0 +1,25 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--gap-card);
+}
+
+.state {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-9) 0;
+}
+
+.empty {
+  margin: 0;
+  padding: var(--space-5) 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-subtle);
+}
+
+@media (max-width: 380px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
