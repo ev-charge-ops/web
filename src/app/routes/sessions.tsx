@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router'
 import { Alert } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { CheckboxField } from '@/components/ui/checkbox-field'
 import { MonthPicker } from '@/components/ui/month-picker'
 import { PageTitle } from '@/components/ui/page-title'
 import { Pagination } from '@/components/ui/pagination'
@@ -44,6 +45,7 @@ type Filters = {
   month: string
   status: string
   point: string
+  anomaly: boolean
   page: number
 }
 
@@ -58,12 +60,15 @@ function SessionsPage({ organizationId }: { organizationId: string }) {
     month: isMonth(monthParam) ? monthParam : currentMonth,
     status: isSessionStatus(statusParam) ? statusParam : '',
     point: searchParams.get('point') ?? '',
+    anomaly: searchParams.get('anomaly') === 'true',
     page: Math.max(1, Number(searchParams.get('page')) || 1),
   }
 
   const sessions = useSessions(organizationId, {
     month: filters.month,
     status: isSessionStatus(filters.status) ? filters.status : undefined,
+    chargePointId: filters.point || undefined,
+    anomaly: filters.anomaly || undefined,
     page: filters.page,
     pageSize,
   })
@@ -75,6 +80,7 @@ function SessionsPage({ organizationId }: { organizationId: string }) {
     if (merged.month !== currentMonth) params.set('month', merged.month)
     if (merged.status) params.set('status', merged.status)
     if (merged.point) params.set('point', merged.point)
+    if (merged.anomaly) params.set('anomaly', 'true')
     if (merged.page > 1) params.set('page', String(merged.page))
     setSearchParams(params, { replace: true })
   }
@@ -87,11 +93,9 @@ function SessionsPage({ organizationId }: { organizationId: string }) {
     })),
   ]
 
-  const items = (sessions.data?.items ?? []).filter(
-    (session) => !filters.point || session.chargePoint.id === filters.point,
-  )
+  const items = sessions.data?.items ?? []
   const flaggedCount = items.filter((session) => session.isAnomaly).length
-  const hasFilters = Boolean(filters.status || filters.point)
+  const hasFilters = Boolean(filters.status || filters.point || filters.anomaly)
 
   return (
     <>
@@ -132,12 +136,12 @@ function SessionsPage({ organizationId }: { organizationId: string }) {
             value={filters.status}
             onChange={(event) => updateFilters({ status: event.target.value })}
           />
+          <CheckboxField
+            label="Somente anomalias"
+            checked={filters.anomaly}
+            onChange={(event) => updateFilters({ anomaly: event.target.checked })}
+          />
         </div>
-        {filters.point && sessions.data && sessions.data.total > pageSize ? (
-          <p className={styles.hint}>
-            O filtro por ponto considera as sessões desta página.
-          </p>
-        ) : null}
         {sessions.isPending ? (
           <div className={styles.state}>
             <Spinner label="Carregando sessões" />
