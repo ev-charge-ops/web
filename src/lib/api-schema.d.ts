@@ -195,6 +195,80 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/oauth/google": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Log in or sign up with a Google ID token
+         * @description Links the Google account to an existing user with the same email or creates a driver account.
+         */
+        post: operations["loginWithGoogle"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/oauth/apple": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Log in or sign up with a Sign in with Apple identity token
+         * @description Links the Apple ID to an existing user with the same email or creates a driver account. Private relay emails are accepted.
+         */
+        post: operations["loginWithApple"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/organizations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List the organizations of the authenticated user */
+        get: operations["listMyOrganizations"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organizations/{organizationId}/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List the members of an organization (managers only) */
+        get: operations["listOrganizationMembers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -284,6 +358,56 @@ export interface components {
             code?: string;
             /** @description Token from the magic link; must be sent alone, without email and code */
             token?: string;
+        };
+        GoogleLoginDto: {
+            /** @description ID token returned by Google Sign-In */
+            idToken: string;
+        };
+        AppleFullNameDto: {
+            /** @example Ana */
+            givenName?: string;
+            /** @example Souza */
+            familyName?: string;
+        };
+        AppleLoginDto: {
+            /** @description Identity token returned by Sign in with Apple */
+            identityToken: string;
+            /** @description Name shared by Apple on the first authorization only */
+            fullName?: components["schemas"]["AppleFullNameDto"];
+        };
+        /** @enum {string} */
+        OrganizationType: "PRIVATE" | "COMMERCIAL";
+        /**
+         * @description Role of the authenticated user in the organization
+         * @enum {string}
+         */
+        MembershipRole: "MANAGER" | "DRIVER";
+        MyOrganizationDto: {
+            /** Format: uuid */
+            id: string;
+            /** @example Residencial Aclimação */
+            name: string;
+            type: components["schemas"]["OrganizationType"];
+            /** @description Role of the authenticated user in the organization */
+            role: components["schemas"]["MembershipRole"];
+            /** @example B · 42 */
+            unitLabel: string | null;
+        };
+        OrganizationMemberDto: {
+            /** Format: uuid */
+            userId: string;
+            /** @example Ana Souza */
+            name: string;
+            /**
+             * Format: email
+             * @example ana@example.com
+             */
+            email: string;
+            role: components["schemas"]["MembershipRole"];
+            /** @example B · 42 */
+            unitLabel: string | null;
+            /** Format: date-time */
+            joinedAt: string;
         };
     };
     responses: never;
@@ -687,6 +811,162 @@ export interface operations {
             };
             /** @description Too many requests */
             429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    loginWithGoogle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GoogleLoginDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthResponseDto"];
+                };
+            };
+            /** @description Invalid payload */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid token or email not verified by Google */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    loginWithApple: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AppleLoginDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthResponseDto"];
+                };
+            };
+            /** @description Invalid payload */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid token or email not verified by Apple */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    listMyOrganizations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyOrganizationDto"][];
+                };
+            };
+            /** @description Missing or invalid access token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    listOrganizationMembers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationMemberDto"][];
+                };
+            };
+            /** @description Missing or invalid access token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Member without the required organization role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Organization not found or user is not a member */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

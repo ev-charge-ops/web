@@ -32,6 +32,13 @@ const router = createBrowserRouter([
     },
   },
   {
+    path: paths.auth.appleCallback.path,
+    lazy: async () => {
+      const { AppleCallbackRoute } = await import('./routes/apple-callback')
+      return { Component: AppleCallbackRoute }
+    },
+  },
+  {
     path: paths.auth.verifyEmail.path,
     lazy: async () => {
       const { VerifyEmailRoute } = await import('./routes/verify-email')
