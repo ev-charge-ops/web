@@ -4,7 +4,6 @@ import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 
 import { env } from '@/config/env'
-import { chargePoints } from '@/testing/mocks/charge-points'
 import { managedOrganization } from '@/testing/mocks/organizations'
 import { server } from '@/testing/mocks/server'
 import {
@@ -23,7 +22,6 @@ const sessionsUrl = `${env.apiUrl}/organizations/${managedOrganization.id}/sessi
 function mockSessions(items = organizationSessions) {
   const requests: URLSearchParams[] = []
   server.use(
-    http.get(`${env.apiUrl}/charge-points`, () => HttpResponse.json(chargePoints)),
     http.get(sessionsUrl, ({ request }) => {
       const params = new URL(request.url).searchParams
       requests.push(params)
@@ -125,8 +123,7 @@ describe('SessionsRoute', () => {
   it('lets the manager retry when the sessions fail to load', async () => {
     let attempts = 0
     server.use(
-      http.get(`${env.apiUrl}/charge-points`, () => HttpResponse.json(chargePoints)),
-      http.get(sessionsUrl, () => {
+        http.get(sessionsUrl, () => {
         attempts += 1
         return attempts === 1
           ? new HttpResponse(null, { status: 500 })
