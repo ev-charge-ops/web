@@ -25,6 +25,10 @@ export const paths = {
       getHref: (token: string) =>
         `/reset-password?token=${encodeURIComponent(token)}`,
     },
+    appleCallback: {
+      path: '/auth/apple/callback',
+      getHref: () => '/auth/apple/callback',
+    },
     verifyEmail: {
       path: '/verify-email',
       getHref: (token: string) =>
