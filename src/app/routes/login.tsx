@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { paths } from '@/config/paths'
 import { EmailLoginForm } from '@/features/auth/components/email-login-form'
 import { LoginForm } from '@/features/auth/components/login-form'
+import { OAuthButtons } from '@/features/auth/components/oauth-buttons'
 import { useAuth } from '@/lib/use-auth'
 
 import styles from './login.module.css'
@@ -50,6 +51,7 @@ export function LoginRoute() {
     >
       {isPassword ? <LoginForm /> : <EmailLoginForm />}
       <div className={styles.divider}>ou</div>
+      <OAuthButtons />
       <Button
         variant="outline"
         icon={
