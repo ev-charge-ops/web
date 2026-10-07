@@ -11,6 +11,27 @@ const router = createBrowserRouter([
     },
   },
   {
+    path: paths.auth.forgotPassword.path,
+    lazy: async () => {
+      const { ForgotPasswordRoute } = await import('./routes/forgot-password')
+      return { Component: ForgotPasswordRoute }
+    },
+  },
+  {
+    path: paths.auth.resetPassword.path,
+    lazy: async () => {
+      const { ResetPasswordRoute } = await import('./routes/reset-password')
+      return { Component: ResetPasswordRoute }
+    },
+  },
+  {
+    path: paths.auth.verifyEmail.path,
+    lazy: async () => {
+      const { VerifyEmailRoute } = await import('./routes/verify-email')
+      return { Component: VerifyEmailRoute }
+    },
+  },
+  {
     lazy: async () => {
       const { ProtectedRoot } = await import('./routes/protected-root')
       return { Component: ProtectedRoot }
