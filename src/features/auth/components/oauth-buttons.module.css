@@ -1,0 +1,16 @@
+.buttons,
+.provider {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.google {
+  display: flex;
+  justify-content: center;
+  min-height: 44px;
+}
+
+.apple {
+  width: 100%;
+}
