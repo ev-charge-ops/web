@@ -1,6 +1,6 @@
 import { KeyRound, Mail } from 'lucide-react'
 import { useState } from 'react'
-import { Navigate, useSearchParams } from 'react-router'
+import { Link, Navigate, useSearchParams } from 'react-router'
 
 import { AuthLayout } from '@/components/layouts/auth-layout'
 import { FullPageSpinner } from '@/components/layouts/full-page-spinner'
@@ -41,6 +41,12 @@ export function LoginRoute() {
     <AuthLayout
       title="Entrar no portal"
       description="Acesso exclusivo para gestores do condomínio."
+      footer={
+        <>
+          <Link to={paths.legal.privacy.getHref()}>Política de Privacidade</Link>
+          <Link to={paths.legal.terms.getHref()}>Termos de Uso</Link>
+        </>
+      }
     >
       {isPassword ? <LoginForm /> : <EmailLoginForm />}
       <div className={styles.divider}>ou</div>
