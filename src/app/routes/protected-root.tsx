@@ -6,6 +6,7 @@ import { paths } from '@/config/paths'
 import { DriverAccessNotice } from '@/features/auth/components/driver-access-notice'
 import { EmailVerificationBanner } from '@/features/auth/components/email-verification-banner'
 import { UserMenu } from '@/features/auth/components/user-menu'
+import { OrganizationSwitcher } from '@/features/organizations/components/organization-switcher'
 import { useAuth } from '@/lib/use-auth'
 
 export function ProtectedRoot() {
@@ -30,7 +31,10 @@ export function ProtectedRoot() {
   }
 
   return (
-    <DashboardLayout user={<UserMenu user={user} />}>
+    <DashboardLayout
+      user={<UserMenu user={user} />}
+      organization={<OrganizationSwitcher />}
+    >
       <EmailVerificationBanner user={user} />
       <Outlet />
     </DashboardLayout>

@@ -131,6 +131,12 @@
   text-overflow: ellipsis;
 }
 
+.organization {
+  display: flex;
+  flex: none;
+  min-width: 0;
+}
+
 .user {
   display: flex;
   align-items: center;

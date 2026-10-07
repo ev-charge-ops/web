@@ -1,4 +1,4 @@
-import { LayoutDashboard, Menu, X, type LucideIcon } from 'lucide-react'
+import { LayoutDashboard, Menu, Users, X, type LucideIcon } from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
 import { NavLink, useLocation } from 'react-router'
 
@@ -23,6 +23,12 @@ const navItems: NavItem[] = [
     icon: LayoutDashboard,
     end: true,
   },
+  {
+    to: paths.residents.getHref(),
+    label: 'Moradores',
+    description: 'Moradores e convites do condomínio',
+    icon: Users,
+  },
 ]
 
 function isActive(item: NavItem, pathname: string) {
@@ -32,9 +38,14 @@ function isActive(item: NavItem, pathname: string) {
 type DashboardLayoutProps = {
   children: ReactNode
   user?: ReactNode
+  organization?: ReactNode
 }
 
-export function DashboardLayout({ children, user }: DashboardLayoutProps) {
+export function DashboardLayout({
+  children,
+  user,
+  organization,
+}: DashboardLayoutProps) {
   const { pathname } = useLocation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const current = navItems.find((item) => isActive(item, pathname)) ?? navItems[0]
@@ -120,6 +131,9 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
             <span className={styles.description}>{current.description}</span>
           </div>
 
+          {organization ? (
+            <div className={styles.organization}>{organization}</div>
+          ) : null}
           {user ? <div className={styles.user}>{user}</div> : null}
         </header>
 
