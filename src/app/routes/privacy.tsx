@@ -162,6 +162,11 @@ const sections: LegalSection[] = [
             <strong>Google e Apple:</strong> login com contas desses provedores.
           </li>
           <li>
+            <strong>Google Maps:</strong> exibição do mapa dos pontos no app. O
+            SDK do mapa recebe dados técnicos do aparelho, como identificadores
+            e dados de falhas e desempenho.
+          </li>
+          <li>
             <strong>Expo:</strong> distribuição do aplicativo e envio de
             notificações.
           </li>
