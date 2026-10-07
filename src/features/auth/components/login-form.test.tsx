@@ -63,6 +63,31 @@ describe('LoginForm', () => {
     expect(onSuccess).not.toHaveBeenCalled()
   })
 
+  it('asks the visitor to wait when rate limited', async () => {
+    server.use(
+      http.post(
+        `${env.apiUrl}/auth/login`,
+        () => new HttpResponse(null, { status: 429 }),
+      ),
+    )
+    renderApp(<LoginForm />)
+
+    await fillAndSubmit('marina@example.com', 's3cure-passw0rd')
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Muitas tentativas, tente novamente em instantes.',
+    )
+  })
+
+  it('links to the password recovery page', () => {
+    renderApp(<LoginForm />)
+
+    expect(screen.getByRole('link', { name: 'Esqueci minha senha' })).toHaveAttribute(
+      'href',
+      '/forgot-password',
+    )
+  })
+
   it('validates the fields before calling the api', async () => {
     const login = vi.fn()
     server.use(

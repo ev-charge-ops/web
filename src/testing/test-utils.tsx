@@ -3,6 +3,7 @@ import { render, type RenderOptions } from '@testing-library/react'
 import type { ReactElement, ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
 
+import { ToastProvider } from '@/components/ui/toast'
 import { AuthProvider } from '@/lib/auth'
 import { createQueryClient } from '@/lib/react-query'
 
@@ -18,7 +19,9 @@ export function renderApp(
   const Wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
+        <ToastProvider>
+          <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
+        </ToastProvider>
       </AuthProvider>
     </QueryClientProvider>
   )

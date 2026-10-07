@@ -54,12 +54,56 @@ describe('ProtectedRoot', () => {
     mockSession(managerUser)
     renderRoutes()
 
-    expect(screen.getByRole('status')).toHaveTextContent('Restaurando sessão')
+    expect(screen.getByText('Restaurando sessão')).toBeInTheDocument()
     expect(
       await screen.findByRole('heading', { name: `Olá, ${managerUser.name}` }),
     ).toBeInTheDocument()
     expect(screen.getByText('Gestor do condomínio')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Sair' })).toBeInTheDocument()
+    expect(
+      screen.queryByRole('region', { name: 'Verificação de e-mail' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('lets an unverified manager resend the verification email', async () => {
+    const unverified = { ...managerUser, emailVerified: false }
+    let resendCount = 0
+    mockSession(unverified)
+    server.use(
+      http.post(`${env.apiUrl}/auth/email-verification/resend`, ({ request }) => {
+        resendCount += 1
+        if (request.headers.get('Authorization') !== 'Bearer access-2') {
+          return new HttpResponse(null, { status: 401 })
+        }
+        return resendCount === 1
+          ? new HttpResponse(null, { status: 202 })
+          : new HttpResponse(null, { status: 429 })
+      }),
+    )
+    renderRoutes()
+
+    const banner = await screen.findByRole('region', {
+      name: 'Verificação de e-mail',
+    })
+    expect(banner).toHaveTextContent(unverified.email)
+
+    const resend = screen.getByRole('button', {
+      name: 'Reenviar e-mail de verificação',
+    })
+    await userEvent.click(resend)
+
+    expect(
+      await screen.findByText(
+        `Enviamos um novo e-mail de verificação para ${unverified.email}.`,
+      ),
+    ).toBeInTheDocument()
+
+    await userEvent.click(resend)
+
+    expect(
+      await screen.findByText('Muitas tentativas, tente novamente em instantes.'),
+    ).toBeInTheDocument()
+    expect(resendCount).toBe(2)
   })
 
   it('blocks drivers and lets them sign out', async () => {

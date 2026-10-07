@@ -1,0 +1,50 @@
+.banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-7);
+  padding: var(--space-4) var(--gutter-card);
+  border: 1px solid rgba(245, 166, 35, 0.32);
+  border-radius: var(--radius-card);
+  background: var(--status-idle-bg);
+}
+
+.icon {
+  flex: none;
+  color: var(--status-idle);
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-title);
+}
+
+.description {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.action {
+  flex: none;
+}
+
+@media (max-width: 720px) {
+  .banner {
+    flex-wrap: wrap;
+  }
+
+  .action {
+    width: 100%;
+  }
+}
