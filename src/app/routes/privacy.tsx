@@ -4,6 +4,7 @@ import {
   LegalLayout,
   type LegalSection,
 } from '@/components/layouts/legal-layout'
+import { company } from '@/config/company'
 import { paths } from '@/config/paths'
 
 const contactEmail = 'contato@softmoon.io'
@@ -19,6 +20,10 @@ const sections: LegalSection[] = [
           veículos elétricos em condomínios e em pontos públicos, com um portal
           web para o gestor do condomínio. É um MVP acadêmico desenvolvido no
           FIAP Enterprise Challenge em parceria com a GoodWe.
+        </p>
+        <p>
+          A controladora dos dados é {company.legalName}, inscrita no CNPJ sob
+          o nº {company.cnpj}.
         </p>
         <p>
           Esta política explica como tratamos os dados pessoais de motoristas,

@@ -121,6 +121,12 @@
   color: var(--text-title);
 }
 
+.company {
+  margin-top: var(--space-5);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
 .main {
   flex: 999 1 560px;
   min-width: 0;

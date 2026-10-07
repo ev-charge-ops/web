@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 
 import { BackgroundVideo } from '@/components/ui/background-video'
 import { Logo } from '@/components/ui/logo'
+import { companyIdentification } from '@/config/company'
 import { paths } from '@/config/paths'
 
 import styles from './auth-layout.module.css'
@@ -86,6 +87,7 @@ export function AuthLayout({
                 </Link>
               ))}
             </nav>
+            <p className={styles.company}>{companyIdentification}</p>
           </footer>
         </div>
       </main>

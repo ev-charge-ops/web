@@ -28,6 +28,14 @@ describe('legal routes', () => {
       screen.getByRole('link', { name: 'contato@softmoon.io' }),
     ).toHaveAttribute('href', 'mailto:contato@softmoon.io')
     expect(
+      screen.getByText(/A controladora dos dados é SOFTMOON\.IO/),
+    ).toHaveTextContent('29.734.824/0001-77')
+    expect(
+      screen.getByText(
+        'SOFTMOON.IO SERVICOS DE INFORMATICA LTDA · CNPJ 29.734.824/0001-77',
+      ),
+    ).toBeInTheDocument()
+    expect(
       screen.getByRole('link', { name: 'Voltar ao portal' }),
     ).toHaveAttribute('href', '/')
   })
