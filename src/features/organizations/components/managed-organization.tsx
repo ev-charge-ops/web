@@ -8,7 +8,7 @@ import type { MyOrganization } from '../api/get-my-organizations'
 import { useCurrentOrganization } from '../hooks/use-current-organization'
 
 type ManagedOrganizationProps = {
-  title: string
+  title?: string
   children: (organization: MyOrganization) => ReactNode
 }
 
@@ -22,7 +22,7 @@ export function ManagedOrganization({ title, children }: ManagedOrganizationProp
   if (error || !organization) {
     return (
       <>
-        <PageTitle title={title} />
+        {title ? <PageTitle title={title} /> : null}
         <Alert tone={error ? 'error' : 'info'}>
           {error
             ? 'Não foi possível carregar o condomínio.'
