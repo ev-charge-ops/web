@@ -52,6 +52,22 @@ describe('legal routes', () => {
     ).toHaveAttribute('href', '/suporte')
   })
 
+  it('covers payments, location, account deletion and data sources in the privacy policy', () => {
+    renderApp(<PrivacyRoute />, { route: '/privacidade' })
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Exclusão da conta' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Notificações' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText(/Localização precisa:/)).toBeInTheDocument()
+    expect(screen.getAllByText(/Stripe/).length).toBeGreaterThan(0)
+    expect(
+      screen.getByRole('link', { name: 'Open Charge Map' }),
+    ).toHaveAttribute('href', 'https://openchargemap.org')
+  })
+
   it('renders the support page with the contact email and the FAQ', () => {
     renderApp(<SupportRoute />, { route: '/suporte' })
 

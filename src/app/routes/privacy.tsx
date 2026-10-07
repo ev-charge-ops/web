@@ -1,7 +1,10 @@
+import { Link } from 'react-router'
+
 import {
   LegalLayout,
   type LegalSection,
 } from '@/components/layouts/legal-layout'
+import { paths } from '@/config/paths'
 
 const contactEmail = 'privacidade@evchargeops.com.br'
 
@@ -12,14 +15,16 @@ const sections: LegalSection[] = [
     content: (
       <>
         <p>
-          O EV ChargeOps é a plataforma que o seu condomínio usa para gerir a
-          recarga de veículos elétricos na garagem. É um MVP acadêmico
-          desenvolvido no FIAP Enterprise Challenge em parceria com a GoodWe.
+          O EV ChargeOps é o app do motorista para a recarga compartilhada de
+          veículos elétricos em condomínios e em pontos públicos, com um portal
+          web para o gestor do condomínio. É um MVP acadêmico desenvolvido no
+          FIAP Enterprise Challenge em parceria com a GoodWe.
         </p>
         <p>
-          Esta política explica como tratamos os dados pessoais de moradores,
-          gestores e visitantes que usam o app e o portal, em conformidade com a
-          Lei Geral de Proteção de Dados (Lei nº 13.709/2018, LGPD).
+          Esta política explica como tratamos os dados pessoais de motoristas,
+          moradores, gestores e visitantes que usam o app e o portal, em
+          conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018,
+          LGPD).
         </p>
       </>
     ),
@@ -40,14 +45,26 @@ const sections: LegalSection[] = [
         </li>
         <li>
           <strong>Recargas:</strong> ponto usado, horário de início e fim,
-          energia em kWh, potência, duração, valor e eventuais multas de
-          ocupação.
+          energia em kWh, potência, duração, preço travado, valor e eventuais
+          multas de ocupação.
         </li>
         <li>
-          <strong>Pagamento de visitantes:</strong> os dados do cartão são
-          recebidos e processados pela Stripe. Guardamos apenas os
-          identificadores da cobrança, os valores autorizados e capturados e o
-          status do pagamento.
+          <strong>Pagamentos com cartão:</strong> nos pontos comerciais, os
+          dados do cartão são informados diretamente à Stripe, que processa o
+          pagamento. Não recebemos nem guardamos o número do cartão. Guardamos
+          apenas os identificadores da cobrança, os valores autorizados e
+          capturados e o status do pagamento.
+        </li>
+        <li>
+          <strong>Localização precisa:</strong> com a sua permissão e somente
+          com o app aberto, usamos a localização do aparelho para mostrar e
+          buscar os pontos de recarga próximos. O app não acessa a localização
+          em segundo plano e não guardamos histórico dos seus deslocamentos.
+        </li>
+        <li>
+          <strong>Câmera:</strong> usada apenas pelo leitor de cartão da Stripe,
+          se você escolher escanear o cartão no pagamento. Não recebemos as
+          imagens.
         </li>
         <li>
           <strong>Dados técnicos:</strong> tokens de acesso para manter sua
@@ -64,7 +81,8 @@ const sections: LegalSection[] = [
         <ul>
           <li>
             <strong>Serviço essencial (obrigatório):</strong> autenticar você,
-            iniciar e encerrar recargas e manter a segurança da conta.
+            mostrar os pontos, iniciar e encerrar recargas, processar pagamentos
+            e manter a segurança da conta.
           </li>
           <li>
             <strong>Rateio e cobrança no condomínio:</strong> calcular quanto
@@ -83,11 +101,25 @@ const sections: LegalSection[] = [
           </li>
         </ul>
         <p>
-          Você pode alterar as finalidades opcionais a qualquer momento na área
-          de privacidade da sua conta no app. Não vendemos dados nem os usamos
-          para publicidade.
+          Você pode alterar as finalidades opcionais a qualquer momento em{' '}
+          <strong>Conta → Privacidade e dados</strong> no app. Não vendemos
+          dados, não os usamos para publicidade e não rastreamos você em apps ou
+          sites de terceiros.
         </p>
       </>
+    ),
+  },
+  {
+    id: 'notificacoes',
+    title: 'Notificações',
+    content: (
+      <p>
+        Com a sua permissão, o app envia notificações push e agenda lembretes
+        locais no aparelho sobre a recarga (conclusão, fim da tolerância e
+        início da multa de ocupação), pagamentos, fila dos pontos e convites.
+        Você pode desativá-las a qualquer momento nos ajustes do aparelho. Ao
+        sair da conta, o token do dispositivo deixa de receber avisos.
+      </p>
     ),
   },
   {
@@ -118,8 +150,9 @@ const sections: LegalSection[] = [
             banco de dados.
           </li>
           <li>
-            <strong>Stripe:</strong> processamento dos pagamentos com cartão de
-            visitantes.
+            <strong>Stripe:</strong> processadora dos pagamentos com cartão nos
+            pontos comerciais, que trata os dados do cartão conforme a própria
+            política de privacidade.
           </li>
           <li>
             <strong>Resend:</strong> envio de e-mails, como códigos de acesso,
@@ -145,15 +178,68 @@ const sections: LegalSection[] = [
     ),
   },
   {
+    id: 'fontes',
+    title: 'Dados de pontos públicos',
+    content: (
+      <p>
+        A localização dos pontos de recarga públicos vem do{' '}
+        <a href="https://openchargemap.org" target="_blank" rel="noreferrer">
+          Open Charge Map
+        </a>
+        , disponibilizada sob a licença{' '}
+        <a
+          href="https://creativecommons.org/licenses/by-sa/4.0/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          CC BY-SA 4.0
+        </a>
+        . Os preços desses pontos são de demonstração. Não enviamos seus dados
+        ao Open Charge Map.
+      </p>
+    ),
+  },
+  {
     id: 'retencao',
     title: 'Retenção',
     content: (
       <p>
         Mantemos os dados enquanto sua conta estiver ativa ou enquanto durar o
-        projeto acadêmico. Ao fim do projeto, ou quando você pedir a exclusão da
-        conta, os dados pessoais são apagados ou anonimizados, salvo quando a
-        lei exigir sua guarda.
+        projeto acadêmico. Ao fim do projeto, ou quando você excluir a conta, os
+        dados pessoais são apagados ou anonimizados. Ficam guardados apenas os
+        registros de recargas e pagamentos necessários ao rateio do condomínio e
+        ao cumprimento de obrigações legais, pelo prazo que a lei exigir.
       </p>
+    ),
+  },
+  {
+    id: 'exclusao',
+    title: 'Exclusão da conta',
+    content: (
+      <>
+        <p>
+          Você pode excluir a conta a qualquer momento no app, em{' '}
+          <strong>Conta → Privacidade e dados → Excluir conta</strong>. A
+          exclusão é imediata e não depende de contato com o suporte.
+        </p>
+        <ul>
+          <li>
+            <strong>Apagamos ou anonimizamos:</strong> nome, e-mail, senha,
+            vínculos com Google e Apple, tokens de acesso e de notificação e as
+            preferências de consentimento.
+          </li>
+          <li>
+            <strong>Mantemos sem identificar você:</strong> os registros das
+            recargas (ponto, horários, energia e valores), vinculados à unidade
+            do condomínio para o rateio, e os registros de pagamento exigidos
+            por lei.
+          </li>
+        </ul>
+        <p>
+          Recargas em andamento precisam ser encerradas antes da exclusão. A
+          Stripe mantém os registros das transações conforme a política dela.
+        </p>
+      </>
     ),
   },
   {
@@ -169,9 +255,9 @@ const sections: LegalSection[] = [
         </p>
         <p>
           No app, você pode <strong>exportar seus dados</strong> e{' '}
-          <strong>pedir a exclusão da conta</strong> na área de privacidade.
-          Você também pode apresentar reclamação à Autoridade Nacional de
-          Proteção de Dados (ANPD).
+          <strong>excluir a conta</strong> em Conta → Privacidade e dados. Você
+          também pode apresentar reclamação à Autoridade Nacional de Proteção de
+          Dados (ANPD).
         </p>
       </>
     ),
@@ -182,7 +268,9 @@ const sections: LegalSection[] = [
     content: (
       <p>
         Para exercer seus direitos ou tirar dúvidas, escreva para{' '}
-        <a href={`mailto:${contactEmail}`}>{contactEmail}</a>. Os e-mails
+        <a href={`mailto:${contactEmail}`}>{contactEmail}</a>. Para ajuda com o
+        app, veja a página de{' '}
+        <Link to={paths.legal.support.getHref()}>Suporte</Link>. Os e-mails
         enviados pelo endereço noreply não são monitorados.
       </p>
     ),
