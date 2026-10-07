@@ -46,6 +46,13 @@ const router = createBrowserRouter([
     },
   },
   {
+    path: paths.invite.path,
+    lazy: async () => {
+      const { InviteRoute } = await import('./routes/invite')
+      return { Component: InviteRoute }
+    },
+  },
+  {
     path: paths.legal.privacy.path,
     lazy: async () => {
       const { PrivacyRoute } = await import('./routes/privacy')
