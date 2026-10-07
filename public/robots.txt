@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /login
+Allow: /privacidade
+Allow: /termos
+Allow: /suporte
+Disallow: /
+
+Sitemap: https://app.evchargeops.com.br/sitemap.xml
