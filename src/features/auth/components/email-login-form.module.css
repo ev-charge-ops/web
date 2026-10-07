@@ -1,0 +1,22 @@
+.sentTo {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.sentTo strong {
+  color: var(--text-title);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.actions button {
+  font-size: 13px;
+}
