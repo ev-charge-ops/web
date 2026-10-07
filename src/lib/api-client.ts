@@ -12,6 +12,16 @@ export type AuthHandlers = {
   onRefreshFailure?: () => void
 }
 
+export class ApiError extends Error {
+  readonly status: number
+
+  constructor(status: number) {
+    super(`Request failed with status ${status}`)
+    this.name = 'ApiError'
+    this.status = status
+  }
+}
+
 let authHandlers: AuthHandlers | null = null
 
 export function setAuthHandlers(handlers: AuthHandlers | null) {
@@ -79,3 +89,5 @@ export function createApiClient(baseUrl: string) {
 }
 
 export const apiClient = createApiClient(env.apiUrl)
+
+export const publicApiClient = createClient<paths>({ baseUrl: env.apiUrl })
