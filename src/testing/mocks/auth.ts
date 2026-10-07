@@ -5,6 +5,7 @@ export const managerUser: AuthUser = {
   name: 'Marina Costa',
   email: 'marina@example.com',
   role: 'MANAGER',
+  emailVerified: true,
 }
 
 export const driverUser: AuthUser = {
@@ -12,6 +13,7 @@ export const driverUser: AuthUser = {
   name: 'Diego Lima',
   email: 'diego@example.com',
   role: 'DRIVER',
+  emailVerified: true,
 }
 
 export function createSession(
