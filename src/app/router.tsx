@@ -94,6 +94,13 @@ const router = createBrowserRouter([
         },
       },
       {
+        path: paths.costSharing.path,
+        lazy: async () => {
+          const { CostSharingRoute } = await import('./routes/cost-sharing')
+          return { Component: CostSharingRoute }
+        },
+      },
+      {
         path: paths.chargePoints.path,
         lazy: async () => {
           const { ChargePointsRoute } = await import('./routes/charge-points')

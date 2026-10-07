@@ -1,0 +1,48 @@
+.toolbar {
+  display: flex;
+}
+
+.toolbar > * {
+  width: 260px;
+  max-width: 100%;
+}
+
+.state {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-9) 0;
+}
+
+.csvNote {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--gutter-card);
+  border-radius: var(--radius-card);
+  background: var(--status-info-bg);
+}
+
+.csvIcon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--status-info);
+}
+
+.csvTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--blue-400);
+}
+
+.csvBody {
+  margin: 2px 0 0;
+  font-size: 13px;
+  line-height: 19px;
+  font-weight: 500;
+  color: var(--text-body);
+}
+
+@media (max-width: 900px) {
+  .toolbar > * {
+    width: 100%;
+  }
+}
