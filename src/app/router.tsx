@@ -67,6 +67,13 @@ const router = createBrowserRouter([
     },
   },
   {
+    path: paths.legal.support.path,
+    lazy: async () => {
+      const { SupportRoute } = await import('./routes/support')
+      return { Component: SupportRoute }
+    },
+  },
+  {
     lazy: async () => {
       const { ProtectedRoot } = await import('./routes/protected-root')
       return { Component: ProtectedRoot }
