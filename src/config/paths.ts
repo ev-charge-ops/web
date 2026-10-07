@@ -3,6 +3,10 @@ export const paths = {
     path: '/',
     getHref: () => '/',
   },
+  residents: {
+    path: '/residents',
+    getHref: () => '/residents',
+  },
   auth: {
     login: {
       path: '/login',

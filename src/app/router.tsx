@@ -72,6 +72,13 @@ const router = createBrowserRouter([
           return { Component: HomeRoute }
         },
       },
+      {
+        path: paths.residents.path,
+        lazy: async () => {
+          const { ResidentsRoute } = await import('./routes/residents')
+          return { Component: ResidentsRoute }
+        },
+      },
     ],
   },
   {
