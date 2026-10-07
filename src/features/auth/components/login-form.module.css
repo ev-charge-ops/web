@@ -1,0 +1,23 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--border-danger);
+  border-radius: var(--radius-input);
+  background: var(--status-fault-bg);
+  color: var(--status-fault);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.submit {
+  width: 100%;
+  margin-top: var(--space-2);
+}
