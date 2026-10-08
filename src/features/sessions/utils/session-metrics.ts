@@ -1,9 +1,9 @@
 import { minutesBetween } from '@/utils/format-duration'
 
-import type { SessionDetail } from '../api/get-session'
+import type { OrganizationSessionDetail } from '../api/get-organization-session'
 
 type SessionTimes = Pick<
-  SessionDetail,
+  OrganizationSessionDetail,
   'startedAt' | 'chargingEndedAt' | 'endedAt'
 >
 
@@ -16,7 +16,7 @@ export function getChargingMinutes(
 }
 
 export function getAveragePowerKw(
-  session: SessionTimes & Pick<SessionDetail, 'energyKwh'>,
+  session: SessionTimes & Pick<OrganizationSessionDetail, 'energyKwh'>,
 ) {
   const hours = getChargingMinutes(session) / 60
   return hours > 0 ? session.energyKwh / hours : 0

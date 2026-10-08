@@ -176,7 +176,11 @@ function SessionsPage({ organizationId }: { organizationId: string }) {
           />
         ) : null}
       </Card>
-      <SessionDrawer session={selected} onClose={() => setSelected(null)} />
+      <SessionDrawer
+        organizationId={organizationId}
+        session={selected}
+        onClose={() => setSelected(null)}
+      />
     </>
   )
 }

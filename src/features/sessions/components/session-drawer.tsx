@@ -10,7 +10,10 @@ import { formatDuration } from '@/utils/format-duration'
 import { formatEnergy } from '@/utils/format-energy'
 import { formatPower } from '@/utils/format-power'
 
-import { useSession, type SessionDetail } from '../api/get-session'
+import {
+  useOrganizationSession,
+  type OrganizationSessionDetail,
+} from '../api/get-organization-session'
 import type { OrganizationSession } from '../api/get-sessions'
 import {
   limitTypeLabels,
@@ -47,7 +50,7 @@ function DetailSection({ title, lines }: { title: string; lines: Line[] }) {
   )
 }
 
-function formatLimit(session: SessionDetail) {
+function formatLimit(session: OrganizationSessionDetail) {
   const { limit } = session
   if (limit.type === 'ENERGY' && limit.energyKwh !== null) {
     return `${limitTypeLabels.ENERGY} · ${formatEnergy(limit.energyKwh)}`
@@ -58,13 +61,7 @@ function formatLimit(session: SessionDetail) {
   return limitTypeLabels[limit.type]
 }
 
-function SessionDetails({
-  summary,
-  session,
-}: {
-  summary: OrganizationSession
-  session: SessionDetail
-}) {
+function SessionDetails({ session }: { session: OrganizationSessionDetail }) {
   const demandSource = formatDemandSource(
     session.demandFactorSource,
     session.demandModelVersion,
@@ -76,7 +73,7 @@ function SessionDetails({
       value: `${session.chargePoint.code} · ${session.chargePoint.name}`,
     },
     { label: 'Unidade', value: session.unitLabel ?? '—' },
-    { label: 'Morador', value: summary.driver.name },
+    { label: 'Morador', value: session.driver.name },
     { label: 'Início', value: formatDateTime(session.startedAt) },
     {
       label: 'Fim da recarga',
@@ -139,8 +136,14 @@ function SessionDetails({
   )
 }
 
-function SessionDrawerBody({ summary }: { summary: OrganizationSession }) {
-  const session = useSession(summary.id)
+function SessionDrawerBody({
+  organizationId,
+  sessionId,
+}: {
+  organizationId: string
+  sessionId: string
+}) {
+  const session = useOrganizationSession(organizationId, sessionId)
 
   if (session.isPending) {
     return (
@@ -154,15 +157,20 @@ function SessionDrawerBody({ summary }: { summary: OrganizationSession }) {
     return <Alert>Não foi possível carregar os detalhes da sessão.</Alert>
   }
 
-  return <SessionDetails summary={summary} session={session.data} />
+  return <SessionDetails session={session.data} />
 }
 
 type SessionDrawerProps = {
+  organizationId: string
   session: OrganizationSession | null
   onClose: () => void
 }
 
-export function SessionDrawer({ session, onClose }: SessionDrawerProps) {
+export function SessionDrawer({
+  organizationId,
+  session,
+  onClose,
+}: SessionDrawerProps) {
   return (
     <Drawer
       isOpen={session !== null}
@@ -174,7 +182,9 @@ export function SessionDrawer({ session, onClose }: SessionDrawerProps) {
           : undefined
       }
     >
-      {session ? <SessionDrawerBody summary={session} /> : null}
+      {session ? (
+        <SessionDrawerBody organizationId={organizationId} sessionId={session.id} />
+      ) : null}
     </Drawer>
   )
 }
