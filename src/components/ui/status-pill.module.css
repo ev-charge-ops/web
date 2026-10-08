@@ -8,6 +8,9 @@
   line-height: 18px;
   font-weight: 700;
   white-space: nowrap;
+  transition:
+    background-color 400ms var(--ease-pulse),
+    color 400ms var(--ease-pulse);
 }
 
 .dot {
@@ -16,6 +19,7 @@
   flex: none;
   border-radius: var(--radius-pill);
   background: var(--pill-fill);
+  transition: background-color 400ms var(--ease-pulse);
 }
 
 .live .dot {
