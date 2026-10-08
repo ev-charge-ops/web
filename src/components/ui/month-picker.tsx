@@ -9,6 +9,7 @@ type MonthPickerProps = {
   label?: string
   value: string
   max?: string
+  isLabelHidden?: boolean
   onChange: (month: string) => void
 }
 
@@ -16,6 +17,7 @@ export function MonthPicker({
   label = 'Mês',
   value,
   max,
+  isLabelHidden = false,
   onChange,
 }: MonthPickerProps) {
   const labelId = useId()
@@ -23,7 +25,10 @@ export function MonthPicker({
 
   return (
     <div role="group" aria-labelledby={labelId} className={styles.field}>
-      <span id={labelId} className={styles.label}>
+      <span
+        id={labelId}
+        className={isLabelHidden ? 'sr-only' : styles.label}
+      >
         {label}
       </span>
       <div className={styles.control}>
