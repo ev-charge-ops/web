@@ -1,0 +1,67 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: var(--gap-card);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: var(--space-6);
+  border-radius: var(--radius-card);
+  background: var(--surface-card);
+}
+
+.label {
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.pair {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.value {
+  font-size: 36px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-title);
+}
+
+.unit {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.notes {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.note {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+}
+
+.default {
+  color: var(--text-muted);
+}
+
+.positive {
+  color: var(--energy-text);
+}
+
+.critical {
+  color: var(--critical-text);
+}
