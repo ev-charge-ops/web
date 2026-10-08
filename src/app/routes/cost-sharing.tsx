@@ -57,7 +57,7 @@ function CostSharing({ organizationId }: { organizationId: string }) {
       <PageTitle
         title={`${pageTitle} de ${formatMonth(month)}`}
         tag={
-          <StatusPill tone={isOpenMonth ? 'idle' : 'offline'} withDot>
+          <StatusPill tone={isOpenMonth ? 'idle' : 'offline'}>
             {isOpenMonth ? 'Mês em aberto' : 'Mês encerrado'}
           </StatusPill>
         }
@@ -90,7 +90,7 @@ function CostSharing({ organizationId }: { organizationId: string }) {
       ) : statement.error ? (
         <Alert
           action={
-            <Button variant="outline" size="sm" onClick={() => statement.refetch()}>
+            <Button variant="secondary" size="sm" onClick={() => statement.refetch()}>
               Tentar novamente
             </Button>
           }

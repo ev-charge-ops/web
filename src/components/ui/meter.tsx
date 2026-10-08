@@ -9,6 +9,7 @@ type MeterProps = {
   value: number
   max: number
   tone?: MeterTone
+  isLive?: boolean
   className?: string
 }
 
@@ -17,6 +18,7 @@ export function Meter({
   value,
   max,
   tone = 'demand',
+  isLive = false,
   className,
 }: MeterProps) {
   const percent = max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0
@@ -31,7 +33,7 @@ export function Meter({
       className={cn(styles.track, className)}
     >
       <div
-        className={cn(styles.fill, styles[tone])}
+        className={cn(styles.fill, styles[tone], isLive && styles.live)}
         style={{ width: `${percent}%` }}
       />
     </div>

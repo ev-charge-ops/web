@@ -27,7 +27,7 @@ export function ChargePointsGrid({ organizationId }: ChargePointsGridProps) {
       <Alert
         action={
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={() => chargePoints.refetch()}
           >

@@ -51,7 +51,7 @@ export function EmailVerificationBanner({ user }: EmailVerificationBannerProps) 
         </span>
       </div>
       <Button
-        variant="outline"
+        variant="secondary"
         size="sm"
         isLoading={resend.isPending}
         onClick={onResend}

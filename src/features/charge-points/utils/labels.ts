@@ -11,7 +11,7 @@ export const chargePointStatusLabels = {
 } satisfies Record<Schemas['ChargePointStatus'], string>
 
 export const chargePointStatusTones = {
-  AVAILABLE: 'info',
+  AVAILABLE: 'charging',
   CHARGING: 'charging',
   IDLE: 'idle',
   OFFLINE: 'offline',

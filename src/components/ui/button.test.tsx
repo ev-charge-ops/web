@@ -24,10 +24,29 @@ describe('Button', () => {
   })
 
   it('applies the requested variant', () => {
-    render(<Button variant="outline">Cancelar</Button>)
+    render(<Button variant="secondary">Cancelar</Button>)
 
     expect(screen.getByRole('button', { name: 'Cancelar' }).className).toMatch(
-      /outline/,
+      /secondary/,
+    )
+  })
+
+  it.each(['primary', 'destructive', 'ghost'] as const)(
+    'applies the %s variant',
+    (variant) => {
+      render(<Button variant={variant}>Ação</Button>)
+
+      expect(screen.getByRole('button', { name: 'Ação' }).className).toMatch(
+        new RegExp(variant),
+      )
+    },
+  )
+
+  it('applies the large size', () => {
+    render(<Button size="lg">Iniciar</Button>)
+
+    expect(screen.getByRole('button', { name: 'Iniciar' }).className).toMatch(
+      /lg/,
     )
   })
 

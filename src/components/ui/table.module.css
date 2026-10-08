@@ -2,20 +2,20 @@
   display: flex;
   align-items: baseline;
   gap: var(--space-3);
-  padding: var(--space-5) var(--gutter-card);
+  padding: var(--space-6) var(--gutter-card) var(--space-5);
 }
 
 .title {
   margin: 0;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--text-title);
 }
 
 .count {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  color: var(--text-subtle);
+  color: var(--text-muted);
 }
 
 .wrap {
@@ -26,23 +26,24 @@
   width: 100%;
   min-width: 640px;
   border-collapse: collapse;
-  font-size: 13.5px;
+  font-size: 14px;
 }
 
 .table th {
-  padding: 10px var(--space-5);
+  padding: 12px var(--space-5);
   border-top: 1px solid var(--hairline);
-  font-size: 11px;
-  font-weight: 800;
+  background: var(--surface-inset);
+  font-size: 12px;
+  font-weight: 700;
   letter-spacing: var(--tracking-caps);
   text-align: left;
   text-transform: uppercase;
-  color: var(--text-subtle);
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
 .table td {
-  padding: 12px var(--space-5);
+  padding: 14px var(--space-5);
   border-top: 1px solid var(--hairline);
   color: var(--text-body);
   vertical-align: middle;
@@ -70,7 +71,8 @@
 
 .mono {
   font-family: var(--font-mono);
-  font-size: 12.5px;
+  font-size: 13px;
+  font-weight: 500;
   white-space: nowrap;
 }
 
@@ -81,11 +83,11 @@
 }
 
 .empty {
-  padding: var(--space-7) var(--gutter-card);
+  padding: var(--space-8) var(--gutter-card);
   border-top: 1px solid var(--hairline);
   text-align: center;
-  color: var(--text-subtle);
-  font-size: 13px;
+  color: var(--text-muted);
+  font-size: 14px;
 }
 
 .state {
@@ -117,23 +119,23 @@
 }
 
 .clickable:hover {
-  background: var(--hover-lift);
+  background: var(--surface-inset);
 }
 
 .flagged td:first-child {
-  box-shadow: inset 3px 0 0 var(--status-fault);
+  box-shadow: inset 3px 0 0 var(--status-fault-fill);
 }
 
 .rowAction {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border: 0;
-  border-radius: var(--radius-input);
+  border-radius: var(--radius-pill);
   background: transparent;
-  color: var(--text-subtle);
+  color: var(--text-muted);
   cursor: pointer;
   transition: background var(--duration-fast) var(--ease-standard);
 }
@@ -159,15 +161,16 @@
 .hint {
   margin: 0;
   padding: 0 var(--gutter-card) var(--space-4);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
-  color: var(--text-subtle);
+  color: var(--text-muted);
 }
 
 .table tbody th,
 .table tfoot th {
-  padding: 12px var(--space-5);
-  font-size: 13.5px;
+  padding: 14px var(--space-5);
+  background: transparent;
+  font-size: 14px;
   letter-spacing: normal;
   text-transform: none;
   color: var(--text-title);
@@ -180,7 +183,7 @@
 
 .totalRow td,
 .totalRow th {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface-inset);
   font-weight: 700;
   color: var(--text-title);
 }

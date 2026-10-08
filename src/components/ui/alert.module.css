@@ -1,18 +1,17 @@
 .alert {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  border: 1px solid transparent;
+  gap: var(--space-4);
+  padding: 14px var(--space-5);
   border-radius: var(--radius-input);
-  font-size: 13px;
-  line-height: 18px;
-  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
 }
 
 .icon {
   flex: none;
-  margin-top: 1px;
+  margin-top: 2px;
 }
 
 .body {
@@ -27,23 +26,16 @@
 }
 
 .error {
-  border-color: var(--border-danger);
   background: var(--status-fault-bg);
   color: var(--status-fault);
 }
 
 .success {
-  border-color: rgba(38, 208, 124, 0.32);
   background: var(--status-charging-bg);
   color: var(--status-charging);
 }
 
 .info {
-  border-color: rgba(74, 144, 226, 0.36);
   background: var(--status-info-bg);
-  color: var(--text-body);
-}
-
-.info .icon {
   color: var(--status-info);
 }

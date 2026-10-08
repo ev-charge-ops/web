@@ -17,7 +17,7 @@ export function Pagination({ page, pageSize, total, onChange }: PaginationProps)
   return (
     <nav className={styles.pagination} aria-label="Paginação">
       <Button
-        variant="outline"
+        variant="secondary"
         size="sm"
         icon={<ChevronLeft size={15} strokeWidth={2} aria-hidden />}
         disabled={page <= 1}
@@ -29,7 +29,7 @@ export function Pagination({ page, pageSize, total, onChange }: PaginationProps)
         Página {page} de {pageCount}
       </span>
       <Button
-        variant="outline"
+        variant="secondary"
         size="sm"
         disabled={page >= pageCount}
         onClick={() => onChange(page + 1)}

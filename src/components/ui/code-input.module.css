@@ -1,13 +1,13 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-3);
 }
 
 .label {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-title);
 }
 
 .boxes {
@@ -17,22 +17,24 @@
 
 .box {
   width: 100%;
-  height: 52px;
+  height: 56px;
   padding: 0;
-  background: var(--surface-inset);
+  background: var(--surface-field);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-input);
   color: var(--text-title);
   font-family: var(--font-mono);
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 500;
   text-align: center;
   outline: none;
-  transition: border-color var(--duration-base) var(--ease-standard);
+  transition: border-color var(--duration-fast) var(--ease-standard);
 }
 
 .box:focus {
-  border-color: var(--border-strong);
+  border-color: var(--focus-ring);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
 }
 
 .box:disabled {
@@ -43,10 +45,11 @@
 .invalid,
 .invalid:focus {
   border-color: var(--border-danger);
+  outline-color: var(--border-danger);
 }
 
 .error {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--status-fault);
 }

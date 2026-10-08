@@ -28,7 +28,7 @@ function Rules({ organizationId }: { organizationId: string }) {
     return (
       <Alert
         action={
-          <Button variant="outline" size="sm" onClick={() => tariff.refetch()}>
+          <Button variant="secondary" size="sm" onClick={() => tariff.refetch()}>
             Tentar novamente
           </Button>
         }

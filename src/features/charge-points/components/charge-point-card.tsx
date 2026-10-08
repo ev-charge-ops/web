@@ -47,7 +47,10 @@ export function ChargePointCard({ chargePoint }: ChargePointCardProps) {
           </h3>
           <span className={styles.code}>{chargePoint.code}</span>
         </div>
-        <StatusPill tone={chargePointStatusTones[chargePoint.status]} withDot>
+        <StatusPill
+          tone={chargePointStatusTones[chargePoint.status]}
+          isLive={chargePoint.status === 'CHARGING'}
+        >
           {chargePointStatusLabels[chargePoint.status]}
         </StatusPill>
       </div>

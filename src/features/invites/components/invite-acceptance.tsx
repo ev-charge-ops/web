@@ -139,7 +139,7 @@ export function InviteAcceptance({ token, oauthButtons }: InviteAcceptanceProps)
             {invite.email} para aceitar este convite.
           </Alert>
           <Button
-            variant="outline"
+            variant="secondary"
             icon={<LogOut size={16} strokeWidth={2} aria-hidden />}
             isLoading={isSigningOut}
             onClick={() => {

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 
+import { Logo } from '@/components/ui/logo'
 import { paths } from '@/config/paths'
 
 import styles from './legal-layout.module.css'
@@ -17,7 +18,7 @@ export function LegalLayout({ title, updatedAt, children }: LegalLayoutProps) {
       <article className={styles.content}>
         <header className={styles.header}>
           <Link to={paths.auth.login.getHref()} className={styles.brand}>
-            EV ChargeOps
+            <Logo size={32} />
           </Link>
           <h1 className={styles.title}>{title}</h1>
           <p className={styles.updated}>Última atualização: {updatedAt}</p>

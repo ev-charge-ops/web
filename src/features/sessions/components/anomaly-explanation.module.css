@@ -55,7 +55,7 @@
   margin: 0;
   padding: var(--space-4);
   border-radius: var(--radius-input);
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--surface-card);
 }
 
 .signal {
