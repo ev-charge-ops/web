@@ -1,4 +1,5 @@
 import { useId, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 
 import { useDismissOnEscape } from '@/hooks/use-dismiss-on-escape'
 
@@ -34,7 +35,7 @@ export function ConfirmDialog({
 
   if (!isOpen) return null
 
-  return (
+  return createPortal(
     <div className={styles.backdrop}>
       <div
         role="alertdialog"
@@ -50,7 +51,11 @@ export function ConfirmDialog({
           {description}
         </p>
         <div className={styles.actions}>
-          <Button variant="secondary" onClick={onCancel} disabled={isConfirming}>
+          <Button
+            variant="secondary"
+            onClick={onCancel}
+            disabled={isConfirming}
+          >
             {cancelLabel}
           </Button>
           <Button
@@ -62,6 +67,7 @@ export function ConfirmDialog({
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
