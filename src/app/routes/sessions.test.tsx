@@ -126,7 +126,7 @@ describe('SessionsRoute', () => {
   it('explains a flagged session in the detail drawer', async () => {
     mockSessions()
     server.use(
-      http.get(`${env.apiUrl}/sessions/${flaggedSession.id}`, () =>
+      http.get(`${sessionsUrl}/${flaggedSession.id}`, () =>
         HttpResponse.json(createSessionDetail(flaggedSession)),
       ),
     )
@@ -149,6 +149,65 @@ describe('SessionsRoute', () => {
 
     await user.click(within(drawer).getAllByRole('button', { name: 'Fechar' })[0])
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('loads the drawer from the organization session detail', async () => {
+    mockSessions()
+    const requested: string[] = []
+    server.use(
+      http.get(`${sessionsUrl}/:sessionId`, ({ params }) => {
+        requested.push(String(params.sessionId))
+        return HttpResponse.json(
+          createSessionDetail(organizationSessions[2], {
+            energyKwh: 4.5,
+            driver: { id: organizationSessions[2].driver.id, name: 'Diego Lima Souza' },
+          }),
+        )
+      }),
+    )
+    const user = userEvent.setup()
+    renderApp(<SessionsRoute />, { route: '/sessions' })
+
+    await user.click(
+      await screen.findByRole('button', {
+        name: /Ver detalhes da sessão de Diego Lima/,
+      }),
+    )
+
+    const drawer = screen.getByRole('dialog', { name: 'Detalhes da sessão' })
+    expect(await within(drawer).findByText('Diego Lima Souza')).toBeInTheDocument()
+    expect(within(drawer).getByText('4,5 kWh')).toBeInTheDocument()
+    expect(requested).toEqual([organizationSessions[2].id])
+  })
+
+  it('shows an error in the drawer when the detail fails to load', async () => {
+    mockSessions()
+    server.use(
+      http.get(`${sessionsUrl}/${flaggedSession.id}`, () =>
+        HttpResponse.json(
+          {
+            statusCode: 404,
+            error: 'Not Found',
+            message: 'Session not found',
+            code: 'SESSION_NOT_FOUND',
+          },
+          { status: 404 },
+        ),
+      ),
+    )
+    const user = userEvent.setup()
+    renderApp(<SessionsRoute />, { route: '/sessions' })
+
+    await user.click(
+      await screen.findByRole('button', {
+        name: /Ver detalhes da sessão de Verônica Alencar/,
+      }),
+    )
+
+    const drawer = screen.getByRole('dialog', { name: 'Detalhes da sessão' })
+    expect(await within(drawer).findByRole('alert')).toHaveTextContent(
+      'Não foi possível carregar os detalhes da sessão.',
+    )
   })
 
   it('shows an empty state when the month has no sessions', async () => {
