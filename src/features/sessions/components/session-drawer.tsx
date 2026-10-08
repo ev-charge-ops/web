@@ -58,6 +58,9 @@ function formatLimit(session: OrganizationSessionDetail) {
   if (limit.type === 'AMOUNT' && limit.amountCents !== null) {
     return `${limitTypeLabels.AMOUNT} · ${formatCents(limit.amountCents)}`
   }
+  if (limit.type === 'PERCENT' && limit.socPercent !== null) {
+    return `${limitTypeLabels.PERCENT} · até ${limit.socPercent}%`
+  }
   return limitTypeLabels[limit.type]
 }
 

@@ -98,7 +98,7 @@ export function createSessionDetail(
     organizationId: managedOrganization.id,
     unitLabel: session.unitLabel,
     regime: session.regime,
-    limit: { type: 'FULL', energyKwh: null, amountCents: null },
+    limit: { type: 'FULL', energyKwh: null, amountCents: null, socPercent: null },
     targetEnergyKwh: null,
     startedAt: session.startedAt,
     chargingEndedAt: session.chargingEndedAt,
