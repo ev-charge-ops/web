@@ -7,8 +7,10 @@ import styles from './text-field.module.css'
 type TextFieldProps = ComponentProps<'input'> & {
   label: string
   labelAction?: ReactNode
-  hint?: string
+  hint?: ReactNode
   error?: string
+  trailing?: ReactNode
+  footer?: ReactNode
 }
 
 export function TextField({
@@ -16,15 +18,18 @@ export function TextField({
   labelAction,
   hint,
   error,
+  trailing,
+  footer,
   id,
   className,
+  'aria-describedby': ariaDescribedBy,
   ...props
 }: TextFieldProps) {
   const generatedId = useId()
   const inputId = id ?? generatedId
   const hintId = `${inputId}-hint`
   const errorId = `${inputId}-error`
-  const describedBy = [error && errorId, hint && hintId]
+  const describedBy = [error && errorId, hint && hintId, ariaDescribedBy]
     .filter(Boolean)
     .join(' ')
 
@@ -42,13 +47,31 @@ export function TextField({
           {label}
         </label>
       )}
-      <input
-        id={inputId}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={describedBy || undefined}
-        className={cn(styles.control, error && styles.invalid)}
-        {...props}
-      />
+      {trailing !== undefined ? (
+        <div className={styles.controlWrap}>
+          <input
+            id={inputId}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={describedBy || undefined}
+            className={cn(
+              styles.control,
+              styles.withTrailing,
+              error && styles.invalid,
+            )}
+            {...props}
+          />
+          <div className={styles.trailing}>{trailing}</div>
+        </div>
+      ) : (
+        <input
+          id={inputId}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={describedBy || undefined}
+          className={cn(styles.control, error && styles.invalid)}
+          {...props}
+        />
+      )}
+      {footer}
       {hint ? (
         <span id={hintId} className={styles.hint}>
           {hint}

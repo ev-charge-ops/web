@@ -5,7 +5,10 @@ import { ApiError, publicApiClient } from '@/lib/api-client'
 
 export const resetPasswordInputSchema = z
   .object({
-    password: z.string().min(8, 'A senha deve ter pelo menos 8 caracteres'),
+    password: z
+      .string()
+      .min(8, 'A senha deve ter pelo menos 8 caracteres')
+      .max(128, 'Use no máximo 128 caracteres'),
     confirmPassword: z.string().min(1, 'Confirme a nova senha'),
   })
   .refine((values) => values.password === values.confirmPassword, {

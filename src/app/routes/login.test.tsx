@@ -10,6 +10,7 @@ import { createSession, driverUser, managerUser } from '@/testing/mocks/auth'
 import { server } from '@/testing/mocks/server'
 import { renderApp } from '@/testing/test-utils'
 
+import { EmailLoginRoute } from './email-login'
 import { HomeRoute } from './home'
 import { LoginRoute } from './login'
 import { ProtectedRoot } from './protected-root'
@@ -18,6 +19,7 @@ function renderRoutes(route = '/login') {
   return renderApp(
     <Routes>
       <Route path="/login" element={<LoginRoute />} />
+      <Route path="/login/email" element={<EmailLoginRoute />} />
       <Route element={<ProtectedRoot />}>
         <Route path="/" element={<HomeRoute />} />
         <Route path="/reports" element={<p>Relatórios</p>} />
@@ -43,28 +45,37 @@ function mockEmailLogin(user: AuthUser) {
 async function signInWithCode(email: string) {
   const user = userEvent.setup()
   await user.click(
-    screen.getByRole('button', { name: 'Receber link de acesso por e-mail' }),
+    screen.getByRole('link', { name: 'Receber link de acesso por e-mail' }),
   )
-  await user.type(screen.getByLabelText('E-mail'), email)
+  await user.type(await screen.findByLabelText('E-mail'), email)
   await user.click(screen.getByRole('button', { name: 'Enviar código' }))
   await user.type(await screen.findByLabelText('Dígito 1 de 6'), '042817')
 }
 
 describe('LoginRoute', () => {
-  it('switches between password and email code methods', async () => {
+  it('switches between the password and the email link pages', async () => {
     const user = userEvent.setup()
-    renderRoutes()
+    renderRoutes('/login?redirectTo=%2Freports')
 
     expect(screen.getByLabelText('Senha')).toBeInTheDocument()
 
     await user.click(
-      screen.getByRole('button', { name: 'Receber link de acesso por e-mail' }),
+      screen.getByRole('link', { name: 'Receber link de acesso por e-mail' }),
     )
+    expect(
+      await screen.findByRole('heading', { name: 'Entrar com link', level: 1 }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText('Acesso sem senha, com o mesmo cuidado.'),
+    ).toBeInTheDocument()
     expect(screen.queryByLabelText('Senha')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Enviar código' })).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: 'Entrar com senha' }))
-    expect(screen.getByLabelText('Senha')).toBeInTheDocument()
+    await user.click(screen.getByRole('link', { name: 'Usar senha' }))
+    expect(await screen.findByLabelText('Senha')).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: 'Receber link de acesso por e-mail' }),
+    ).toHaveAttribute('href', '/login/email?redirectTo=%2Freports')
   })
 
   it('presents the portal pitch, the forgot password link and the driver note', () => {

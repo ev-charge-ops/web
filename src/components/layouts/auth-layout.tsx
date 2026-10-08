@@ -10,9 +10,14 @@ type AuthLayoutProps = {
   description?: ReactNode
   children: ReactNode
   footer?: ReactNode
+  headline?: string
+  highlights?: string[]
+  image?: string
 }
 
-const highlights = [
+const defaultHeadline = 'Cada kWh com dono, cada vaga livre a tempo.'
+
+const defaultHighlights = [
   'Rateio por unidade',
   'Capacidade elétrica ao vivo',
   'Anomalias por IA',
@@ -23,19 +28,32 @@ export function AuthLayout({
   description,
   children,
   footer,
+  headline = defaultHeadline,
+  highlights = defaultHighlights,
+  image,
 }: AuthLayoutProps) {
   return (
     <div className={styles.page}>
       <aside className={styles.panel} aria-label="EV ChargeOps">
         <div className={styles.media}>
-          <BackgroundVideo src="/media/garage-loop" className={styles.video} />
+          {image ? (
+            <img
+              src={image}
+              alt=""
+              aria-hidden="true"
+              className={styles.image}
+            />
+          ) : (
+            <BackgroundVideo
+              src="/media/garage-loop"
+              className={styles.video}
+            />
+          )}
         </div>
         <div className={styles.shade} aria-hidden="true" />
         <Logo variant="inverse" size={40} className={styles.logo} />
         <div className={styles.pitch}>
-          <p className={styles.headline}>
-            Cada kWh com dono, cada vaga livre a tempo.
-          </p>
+          <p className={styles.headline}>{headline}</p>
           <ul className={styles.chips}>
             {highlights.map((highlight) => (
               <li key={highlight} className={styles.chip}>

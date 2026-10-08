@@ -53,3 +53,50 @@
   font-weight: 600;
   color: var(--status-fault);
 }
+
+.inset .boxes {
+  gap: var(--space-3);
+}
+
+.inset .box {
+  height: 60px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  background: var(--surface-inset);
+  font-size: 24px;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    background var(--duration-fast) var(--ease-standard);
+}
+
+.inset .box:focus {
+  border-color: var(--text-title);
+  background: var(--surface-card);
+  outline: none;
+}
+
+.inset .filled {
+  animation: pop 0.4s var(--ease-out) both;
+}
+
+.inset .invalid,
+.inset .invalid:focus {
+  border-color: var(--border-danger);
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inset .filled {
+    animation: none;
+  }
+}

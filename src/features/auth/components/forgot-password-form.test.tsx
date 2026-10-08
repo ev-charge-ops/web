@@ -35,10 +35,9 @@ describe('ForgotPasswordForm', () => {
       await screen.findByText(forgotPasswordSuccessMessage),
     ).toBeInTheDocument()
     expect(body).toHaveBeenCalledWith({ email: 'marina@example.com' })
-    expect(screen.getByRole('link', { name: 'Voltar para o login' })).toHaveAttribute(
-      'href',
-      '/login',
-    )
+    expect(
+      screen.getByRole('link', { name: 'Voltar para entrar' }),
+    ).toHaveAttribute('href', '/login')
     expect(screen.queryByLabelText('E-mail')).not.toBeInTheDocument()
   })
 
@@ -54,7 +53,9 @@ describe('ForgotPasswordForm', () => {
 
     await submitEmail('not-an-email')
 
-    expect(await screen.findByText('Informe um e-mail válido')).toBeInTheDocument()
+    expect(
+      await screen.findByText('Informe um e-mail válido'),
+    ).toBeInTheDocument()
     expect(forgot).not.toHaveBeenCalled()
   })
 
@@ -63,7 +64,10 @@ describe('ForgotPasswordForm', () => {
       http.post(
         `${env.apiUrl}/auth/password/forgot`,
         () =>
-          new HttpResponse(null, { status: 429, headers: { 'Retry-After': '60' } }),
+          new HttpResponse(null, {
+            status: 429,
+            headers: { 'Retry-After': '60' },
+          }),
       ),
     )
     renderApp(<ForgotPasswordForm />)

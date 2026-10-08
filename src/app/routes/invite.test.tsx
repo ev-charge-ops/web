@@ -53,11 +53,9 @@ function mockSession(user: AuthUser) {
 
 async function fillNewAccount() {
   const user = userEvent.setup()
-  await user.type(await screen.findByLabelText('Seu nome'), 'Ana Souza')
-  await user.type(screen.getByLabelText('Crie uma senha'), 's3cure-passw0rd')
-  await user.click(
-    screen.getByRole('button', { name: 'Criar conta e aceitar convite' }),
-  )
+  await user.type(await screen.findByLabelText('Nome completo'), 'Ana Souza')
+  await user.type(screen.getByLabelText('Senha'), 's3cure-passw0rd')
+  await user.click(screen.getByRole('button', { name: 'Aceitar convite' }))
 }
 
 describe('InviteRoute', () => {
@@ -89,7 +87,7 @@ describe('InviteRoute', () => {
     )
 
     expect(
-      await screen.findByRole('heading', { name: 'Baixe o app EV ChargeOps' }),
+      await screen.findByRole('heading', { name: 'Convite aceito' }),
     ).toBeInTheDocument()
     expect(accepted).toBe(true)
   })
@@ -97,9 +95,9 @@ describe('InviteRoute', () => {
   it('rejects links without a token', () => {
     renderInvite('/invite')
 
-    expect(screen.getByRole('alert')).toHaveTextContent(
-      'Link de convite inválido.',
-    )
+    expect(
+      screen.getByRole('heading', { name: 'Link de convite inválido' }),
+    ).toBeInTheDocument()
   })
 
   it('shows the invite details and creates the account', async () => {
@@ -113,23 +111,33 @@ describe('InviteRoute', () => {
     )
     renderInvite()
 
-    expect(await screen.findByText('Residencial Aclimação')).toBeInTheDocument()
-    expect(screen.getByText('ana@example.com')).toBeInTheDocument()
-    expect(screen.getByText('B · 42')).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', {
+        name: 'Você foi convidado para Residencial Aclimação',
+        level: 1,
+      }),
+    ).toBeInTheDocument()
+    expect(screen.getAllByText('ana@example.com')).not.toHaveLength(0)
+    expect(screen.getByText('Morador · unidade B · 42')).toBeInTheDocument()
+    expect(screen.getByText(/válido até 14\/10\/2026/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Termos de uso' })).toHaveAttribute(
+      'href',
+      '/termos',
+    )
 
     await fillNewAccount()
 
     expect(
-      await screen.findByText(
-        'Convite aceito! Você agora faz parte de Residencial Aclimação.',
-      ),
+      await screen.findByText('Você agora faz parte de Residencial Aclimação.'),
     ).toBeInTheDocument()
     expect(body).toEqual({ name: 'Ana Souza', password: 's3cure-passw0rd' })
     expect(
-      screen.getByRole('heading', { name: 'Baixe o app EV ChargeOps' }),
+      screen.getByRole('heading', {
+        name: 'Motoristas usam o app EV ChargeOps',
+      }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('link', { name: 'Baixar para Android (APK)' }),
+      screen.getByRole('link', { name: /Baixar para Android \(APK\)/ }),
     ).toHaveAttribute(
       'href',
       'https://expo.dev/accounts/ev-charge-ops/projects/ev-charge-ops',
@@ -151,7 +159,7 @@ describe('InviteRoute', () => {
 
     await user.click(
       await screen.findByRole('button', {
-        name: 'Criar conta e aceitar convite',
+        name: 'Aceitar convite',
       }),
     )
 
@@ -215,8 +223,10 @@ describe('InviteRoute', () => {
     mockPreview(createInvitePreview({ status }))
     renderInvite()
 
-    expect(await screen.findByRole('heading', { name: title })).toBeInTheDocument()
-    expect(screen.queryByLabelText('Seu nome')).not.toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { name: title }),
+    ).toBeInTheDocument()
+    expect(screen.queryByLabelText('Nome completo')).not.toBeInTheDocument()
   })
 
   it('explains unknown invites', async () => {
@@ -253,12 +263,10 @@ describe('InviteRoute', () => {
     )
 
     expect(
-      await screen.findByText(
-        'Convite aceito! Você agora faz parte de Residencial Aclimação.',
-      ),
+      await screen.findByText('Você agora faz parte de Residencial Aclimação.'),
     ).toBeInTheDocument()
     expect(authorization).toBe('Bearer access-2')
-    expect(screen.queryByLabelText('Seu nome')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Nome completo')).not.toBeInTheDocument()
   })
 
   it('treats existing memberships as accepted', async () => {
@@ -303,6 +311,6 @@ describe('InviteRoute', () => {
       screen.getByRole('button', { name: 'Sair e usar outra conta' }),
     )
 
-    expect(await screen.findByLabelText('Seu nome')).toBeInTheDocument()
+    expect(await screen.findByLabelText('Nome completo')).toBeInTheDocument()
   })
 })

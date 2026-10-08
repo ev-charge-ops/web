@@ -22,8 +22,11 @@ function renderRoute(route = '/reset-password?token=reset-token') {
 async function submitPasswords(password: string, confirmPassword: string) {
   const user = userEvent.setup()
   await user.type(screen.getByLabelText('Nova senha'), password)
-  await user.type(screen.getByLabelText('Confirme a nova senha'), confirmPassword)
-  await user.click(screen.getByRole('button', { name: 'Redefinir senha' }))
+  await user.type(
+    screen.getByLabelText('Confirmar nova senha'),
+    confirmPassword,
+  )
+  await user.click(screen.getByRole('button', { name: 'Salvar nova senha' }))
 }
 
 describe('ResetPasswordRoute', () => {
@@ -82,10 +85,9 @@ describe('ResetPasswordRoute', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(
       'Este link de redefinição é inválido ou expirou.',
     )
-    expect(screen.getByRole('link', { name: 'Solicitar novo link' })).toHaveAttribute(
-      'href',
-      '/forgot-password',
-    )
+    expect(
+      screen.getByRole('link', { name: 'Solicitar novo link' }),
+    ).toHaveAttribute('href', '/forgot-password')
   })
 
   it('asks the visitor to wait when rate limited', async () => {
@@ -102,6 +104,35 @@ describe('ResetPasswordRoute', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(
       'Muitas tentativas, tente novamente em instantes.',
     )
+  })
+
+  it('grades the new password and confirms when both match', async () => {
+    const user = userEvent.setup()
+    renderRoute()
+
+    expect(
+      screen.getByText('Sua senha protege o rateio de todo o condomínio.'),
+    ).toBeInTheDocument()
+
+    await user.type(screen.getByLabelText('Nova senha'), 'senha')
+    expect(screen.getByText('Fraca')).toBeInTheDocument()
+
+    await user.type(screen.getByLabelText('Nova senha'), 'Forte2026!')
+    expect(screen.getByText('Forte')).toBeInTheDocument()
+    expect(screen.getByText('Pelo menos 8 caracteres')).toHaveTextContent(
+      'atendido',
+    )
+
+    await user.type(
+      screen.getByLabelText('Confirmar nova senha'),
+      'senhaForte2026!',
+    )
+    expect(screen.getByText('As senhas coincidem')).toBeInTheDocument()
+
+    await user.click(
+      screen.getAllByRole('button', { name: 'Mostrar senha' })[0],
+    )
+    expect(screen.getByLabelText('Nova senha')).toHaveAttribute('type', 'text')
   })
 
   it('shows the invalid link message when the token is missing', () => {
