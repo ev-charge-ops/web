@@ -94,8 +94,8 @@ function formatIdle(session: OrganizationSessionDetail) {
 }
 
 function formatDemand(session: OrganizationSessionDetail) {
-  if (session.regime === 'PRIVATE' && session.demandFactor === 1) {
-    return { value: 'Não se aplica', hint: 'Ponto privado' }
+  if (session.regime === 'PRIVATE') {
+    return { value: 'Não se aplica', hint: 'Ponto privado · energia a custo' }
   }
   return {
     value: formatDemandFactor(session.demandFactor),
