@@ -84,3 +84,28 @@
   width: 36px;
   height: 36px;
 }
+
+.dense {
+  gap: 6px;
+}
+
+.dense .label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.dense .control {
+  height: 44px;
+  border-radius: var(--radius-input);
+}
+
+.dense .value {
+  min-width: 120px;
+}
+
+.dense .step {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+}

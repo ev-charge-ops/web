@@ -12,6 +12,7 @@ type MonthPickerProps = {
   max?: string
   isLabelHidden?: boolean
   isCompact?: boolean
+  isDense?: boolean
   onChange: (month: string) => void
 }
 
@@ -21,17 +22,19 @@ export function MonthPicker({
   max,
   isLabelHidden = false,
   isCompact = false,
+  isDense = false,
   onChange,
 }: MonthPickerProps) {
   const labelId = useId()
   const isAtMax = Boolean(max && value >= max)
 
   return (
-    <div role="group" aria-labelledby={labelId} className={styles.field}>
-      <span
-        id={labelId}
-        className={isLabelHidden ? 'sr-only' : styles.label}
-      >
+    <div
+      role="group"
+      aria-labelledby={labelId}
+      className={cn(styles.field, isDense && styles.dense)}
+    >
+      <span id={labelId} className={isLabelHidden ? 'sr-only' : styles.label}>
         {label}
       </span>
       <div className={cn(styles.control, isCompact && styles.compact)}>
