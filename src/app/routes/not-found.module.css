@@ -1,33 +1,224 @@
 .page {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  padding: 28px var(--space-5);
+  background: var(--bg-base);
+  color: var(--text-title);
+}
+
+.brand {
+  display: flex;
+  align-self: flex-start;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--text-title);
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-3);
-  min-height: 100vh;
-  padding: var(--space-7);
+  gap: 28px;
+  padding: var(--space-9) 0;
   text-align: center;
-  background: var(--wash-accent), var(--bg-base);
 }
 
 .code {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: 48px;
-  line-height: 56px;
-  font-weight: 700;
-  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(4px, 1vw, 12px);
+  font-size: clamp(120px, 20vw, 240px);
+  line-height: 0.9;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  animation: rise 0.6s var(--ease-out) both;
+}
+
+.mark {
+  width: 0.78em;
+  height: 0.78em;
+  overflow: visible;
+}
+
+.ring {
+  stroke: var(--text-title);
+  stroke-dasharray: 84;
+  animation: draw 1.2s cubic-bezier(0.65, 0, 0.35, 1) 0.25s both;
+}
+
+.bolt {
+  fill: var(--energy);
+  animation: bolt-in 0.45s var(--ease-out) 1.05s both;
+}
+
+.node,
+.halo {
+  fill: var(--energy);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.node {
+  animation: node-in 0.4s var(--ease-out) 1.4s both;
+}
+
+.halo {
+  opacity: 0;
+  animation: halo 2s var(--ease-pulse) 1.8s infinite;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 460px;
+  animation: rise 0.6s var(--ease-out) 0.12s both;
 }
 
 .title {
   margin: 0;
-  font-size: 24px;
-  line-height: 30px;
-  font-weight: 800;
-  color: var(--text-title);
+  font-size: 36px;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.03em;
 }
 
 .description {
-  margin: 0 0 var(--space-3);
-  color: var(--text-subtle);
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  animation: rise 0.6s var(--ease-out) 0.18s both;
+}
+
+.primary,
+.secondary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 56px;
+  padding: 0 var(--space-7);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-pulse),
+    transform var(--duration-fast) var(--ease-pulse);
+}
+
+.primary {
+  padding: 0 28px;
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+.primary:hover {
+  background: var(--accent-hover);
+  color: var(--text-on-accent);
+}
+
+.secondary {
+  background: var(--surface-card);
+  color: var(--text-title);
+}
+
+.secondary:hover {
+  background: var(--surface-inset);
+}
+
+.primary:active,
+.secondary:active {
+  transform: scale(var(--press-scale));
+}
+
+.footer {
+  margin: 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 84;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes bolt-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes node-in {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes halo {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .code,
+  .ring,
+  .bolt,
+  .node,
+  .halo,
+  .copy,
+  .actions {
+    animation: none;
+  }
 }
