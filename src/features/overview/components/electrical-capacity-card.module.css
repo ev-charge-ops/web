@@ -75,6 +75,7 @@
 .segment {
   flex: none;
   background: var(--energy);
+  transition: width 0.6s var(--ease-out);
   animation: fill 0.9s var(--ease-out) 0.2s both;
 }
 
@@ -121,6 +122,11 @@
   background: var(--gray-300);
 }
 
+.swatch.available {
+  border: 1px solid var(--border-subtle);
+  background: var(--meter-track);
+}
+
 .swatch.segmentAlt {
   background: var(--energy-soft);
 }
@@ -143,6 +149,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .segment {
+    transition: none;
     animation: none;
   }
 }
