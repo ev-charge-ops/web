@@ -110,7 +110,7 @@ export function DashboardLayout({
         className={cn(styles.sidebar, isMenuOpen && styles.sidebarOpen)}
       >
         <div className={styles.brand}>
-          <Logo size={36} />
+          <Logo size={30} />
           <button
             ref={closeButtonRef}
             type="button"
