@@ -3,7 +3,8 @@ import type { components } from '@/lib/api-schema'
 import { managedOrganization } from './organizations'
 
 type OrganizationSession = components['schemas']['OrganizationSessionDto']
-type SessionDetail = components['schemas']['SessionDetailResponseDto']
+type OrganizationSessionDetail =
+  components['schemas']['OrganizationSessionDetailResponseDto']
 type SessionPage = components['schemas']['OrganizationSessionPageDto']
 
 export function createOrganizationSession(
@@ -88,8 +89,8 @@ export function createSessionPage(
 
 export function createSessionDetail(
   session: OrganizationSession,
-  overrides: Partial<SessionDetail> = {},
-): SessionDetail {
+  overrides: Partial<OrganizationSessionDetail> = {},
+): OrganizationSessionDetail {
   return {
     id: session.id,
     status: session.status,
@@ -102,6 +103,12 @@ export function createSessionDetail(
     startedAt: session.startedAt,
     chargingEndedAt: session.chargingEndedAt,
     graceEndsAt: null,
+    idleStartsAt: null,
+    idleFeeCapReachedAt: null,
+    projectedChargingEndsAt: null,
+    projectedGraceEndsAt: null,
+    projectedIdleStartsAt: null,
+    projectedIdleFeeCapReachedAt: null,
     endedAt: session.endedAt,
     energyKwh: session.energyKwh,
     powerKw: 0,
@@ -120,6 +127,8 @@ export function createSessionDetail(
     totalCents: session.totalCents,
     anomalyScore: session.anomalyScore,
     isAnomaly: session.isAnomaly,
+    anomalyModelVersion: session.anomalyScore === null ? null : 'v1',
+    driver: session.driver,
     simulationSpeed: 1,
     payment: null,
     readings: [],
