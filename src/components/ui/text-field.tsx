@@ -1,4 +1,4 @@
-import { useId, type ComponentProps } from 'react'
+import { useId, type ComponentProps, type ReactNode } from 'react'
 
 import { cn } from '@/utils/cn'
 
@@ -6,12 +6,14 @@ import styles from './text-field.module.css'
 
 type TextFieldProps = ComponentProps<'input'> & {
   label: string
+  labelAction?: ReactNode
   hint?: string
   error?: string
 }
 
 export function TextField({
   label,
+  labelAction,
   hint,
   error,
   id,
@@ -28,9 +30,18 @@ export function TextField({
 
   return (
     <div className={cn(styles.field, className)}>
-      <label htmlFor={inputId} className={styles.label}>
-        {label}
-      </label>
+      {labelAction ? (
+        <div className={styles.labelRow}>
+          <label htmlFor={inputId} className={styles.label}>
+            {label}
+          </label>
+          {labelAction}
+        </div>
+      ) : (
+        <label htmlFor={inputId} className={styles.label}>
+          {label}
+        </label>
+      )}
       <input
         id={inputId}
         aria-invalid={error ? true : undefined}

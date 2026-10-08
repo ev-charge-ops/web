@@ -1,65 +1,133 @@
 .page {
   display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  min-height: 100vh;
+  padding: var(--space-5);
+  background: var(--bg-base);
+}
+
+.panel {
+  position: relative;
+  flex: 1 1 520px;
+  min-height: max(560px, calc(100vh - 2 * var(--space-5)));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-8);
+  padding: var(--space-9);
+  overflow: hidden;
+  border-radius: 32px;
+  background: #16181a;
+  color: var(--gray-0);
+  isolation: isolate;
+}
+
+.media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: #1e2023;
+  animation: ken-burns 16s ease-in-out infinite alternate;
+}
+
+.video {
+  opacity: 0.92;
+}
+
+.shade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgba(14, 15, 17, 0.55) 0%,
+    rgba(14, 15, 17, 0.1) 38%,
+    rgba(14, 15, 17, 0.72) 100%
+  );
+}
+
+.logo {
+  position: relative;
+}
+
+.logo span {
+  font-size: 20px;
+}
+
+.pitch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 520px;
+  animation: rise var(--duration-slow) var(--ease-out) both;
+}
+
+.headline {
+  margin: 0;
+  font-size: clamp(36px, 4.4vw, 60px);
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  padding: var(--space-3) 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 600;
+}
+
+.main {
+  flex: 1 1 420px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  padding: var(--space-7) var(--space-5);
-  background: var(--wash-accent), var(--bg-base);
+  padding: var(--space-8) var(--space-5);
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  gap: var(--space-7);
+  gap: 18px;
   width: 100%;
   max-width: 400px;
-}
-
-.brand {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.logo {
-  margin-bottom: var(--space-2);
-}
-
-.eyebrow {
-  font-size: 11px;
-  line-height: 14px;
-  font-weight: 800;
-  letter-spacing: var(--tracking-caps);
-  text-transform: uppercase;
-  color: var(--text-subtle);
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
+  animation: rise var(--duration-slow) var(--ease-out) 0.1s both;
 }
 
 .header {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 6px;
 }
 
 .title {
   margin: 0;
-  font-size: 28px;
-  line-height: 34px;
+  font-size: 34px;
+  line-height: 40px;
   font-weight: 700;
-  letter-spacing: var(--tracking-title);
+  letter-spacing: -0.03em;
   color: var(--text-title);
 }
 
 .description {
   margin: 0;
-  font-size: 15px;
-  line-height: 22px;
+  font-size: 16px;
+  line-height: 24px;
   color: var(--text-muted);
 }
 
@@ -68,5 +136,77 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: var(--space-5);
+  padding-top: var(--space-3);
   font-size: 12px;
+}
+
+@keyframes ken-burns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@media (max-width: 987px) {
+  .panel {
+    min-height: 280px;
+    padding: 28px;
+  }
+
+  .headline {
+    font-size: clamp(30px, 7vw, 44px);
+  }
+
+  .main {
+    padding: var(--space-5) 0 var(--space-7);
+  }
+}
+
+@media (max-width: 520px) {
+  .page {
+    gap: var(--space-3);
+    padding: var(--space-3);
+  }
+
+  .panel {
+    min-height: 220px;
+    padding: var(--space-6);
+    border-radius: var(--radius-sheet);
+  }
+
+  .chips {
+    display: none;
+  }
+
+  .main {
+    padding: var(--space-5) var(--space-3) var(--space-7);
+  }
+
+  .title {
+    font-size: 30px;
+    line-height: 36px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media,
+  .pitch,
+  .content {
+    animation: none;
+  }
 }

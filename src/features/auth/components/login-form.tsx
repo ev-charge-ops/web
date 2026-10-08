@@ -48,21 +48,26 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         label="E-mail"
         type="email"
         autoComplete="username"
-        placeholder="voce@condominio.com.br"
+        placeholder="gestor@condominio.com.br"
         error={errors.email?.message}
         {...register('email')}
       />
       <TextField
         label="Senha"
+        labelAction={
+          <Link to={paths.auth.forgotPassword.getHref()}>Esqueci a senha</Link>
+        }
         type="password"
         autoComplete="current-password"
         error={errors.password?.message}
         {...register('password')}
       />
-      <div className={styles.forgot}>
-        <Link to={paths.auth.forgotPassword.getHref()}>Esqueci minha senha</Link>
-      </div>
-      <Button type="submit" isLoading={login.isPending} className={styles.submit}>
+      <Button
+        type="submit"
+        size="lg"
+        isLoading={login.isPending}
+        className={styles.submit}
+      >
         Entrar
       </Button>
     </form>

@@ -95,6 +95,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       />
       <Button
         type="submit"
+        size="lg"
         isLoading={resetPassword.isPending}
         className={styles.submit}
       >

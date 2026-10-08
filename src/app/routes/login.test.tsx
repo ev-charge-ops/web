@@ -43,7 +43,7 @@ function mockEmailLogin(user: AuthUser) {
 async function signInWithCode(email: string) {
   const user = userEvent.setup()
   await user.click(
-    screen.getByRole('button', { name: 'Entrar com código por e-mail' }),
+    screen.getByRole('button', { name: 'Receber link de acesso por e-mail' }),
   )
   await user.type(screen.getByLabelText('E-mail'), email)
   await user.click(screen.getByRole('button', { name: 'Enviar código' }))
@@ -58,13 +58,31 @@ describe('LoginRoute', () => {
     expect(screen.getByLabelText('Senha')).toBeInTheDocument()
 
     await user.click(
-      screen.getByRole('button', { name: 'Entrar com código por e-mail' }),
+      screen.getByRole('button', { name: 'Receber link de acesso por e-mail' }),
     )
     expect(screen.queryByLabelText('Senha')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Enviar código' })).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Entrar com senha' }))
     expect(screen.getByLabelText('Senha')).toBeInTheDocument()
+  })
+
+  it('presents the portal pitch, the forgot password link and the driver note', () => {
+    renderRoutes()
+
+    expect(screen.getByRole('heading', { name: 'Entrar', level: 1 })).toBeInTheDocument()
+    expect(screen.getByText('Portal do gestor e do síndico')).toBeInTheDocument()
+    expect(
+      screen.getByText('Cada kWh com dono, cada vaga livre a tempo.'),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Rateio por unidade')).toBeInTheDocument()
+    expect(screen.getByText('Capacidade elétrica ao vivo')).toBeInTheDocument()
+    expect(screen.getByText('Anomalias por IA')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Esqueci a senha' })).toHaveAttribute(
+      'href',
+      '/forgot-password',
+    )
+    expect(screen.getByText('Motorista?')).toBeInTheDocument()
   })
 
   it('links to the privacy policy and terms of use', () => {

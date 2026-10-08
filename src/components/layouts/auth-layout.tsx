@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-import { Card } from '@/components/ui/card'
+import { BackgroundVideo } from '@/components/ui/background-video'
 import { Logo } from '@/components/ui/logo'
 
 import styles from './auth-layout.module.css'
@@ -12,6 +12,12 @@ type AuthLayoutProps = {
   footer?: ReactNode
 }
 
+const highlights = [
+  'Rateio por unidade',
+  'Capacidade elétrica ao vivo',
+  'Anomalias por IA',
+]
+
 export function AuthLayout({
   title,
   description,
@@ -19,13 +25,28 @@ export function AuthLayout({
   footer,
 }: AuthLayoutProps) {
   return (
-    <main className={styles.page}>
-      <div className={styles.content}>
-        <div className={styles.brand}>
-          <Logo size={44} className={styles.logo} />
-          <span className={styles.eyebrow}>Portal do condomínio</span>
+    <div className={styles.page}>
+      <aside className={styles.panel} aria-label="EV ChargeOps">
+        <div className={styles.media}>
+          <BackgroundVideo src="/media/garage-loop" className={styles.video} />
         </div>
-        <Card className={styles.card}>
+        <div className={styles.shade} aria-hidden="true" />
+        <Logo variant="inverse" size={40} className={styles.logo} />
+        <div className={styles.pitch}>
+          <p className={styles.headline}>
+            Cada kWh com dono, cada vaga livre a tempo.
+          </p>
+          <ul className={styles.chips}>
+            {highlights.map((highlight) => (
+              <li key={highlight} className={styles.chip}>
+                {highlight}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+      <main className={styles.main}>
+        <div className={styles.content}>
           <header className={styles.header}>
             <h1 className={styles.title}>{title}</h1>
             {description ? (
@@ -33,9 +54,9 @@ export function AuthLayout({
             ) : null}
           </header>
           {children}
-        </Card>
-        {footer ? <footer className={styles.footer}>{footer}</footer> : null}
-      </div>
-    </main>
+          {footer ? <footer className={styles.footer}>{footer}</footer> : null}
+        </div>
+      </main>
+    </div>
   )
 }
