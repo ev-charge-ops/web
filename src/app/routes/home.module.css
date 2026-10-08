@@ -1,25 +1,11 @@
-.split {
+.pair {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
   gap: var(--gap-card);
-}
-
-.halves {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--gap-card);
-  align-items: start;
 }
 
 .state {
   display: flex;
   justify-content: center;
   padding: var(--space-9) 0;
-}
-
-@media (max-width: 1080px) {
-  .split,
-  .halves {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
