@@ -1,15 +1,49 @@
-.layout {
+.pair {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
   gap: var(--gap-card);
-  align-items: start;
 }
 
-.aside {
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.tile {
   display: flex;
   flex-direction: column;
-  gap: var(--gap-card);
-  min-width: 0;
+  gap: var(--space-2);
+  padding: var(--space-4) 14px;
+  border-radius: var(--radius-md);
+  background: var(--surface-inset);
+}
+
+.tile dt {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.tile dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-title);
+}
+
+.tileHint {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--text-muted);
 }
 
 .state {
@@ -19,14 +53,23 @@
 }
 
 .note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
   margin: 0;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-subtle);
+  padding: var(--space-5) 18px;
+  border-radius: var(--radius-lg);
+  background: var(--status-info-bg);
+  color: var(--status-info);
+  font-size: 14px;
+  line-height: 1.45;
 }
 
-@media (max-width: 1080px) {
-  .layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
+.note svg {
+  flex: none;
+}
+
+.note strong {
+  display: block;
+  margin-bottom: 3px;
 }
