@@ -6,6 +6,10 @@ import type { components } from '@/lib/api-schema'
 export type OrganizationOverview =
   components['schemas']['OrganizationOverviewResponseDto']
 export type SiteCapacity = components['schemas']['SiteCapacityDto']
+export type OverviewChargePoint = components['schemas']['OverviewChargePointDto']
+export type MonthPeak = components['schemas']['MonthPeakDto']
+
+export const overviewLiveRefreshMs = 30_000
 
 export async function getOverview(
   organizationId: string,
@@ -25,6 +29,17 @@ export const getOverviewQueryOptions = (organizationId: string, month?: string) 
     queryFn: () => getOverview(organizationId, month),
   })
 
-export function useOverview(organizationId: string, month?: string) {
-  return useQuery(getOverviewQueryOptions(organizationId, month))
+type UseOverviewOptions = {
+  refetchInterval?: number | false
+}
+
+export function useOverview(
+  organizationId: string,
+  month?: string,
+  { refetchInterval = false }: UseOverviewOptions = {},
+) {
+  return useQuery({
+    ...getOverviewQueryOptions(organizationId, month),
+    refetchInterval,
+  })
 }
