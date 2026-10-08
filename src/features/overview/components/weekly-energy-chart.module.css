@@ -61,6 +61,7 @@
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--text-title);
+  animation: value-in 0.4s var(--ease-out) both;
 }
 
 .bar {
@@ -92,8 +93,20 @@
   }
 }
 
+@keyframes value-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .bar {
+  .bar,
+  .value {
     animation: none;
   }
 }
