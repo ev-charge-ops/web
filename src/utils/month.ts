@@ -62,8 +62,12 @@ export function formatShortMonth(month: string) {
   return `${capitalize(name)} ${month.slice(0, 4)}`
 }
 
-export function getMonthLastDay(month: string) {
+export function getDaysInMonth(month: string) {
   const [year, monthIndex] = month.split('-').map(Number)
-  const day = new Date(Date.UTC(year, monthIndex, 0)).getUTCDate()
-  return `${String(day).padStart(2, '0')}/${String(monthIndex).padStart(2, '0')}`
+  return new Date(Date.UTC(year, monthIndex, 0)).getUTCDate()
+}
+
+export function getMonthLastDay(month: string) {
+  const day = getDaysInMonth(month)
+  return `${String(day).padStart(2, '0')}/${month.slice(5, 7)}`
 }
