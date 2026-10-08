@@ -8,7 +8,7 @@
 .eyebrow {
   padding: 0 6px;
   font-size: 12px;
-  line-height: 16px;
+  line-height: 14px;
   font-weight: 700;
   letter-spacing: var(--tracking-caps);
   text-transform: uppercase;
@@ -58,13 +58,13 @@
 
 .name {
   font-size: 15px;
-  line-height: 20px;
+  line-height: 18px;
   font-weight: 700;
 }
 
 .subtitle {
   font-size: 13px;
-  line-height: 18px;
+  line-height: 15px;
   font-weight: 400;
   color: var(--text-muted);
 }
