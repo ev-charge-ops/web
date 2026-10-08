@@ -3,6 +3,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { Link, NavLink } from 'react-router'
 
 import { Logo } from '@/components/ui/logo'
+import { companyIdentification } from '@/config/company'
 import { paths } from '@/config/paths'
 import { cn } from '@/utils/cn'
 
@@ -136,6 +137,7 @@ export function LegalLayout({
                   qualquer mudança relevante neste documento.
                 </p>
               ) : null}
+              <p className={styles.company}>{companyIdentification}</p>
             </div>
           </article>
         </main>

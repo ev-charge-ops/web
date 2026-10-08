@@ -117,6 +117,11 @@ describe('LoginRoute', () => {
       'href',
       '/termos',
     )
+    expect(
+      screen.getByText(
+        'SOFTMOON.IO SERVICOS DE INFORMATICA LTDA · CNPJ 29.734.824/0001-77',
+      ),
+    ).toBeInTheDocument()
   })
 
   it('signs in with an email code and follows the redirect target', async () => {

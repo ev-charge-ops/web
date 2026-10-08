@@ -4,6 +4,7 @@ import {
   LegalLayout,
   type LegalSection,
 } from '@/components/layouts/legal-layout'
+import { company } from '@/config/company'
 import { paths } from '@/config/paths'
 
 const contactEmail = 'contato@softmoon.io'
@@ -18,6 +19,10 @@ const sections: LegalSection[] = [
         <p>
           Estes termos regem o uso do portal e do aplicativo EV ChargeOps. Ao
           criar uma conta ou usar o serviço, você concorda com eles.
+        </p>
+        <p>
+          O EV ChargeOps é operado por {company.legalName}, inscrita no CNPJ
+          sob o nº {company.cnpj}.
         </p>
         <p>
           O EV ChargeOps é um MVP acadêmico desenvolvido no FIAP Enterprise
