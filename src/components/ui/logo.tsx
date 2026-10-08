@@ -20,7 +20,7 @@ export function LogoMark({
   variant = 'dark',
   size = 36,
 }: Pick<LogoProps, 'variant' | 'size'>) {
-  const isCompact = size < 40
+  const isCompact = size < 32
 
   return (
     <svg
