@@ -1,3 +1,5 @@
+import { useRef, type KeyboardEvent } from 'react'
+
 import { StatusPill } from '@/components/ui/status-pill'
 import tableStyles from '@/components/ui/table.module.css'
 import { cn } from '@/utils/cn'
@@ -43,6 +45,21 @@ export function SessionsTable({
   selectedId,
   onSelect,
 }: SessionsTableProps) {
+  const buttonsRef = useRef<Array<HTMLButtonElement | null>>([])
+
+  const onRowKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    index: number,
+  ) => {
+    const offset =
+      event.key === 'ArrowDown' ? 1 : event.key === 'ArrowUp' ? -1 : 0
+    const next = sessions[index + offset]
+    if (!offset || !next) return
+    event.preventDefault()
+    buttonsRef.current[index + offset]?.focus()
+    if (selectedId) onSelect(next)
+  }
+
   return (
     <div className={tableStyles.wrap}>
       <table
@@ -62,7 +79,7 @@ export function SessionsTable({
           </tr>
         </thead>
         <tbody>
-          {sessions.map((session) => {
+          {sessions.map((session, index) => {
             const status = getSessionRowStatus(session)
             const flagged = isFlagged(session)
             return (
@@ -77,8 +94,12 @@ export function SessionsTable({
               >
                 <td>
                   <button
+                    ref={(element) => {
+                      buttonsRef.current[index] = element
+                    }}
                     type="button"
                     className={styles.open}
+                    onKeyDown={(event) => onRowKeyDown(event, index)}
                     aria-label={`Ver detalhes da sessão de ${session.driver.name} em ${formatDayTime(session.startedAt)}`}
                     onClick={(event) => {
                       event.stopPropagation()
