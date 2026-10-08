@@ -22,11 +22,12 @@
     (s.dataset.t || "0,0").split(",").map(Number),
   );
   let active = -1;
-  let targetTime = 0;
-  let shownTime = 0;
+  let targetTime = ranges[0][0];
+  let shownTime = targetTime;
   let lastScroll = 0;
   let scrolling = false;
   let idleTimer = 0;
+  let syncedScroll = -1;
 
   function setActive(i) {
     if (i === active) return;
@@ -63,13 +64,16 @@
   }
 
   function onScroll() {
+    syncedScroll = scrollY;
     const vh = innerHeight;
     let idx = 0;
     steps.forEach((s, i) => {
-      const r = s.getBoundingClientRect();
-      if (r.top < vh * 0.55) idx = i;
-      if (r.top < vh * 0.8) s.classList.add("in");
+      if (s.getBoundingClientRect().top < vh * 0.55) idx = i;
     });
+    const storyBottom = story.getBoundingClientRect().bottom;
+    body.style.setProperty("--lift", `${Math.min(0, storyBottom - vh)}px`);
+    const storyOut = storyBottom < vh * 0.25;
+    steps.forEach((s, i) => s.classList.toggle("in", i === idx && !storyOut));
     setActive(idx);
 
     const s = steps[idx];
@@ -117,6 +121,11 @@
     }, 180);
   }
 
+  function sync() {
+    if (scrollY !== syncedScroll) onScroll();
+    requestAnimationFrame(sync);
+  }
+
   function loop() {
     shownTime += (targetTime - shownTime) * 0.18;
     if (
@@ -143,6 +152,7 @@
   addEventListener("resize", onScroll);
   onScroll();
   scrolling = false;
+  requestAnimationFrame(sync);
 
   const io = new IntersectionObserver(
     (es) =>
@@ -155,4 +165,31 @@
     { threshold: 0.2 },
   );
   document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+})();
+
+(() => {
+  const tabs = [...document.querySelectorAll(".portal-tabs [data-shot]")];
+  const shots = [...document.querySelectorAll(".browser-view [data-shot]")];
+  if (!tabs.length) return;
+  let current = 0;
+  let timer = 0;
+  const show = (i) => {
+    current = i;
+    tabs.forEach((t, k) => t.setAttribute("aria-selected", String(k === i)));
+    shots.forEach((img) =>
+      img.classList.toggle("on", img.dataset.shot === tabs[i].dataset.shot),
+    );
+  };
+  const schedule = () => {
+    clearInterval(timer);
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    timer = setInterval(() => show((current + 1) % tabs.length), 5000);
+  };
+  tabs.forEach((t, i) =>
+    t.addEventListener("click", () => {
+      show(i);
+      schedule();
+    }),
+  );
+  schedule();
 })();

@@ -142,7 +142,7 @@
       </a>
       <nav aria-label="Seções">
         <a href="#motorista">Motorista</a>
-        <a href="#sindico">Síndico</a>
+        <a href="#condominio">Condomínio</a>
         <a href="#regras">Regras</a>
         <a href="#contato">Contato</a>
       </nav>
@@ -295,7 +295,7 @@
             class="step step-hero"
             data-bg="studio"
             data-theme="light"
-            data-t="0,6.4"
+            data-t="3.6,6"
           >
             <div class="copy">
               <p class="eyebrow">Recarga de carro elétrico em condomínios</p>
@@ -322,7 +322,7 @@
             id="motorista-1"
             data-bg="garagem"
             data-theme="dark"
-            data-t="6.5,13.4"
+            data-t="7.2,13"
           >
             <div class="copy">
               <p class="eyebrow">1 · Encontrar</p>
@@ -343,7 +343,7 @@
             class="step side-right"
             data-bg="studio"
             data-theme="light"
-            data-t="13.5,22.4"
+            data-t="14.2,21.8"
           >
             <div class="copy">
               <p class="eyebrow">2 · Iniciar</p>
@@ -364,7 +364,7 @@
             class="step side-left"
             data-bg="green"
             data-theme="dark"
-            data-t="22.5,27.4"
+            data-t="23.2,27.4"
             data-ring="1"
           >
             <div class="copy">
@@ -382,7 +382,7 @@
             class="step side-right"
             data-bg="amber"
             data-theme="dark"
-            data-t="27.5,31.9"
+            data-t="27.6,31"
             data-ring="1"
           >
             <div class="copy">
@@ -400,7 +400,7 @@
             class="step side-left"
             data-bg="studio"
             data-theme="light"
-            data-t="32,37.9"
+            data-t="32.2,36"
           >
             <div class="copy">
               <p class="eyebrow">5 · Pagar o justo</p>
@@ -418,7 +418,7 @@
             id="sindico"
             data-bg="predio"
             data-theme="dark"
-            data-t="37.9,39.9"
+            data-t="38.2,39.8"
             data-portal="1"
           >
             <div class="copy">
@@ -429,11 +429,138 @@
                 carregou, quanto consumiu e o valor de cada unidade, com
                 exportação em CSV e alerta de anomalias.
               </p>
-              <a class="btn btn-light" href="https://app.evchargeops.com.br"
-                >Conhecer o portal</a
-              >
+              <a class="btn btn-light" href="#condominio">Ver o portal</a>
             </div>
           </article>
+        </div>
+      </section>
+
+      <section
+        class="band band-portal"
+        id="condominio"
+        aria-labelledby="condominio-t"
+      >
+        <div class="wrap">
+          <p class="eyebrow">Para o condomínio</p>
+          <h2 id="condominio-t" class="reveal">
+            O síndico enxerga tudo. Sem planilha.
+          </h2>
+          <p class="lead reveal">
+            O portal do condomínio mostra a capacidade elétrica ao vivo, cada
+            recarga por morador e o rateio do mês pronto para a administradora,
+            com regras de tarifa, tolerância e multa definidas pelo próprio
+            condomínio.
+          </p>
+          <div
+            class="portal-tabs reveal"
+            role="tablist"
+            aria-label="Telas do portal"
+          >
+            <button
+              type="button"
+              role="tab"
+              aria-selected="true"
+              aria-controls="portal-shot"
+              data-shot="overview"
+            >
+              Visão geral
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="portal-shot"
+              data-shot="cost-sharing"
+            >
+              Rateio mensal
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="portal-shot"
+              data-shot="sessions"
+            >
+              Sessões
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="portal-shot"
+              data-shot="charge-points"
+            >
+              Pontos e capacidade
+            </button>
+          </div>
+          <figure class="browser reveal" id="portal-shot" role="tabpanel">
+            <div class="browser-bar" aria-hidden="true">
+              <i></i><i></i><i></i>
+              <span>app.evchargeops.com.br</span>
+            </div>
+            <div class="browser-view">
+              <img
+                data-shot="overview"
+                class="on"
+                src="/assets/img/portal-overview.webp"
+                width="1440"
+                height="900"
+                alt="Visão geral do portal: capacidade elétrica, consumo do mês, sessões e anomalias"
+                loading="lazy"
+                decoding="async"
+              />
+              <img
+                data-shot="cost-sharing"
+                src="/assets/img/portal-cost-sharing.webp"
+                width="1440"
+                height="900"
+                alt="Rateio mensal por unidade com total, taxa de acesso e multas de ocupação"
+                loading="lazy"
+                decoding="async"
+              />
+              <img
+                data-shot="sessions"
+                src="/assets/img/portal-sessions.webp"
+                width="1440"
+                height="900"
+                alt="Lista de sessões de recarga com morador, energia, valor e alertas de anomalia"
+                loading="lazy"
+                decoding="async"
+              />
+              <img
+                data-shot="charge-points"
+                src="/assets/img/portal-charge-points.webp"
+                width="1440"
+                height="900"
+                alt="Pontos de recarga do condomínio com potência e capacidade em uso"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </figure>
+          <div class="grid3 portal-feats">
+            <div class="feat-light reveal">
+              <b>Capacidade ao vivo</b>
+              <p>
+                Quanto da demanda contratada está em uso agora e o pico do mês,
+                por ponto.
+              </p>
+            </div>
+            <div class="feat-light reveal">
+              <b>Rateio pronto</b>
+              <p>
+                Energia a custo, taxa de acesso e ocupação por unidade,
+                exportados em CSV.
+              </p>
+            </div>
+            <div class="feat-light reveal">
+              <b>Moradores e regras</b>
+              <p>
+                Convites por e-mail, tolerância, multa e alertas de consumo fora
+                do perfil.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
