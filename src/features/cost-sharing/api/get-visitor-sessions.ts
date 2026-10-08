@@ -1,49 +1,33 @@
 import { queryOptions, useQuery } from '@tanstack/react-query'
 
 import { apiClient, toApiError } from '@/lib/api-client'
+import type { components } from '@/lib/api-schema'
+
+type Overview = components['schemas']['OrganizationOverviewResponseDto']
 
 export type VisitorSessions = {
   sessionsCount: number
   commercialPointCodes: string[]
 }
 
-async function getCommercialPoints(organizationId: string) {
-  const { data, error, response } = await apiClient.GET('/charge-points', {
-    params: { query: { organizationId } },
-  })
-  if (!data) throw toApiError(response, error)
-  return data.filter((point) => point.type === 'COMMERCIAL')
-}
-
-async function countPointSessions(
+async function getMonthOverview(
   organizationId: string,
-  chargePointId: string,
   month: string,
-) {
+): Promise<Overview> {
   const { data, error, response } = await apiClient.GET(
-    '/organizations/{organizationId}/sessions',
-    {
-      params: {
-        path: { organizationId },
-        query: { month, chargePointId, page: 1, pageSize: 1 },
-      },
-    },
+    '/organizations/{organizationId}/overview',
+    { params: { path: { organizationId }, query: { month } } },
   )
   if (!data) throw toApiError(response, error)
-  return data.total
+  return data
 }
 
-export async function getVisitorSessions(
-  organizationId: string,
-  month: string,
-): Promise<VisitorSessions> {
-  const points = await getCommercialPoints(organizationId)
-  const counts = await Promise.all(
-    points.map((point) => countPointSessions(organizationId, point.id, month)),
-  )
+export function toVisitorSessions(overview: Overview): VisitorSessions {
   return {
-    sessionsCount: counts.reduce((sum, count) => sum + count, 0),
-    commercialPointCodes: points.map((point) => point.code),
+    sessionsCount: overview.visitorSessionsCount,
+    commercialPointCodes: overview.chargePoints
+      .filter((point) => point.type === 'COMMERCIAL')
+      .map((point) => point.code),
   }
 }
 
@@ -52,8 +36,9 @@ export const getVisitorSessionsQueryOptions = (
   month: string,
 ) =>
   queryOptions({
-    queryKey: ['organizations', organizationId, 'visitor-sessions', month],
-    queryFn: () => getVisitorSessions(organizationId, month),
+    queryKey: ['organizations', organizationId, 'overview', month],
+    queryFn: () => getMonthOverview(organizationId, month),
+    select: toVisitorSessions,
   })
 
 export function useVisitorSessions(organizationId: string, month: string) {

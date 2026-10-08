@@ -2,6 +2,7 @@ import { Alert } from '@/components/ui/alert'
 import { PageTitle } from '@/components/ui/page-title'
 import { Spinner } from '@/components/ui/spinner'
 import { ChargePointsGrid } from '@/features/charge-points/components/charge-points-grid'
+import { DynamicPriceCard } from '@/features/charge-points/components/dynamic-price-card'
 import { ManagedOrganization } from '@/features/organizations/components/managed-organization'
 import { useOverview } from '@/features/overview/api/get-overview'
 import { CapacityCard } from '@/features/overview/components/capacity-card'
@@ -26,7 +27,12 @@ function SiteCapacity({ organizationId }: { organizationId: string }) {
     return <Alert>Não foi possível carregar a capacidade elétrica.</Alert>
   }
 
-  return <CapacityCard capacity={overview.data.capacity} />
+  return (
+    <div className={styles.aside}>
+      <CapacityCard capacity={overview.data.capacity} />
+      <DynamicPriceCard chargePoints={overview.data.chargePoints} />
+    </div>
+  )
 }
 
 export function ChargePointsRoute() {
@@ -35,6 +41,7 @@ export function ChargePointsRoute() {
       {(organization) => (
         <>
           <PageTitle
+            eyebrow={organization.name}
             title={pageTitle}
             description={`Pontos de recarga de ${organization.name} com status, carregador e preço do kWh agora. A demanda somada nunca passa do limite contratado porque o balanceamento reduz a potência antes.`}
           />

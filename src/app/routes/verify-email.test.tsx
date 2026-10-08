@@ -113,7 +113,7 @@ describe('VerifyEmailRoute', () => {
     await userEvent.click(portalLink)
 
     expect(
-      await screen.findByRole('heading', { name: `Olá, ${managerUser.name}` }),
+      await screen.findByRole('heading', { name: 'Visão geral', level: 1 }),
     ).toBeInTheDocument()
     expect(
       screen.queryByRole('region', { name: 'Verificação de e-mail' }),

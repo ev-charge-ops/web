@@ -1,0 +1,148 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+  padding: var(--space-7);
+  border-radius: var(--radius-sheet);
+  background: var(--surface-card);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+.subtitle {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-muted);
+}
+
+.figure {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.value {
+  font-size: 56px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-title);
+}
+
+.unit {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.meter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.bar {
+  display: flex;
+  height: 14px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--meter-track);
+}
+
+.segment {
+  flex: none;
+  background: var(--energy);
+  animation: fill 0.9s var(--ease-out) 0.2s both;
+}
+
+.segmentAlt {
+  background: var(--energy-soft);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.reserve {
+  flex: none;
+  background: var(--gray-300);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--energy);
+}
+
+.swatch.reserve {
+  background: var(--gray-300);
+}
+
+.swatch.segmentAlt {
+  background: var(--energy-soft);
+}
+
+.note {
+  margin: 0;
+  padding: var(--space-4) 14px;
+  border-radius: var(--radius-input);
+  background: var(--surface-inset);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-body);
+}
+
+@keyframes fill {
+  from {
+    width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .segment {
+    animation: none;
+  }
+}

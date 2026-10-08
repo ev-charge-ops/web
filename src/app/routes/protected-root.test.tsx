@@ -51,15 +51,14 @@ describe('ProtectedRoot', () => {
     ).toBeInTheDocument()
   })
 
-  it('shows the overview with the manager name and role', async () => {
+  it('shows the overview inside the portal shell', async () => {
     mockSession(managerUser)
     renderRoutes()
 
     expect(screen.getByText('Restaurando sessão')).toBeInTheDocument()
     expect(
-      await screen.findByRole('heading', { name: `Olá, ${managerUser.name}` }),
+      await screen.findByRole('heading', { name: 'Visão geral', level: 1 }),
     ).toBeInTheDocument()
-    expect(screen.getByText('Gestor do condomínio')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Sair' })).toBeInTheDocument()
     expect(
       await screen.findByText(managedOrganization.name),
@@ -137,7 +136,7 @@ describe('ProtectedRoot', () => {
     renderRoutes('/login')
 
     expect(
-      await screen.findByRole('heading', { name: `Olá, ${managerUser.name}` }),
+      await screen.findByRole('heading', { name: 'Visão geral', level: 1 }),
     ).toBeInTheDocument()
   })
 })

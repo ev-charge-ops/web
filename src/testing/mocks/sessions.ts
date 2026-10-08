@@ -36,6 +36,10 @@ export function createOrganizationSession(
     totalCents: 1114,
     anomalyScore: 0.21,
     isAnomaly: false,
+    anomalyReviewStatus: null,
+    anomalyReviewNote: null,
+    anomalyReviewedAt: null,
+    anomalyReviewedById: null,
     ...overrides,
   }
 }
@@ -59,6 +63,7 @@ export const flaggedSession = createOrganizationSession({
   totalCents: 6409,
   anomalyScore: 0.9133,
   isAnomaly: true,
+  anomalyReviewStatus: 'PENDING_REVIEW',
 })
 
 export const organizationSessions: OrganizationSession[] = [
@@ -128,6 +133,10 @@ export function createSessionDetail(
     anomalyScore: session.anomalyScore,
     isAnomaly: session.isAnomaly,
     anomalyModelVersion: session.anomalyScore === null ? null : 'v1',
+    anomalyReviewStatus: session.anomalyReviewStatus,
+    anomalyReviewNote: session.anomalyReviewNote,
+    anomalyReviewedAt: session.anomalyReviewedAt,
+    anomalyReviewedById: session.anomalyReviewedById,
     driver: session.driver,
     simulationSpeed: 1,
     payment: null,

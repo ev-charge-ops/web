@@ -211,7 +211,7 @@ describe('LoginRoute with OAuth providers', () => {
     await user.click(screen.getByRole('button', { name: 'Continuar com a Apple' }))
 
     expect(
-      await screen.findByRole('heading', { name: `Olá, ${managerUser.name}` }),
+      await screen.findByRole('heading', { name: 'Visão geral', level: 1 }),
     ).toBeInTheDocument()
     expect(signInWithApple).toHaveBeenCalledWith({
       clientId: 'apple-services-id',

@@ -46,6 +46,15 @@ describe('ChargePointsRoute', () => {
     ).toBeInTheDocument()
   })
 
+  it('shows the dynamic price of each point next to the capacity', async () => {
+    renderApp(<ChargePointsRoute />, { route: '/charge-points' })
+
+    const prices = await screen.findByRole('list', { name: 'Preço por ponto' })
+    expect(within(prices).getAllByRole('listitem')).toHaveLength(3)
+    expect(screen.getByText('Fator de demanda 0,8×')).toBeInTheDocument()
+    expect(screen.getByText(managedOrganization.name, { selector: 'p' })).toBeInTheDocument()
+  })
+
   it('requests only the points of the managed organization', async () => {
     const organizationIds: (string | null)[] = []
     server.use(
