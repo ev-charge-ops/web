@@ -1,65 +1,179 @@
-.stack,
-.form {
+.header,
+.message {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: 10px;
+  animation: rise 0.6s var(--ease-out) 0.06s both;
 }
 
-.summary {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
+.title {
   margin: 0;
-  padding: var(--space-4);
+  font-size: 30px;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-title);
+  text-wrap: balance;
+}
+
+.description {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.role {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: var(--space-4) 14px;
   border-radius: var(--radius-input);
   background: var(--surface-inset);
 }
 
-.summary div {
+.roleIcon {
   display: flex;
-  justify-content: space-between;
-  gap: var(--space-4);
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--energy-tint);
+  color: var(--energy-text);
 }
 
-.summary dt {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-subtle);
+.roleText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
-.summary dd {
-  margin: 0;
-  font-size: 13px;
+.roleName {
+  font-size: 15px;
   font-weight: 700;
   color: var(--text-title);
-  text-align: right;
+}
+
+.roleDescription {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-muted);
   overflow-wrap: anywhere;
 }
 
-.footnote {
-  margin: 0;
-  font-size: 13px;
-  text-align: center;
-  color: var(--text-subtle);
-}
-
-.result {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.resultTitle {
-  margin: 0;
-  font-size: 16px;
-  line-height: 22px;
-  font-weight: 800;
+.meta strong {
   color: var(--text-title);
 }
 
-.resultDescription {
-  margin: 0;
-  font-size: 14px;
-  line-height: 20px;
+.avatar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg-base);
+  color: var(--text-title);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: rise 0.6s var(--ease-out) 0.12s both;
+}
+
+.fieldEmail {
+  font-size: 13px;
+  font-weight: 500;
   color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.oauth button {
+  height: 48px;
+  background: var(--surface-card);
+  box-shadow: inset 0 0 0 1px var(--border-subtle);
+}
+
+.oauth button:hover:not(:disabled) {
+  background: var(--surface-inset);
+}
+
+.submit {
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+.terms {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.terms a {
+  font-weight: 700;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-9) 0;
+}
+
+.openApp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  height: 56px;
+  margin-top: var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--text-on-accent);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.openApp:hover {
+  background: var(--accent-hover);
+  color: var(--text-on-accent);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .message,
+  .form {
+    animation: none;
+  }
 }
