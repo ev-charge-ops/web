@@ -5,6 +5,13 @@
   align-items: start;
 }
 
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-card);
+  min-width: 0;
+}
+
 .state {
   display: flex;
   justify-content: center;
