@@ -26,7 +26,7 @@ export function DriverAccessNotice({ user }: DriverAccessNoticeProps) {
         </span>
       </div>
       <Button
-        variant="outline"
+        variant="secondary"
         icon={<LogOut size={16} strokeWidth={2} aria-hidden />}
         isLoading={logout.isPending}
         onClick={() => logout.mutate()}

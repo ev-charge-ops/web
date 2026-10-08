@@ -111,7 +111,7 @@ export function InviteDrawer({
         </Card>
 
         <div className={styles.footer}>
-          <Button variant="outline" onClick={close} className={styles.cancel}>
+          <Button variant="secondary" onClick={close} className={styles.cancel}>
             Cancelar
           </Button>
           <Button

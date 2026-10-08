@@ -120,7 +120,7 @@ export function TariffForm({ organizationId, tariff }: TariffFormProps) {
         </span>
         <div className={styles.actions}>
           <Button
-            variant="outline"
+            variant="secondary"
             disabled={!isDirty || updateTariff.isPending}
             onClick={() => reset(toTariffFormValues(tariff))}
           >

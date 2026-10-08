@@ -150,7 +150,7 @@ function SessionsPage({ organizationId }: { organizationId: string }) {
           <div className={styles.state}>
             <Alert
               action={
-                <Button variant="outline" size="sm" onClick={() => sessions.refetch()}>
+                <Button variant="secondary" size="sm" onClick={() => sessions.refetch()}>
                   Tentar novamente
                 </Button>
               }
