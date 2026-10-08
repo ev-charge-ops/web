@@ -65,13 +65,13 @@
 .bar {
   display: block;
   width: 100%;
-  border-radius: 8px 8px 4px 4px;
-  background: rgba(38, 208, 124, 0.35);
+  border-radius: var(--radius-input);
+  background: var(--chart-bar);
   transition: height var(--duration-slow) var(--ease-out);
 }
 
 .peak {
-  background: var(--status-charging);
+  background: var(--chart-bar-peak);
 }
 
 .week {
