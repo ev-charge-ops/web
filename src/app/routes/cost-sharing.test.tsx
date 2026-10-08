@@ -6,9 +6,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { env } from '@/config/env'
 import { managedOrganization } from '@/testing/mocks/organizations'
 import { server } from '@/testing/mocks/server'
+import { createSessionPage } from '@/testing/mocks/sessions'
 import { createStatement } from '@/testing/mocks/statements'
 import { renderApp } from '@/testing/test-utils'
-import { formatMonth, getCurrentMonth, shiftMonth } from '@/utils/month'
+import {
+  formatMonth,
+  formatMonthTitle,
+  getCurrentMonth,
+  getMonthLastDay,
+  shiftMonth,
+} from '@/utils/month'
 
 import { CostSharingRoute } from './cost-sharing'
 
@@ -50,16 +57,60 @@ describe('CostSharingRoute', () => {
     expect(within(rows[3]).getByRole('rowheader')).toHaveTextContent('A · 11')
     expect(rows[1]).toHaveTextContent(/R\$\s2,00/)
     expect(rows[1]).toHaveTextContent(/R\$\s71,12/)
-    expect(rows[4]).toHaveTextContent('Total a ratear')
+    expect(rows[4]).toHaveTextContent('3 unidades')
     expect(rows[4]).toHaveTextContent(/R\$\s152,26/)
     expect(
-      screen.getByRole('heading', {
-        name: `Rateio de ${formatMonth(getCurrentMonth())}`,
-      }),
+      screen.getByRole('heading', { name: 'Rateio mensal', level: 1 }),
     ).toBeInTheDocument()
-    expect(screen.getByText('Mês em aberto')).toBeInTheDocument()
-    expect(screen.getByText('3 unidades no rateio')).toBeInTheDocument()
+    expect(
+      screen.getByText(`${formatMonthTitle(getCurrentMonth())} · aberto`),
+    ).toBeInTheDocument()
     expect(months[0]).toBe(getCurrentMonth())
+  })
+
+  it('splits the total and explains the formula from the tariff', async () => {
+    mockStatements()
+    renderApp(<CostSharingRoute />, { route: '/cost-sharing' })
+
+    const total = await screen.findByRole('region', { name: 'Total a ratear' })
+    expect(total).toHaveTextContent('152,26')
+    expect(total).toHaveTextContent(/Energia R\$\s45,26/)
+    expect(total).toHaveTextContent(/Acesso R\$\s105,00/)
+    expect(total).toHaveTextContent(/Ocupação R\$\s2,00/)
+
+    const formula = screen.getByRole('region', {
+      name: 'Como cada unidade é calculada',
+    })
+    expect(await within(formula).findByText(/kWh × R\$\s0,89/)).toBeInTheDocument()
+    expect(formula).toHaveTextContent(/acesso R\$\s35,00/)
+    expect(formula).toHaveTextContent('após 10 min de tolerância')
+  })
+
+  it('counts the visitor sessions of the commercial points outside the statement', async () => {
+    mockStatements()
+    const requests: { month: string | null; chargePointId: string | null }[] = []
+    server.use(
+      http.get(
+        `${env.apiUrl}/organizations/${managedOrganization.id}/sessions`,
+        ({ request }) => {
+          const params = new URL(request.url).searchParams
+          requests.push({
+            month: params.get('month'),
+            chargePointId: params.get('chargePointId'),
+          })
+          return HttpResponse.json(createSessionPage([], { total: 7 }))
+        },
+      ),
+    )
+    renderApp(<CostSharingRoute />, { route: '/cost-sharing' })
+
+    const card = await screen.findByRole('region', { name: 'Fora do rateio' })
+    expect(await within(card).findByText('7')).toBeInTheDocument()
+    expect(card).toHaveTextContent('sessões de visitantes')
+    expect(card).toHaveTextContent('L2-01 é ponto comercial')
+    expect(requests).toEqual([
+      { month: getCurrentMonth(), chargePointId: '5b0e8c1d-2f3a-4b6c-8d7e-9f0a1b2c3d03' },
+    ])
   })
 
   it('loads the statement of the chosen month', async () => {
@@ -72,11 +123,10 @@ describe('CostSharingRoute', () => {
 
     const previousMonth = shiftMonth(getCurrentMonth(), -1)
     expect(
-      await screen.findByRole('heading', {
-        name: `Rateio de ${formatMonth(previousMonth)}`,
-      }),
+      await screen.findByText(
+        `${formatMonthTitle(previousMonth)} · fechado em ${getMonthLastDay(previousMonth)}`,
+      ),
     ).toBeInTheDocument()
-    expect(screen.getByText('Mês encerrado')).toBeInTheDocument()
     expect(months.at(-1)).toBe(previousMonth)
   })
 

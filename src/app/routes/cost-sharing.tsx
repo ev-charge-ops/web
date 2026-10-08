@@ -1,25 +1,33 @@
-import { FileDown, Info } from 'lucide-react'
+import { Download } from 'lucide-react'
 import { useSearchParams } from 'react-router'
 
 import { Alert } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { MonthPicker } from '@/components/ui/month-picker'
 import { PageTitle } from '@/components/ui/page-title'
 import { Spinner } from '@/components/ui/spinner'
-import { StatusPill } from '@/components/ui/status-pill'
-import styles from '@/components/ui/table.module.css'
 import { useToast } from '@/components/ui/use-toast'
 import { useExportStatementCsv } from '@/features/cost-sharing/api/export-statement-csv'
 import { useStatement } from '@/features/cost-sharing/api/get-statement'
-import { StatementMetrics } from '@/features/cost-sharing/components/statement-metrics'
+import { useVisitorSessions } from '@/features/cost-sharing/api/get-visitor-sessions'
+import { CostFormulaCard } from '@/features/cost-sharing/components/cost-formula-card'
+import { StatementSummary } from '@/features/cost-sharing/components/statement-summary'
 import { StatementTable } from '@/features/cost-sharing/components/statement-table'
+import { StatementTotalCard } from '@/features/cost-sharing/components/statement-total-card'
+import { VisitorSessionsCard } from '@/features/cost-sharing/components/visitor-sessions-card'
 import { ManagedOrganization } from '@/features/organizations/components/managed-organization'
-import { formatMonth, getCurrentMonth, isMonth } from '@/utils/month'
+import { useTariff } from '@/features/tariff/api/get-tariff'
+import {
+  formatMonth,
+  formatMonthTitle,
+  getCurrentMonth,
+  getMonthLastDay,
+  isMonth,
+} from '@/utils/month'
 
 import pageStyles from './cost-sharing.module.css'
 
-const pageTitle = 'Rateio'
+const pageTitle = 'Rateio mensal'
 
 function CostSharing({ organizationId }: { organizationId: string }) {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -28,6 +36,8 @@ function CostSharing({ organizationId }: { organizationId: string }) {
   const monthParam = searchParams.get('month')
   const month = isMonth(monthParam) ? monthParam : currentMonth
   const statement = useStatement(organizationId, month)
+  const tariff = useTariff(organizationId)
+  const visitorSessions = useVisitorSessions(organizationId, month)
   const exportCsv = useExportStatementCsv(organizationId)
   const isOpenMonth = month === currentMonth
 
@@ -55,33 +65,29 @@ function CostSharing({ organizationId }: { organizationId: string }) {
   return (
     <>
       <PageTitle
-        title={`${pageTitle} de ${formatMonth(month)}`}
-        tag={
-          <StatusPill tone={isOpenMonth ? 'idle' : 'offline'}>
-            {isOpenMonth ? 'Mês em aberto' : 'Mês encerrado'}
-          </StatusPill>
-        }
-        description="Energia a custo, sem margem. Cada unidade paga a energia medida com a tarifa travada no início de cada sessão, a taxa de acesso e a ocupação depois da tolerância."
+        eyebrow={`${formatMonthTitle(month)} · ${isOpenMonth ? 'aberto' : `fechado em ${getMonthLastDay(month)}`}`}
+        title={pageTitle}
         actions={
-          <Button
-            icon={<FileDown size={16} strokeWidth={2} aria-hidden />}
-            isLoading={exportCsv.isPending}
-            disabled={!hasLines}
-            onClick={download}
-          >
-            Exportar CSV
-          </Button>
+          <>
+            <MonthPicker
+              label="Mês do rateio"
+              value={month}
+              max={currentMonth}
+              isLabelHidden
+              isCompact
+              onChange={changeMonth}
+            />
+            <Button
+              icon={<Download size={18} strokeWidth={2} aria-hidden />}
+              isLoading={exportCsv.isPending}
+              disabled={!hasLines}
+              onClick={download}
+            >
+              Exportar CSV
+            </Button>
+          </>
         }
       />
-
-      <div className={pageStyles.toolbar}>
-        <MonthPicker
-          label="Mês do rateio"
-          value={month}
-          max={currentMonth}
-          onChange={changeMonth}
-        />
-      </div>
 
       {statement.isPending ? (
         <div className={pageStyles.state}>
@@ -99,33 +105,22 @@ function CostSharing({ organizationId }: { organizationId: string }) {
         </Alert>
       ) : (
         <>
-          <StatementMetrics statement={statement.data} />
-          <Card flush>
-            <div className={styles.head}>
-              <h2 className={styles.title}>Unidades</h2>
-              <span className={styles.count}>
-                {statement.data.lines.length} · ordenadas pelo valor
-              </span>
-            </div>
-            {hasLines ? (
-              <StatementTable statement={statement.data} />
-            ) : (
-              <p className={styles.empty}>
-                Nenhuma unidade no rateio de {formatMonth(month)}.
-              </p>
-            )}
-          </Card>
-          <div className={pageStyles.csvNote}>
-            <Info size={18} strokeWidth={2} aria-hidden className={pageStyles.csvIcon} />
-            <div>
-              <div className={pageStyles.csvTitle}>O CSV vai para a administradora</div>
-              <p className={pageStyles.csvBody}>
-                Uma linha por unidade com kWh, energia, taxa de acesso, ocupação e
-                total. Ponto e vírgula como separador e decimal com vírgula, no
-                formato aceito pelo importador de boletos.
-              </p>
-            </div>
-          </div>
+          <StatementSummary>
+            <StatementTotalCard statement={statement.data} />
+            <CostFormulaCard
+              utilityRateCents={tariff.data?.utilityRateCents}
+              accessFeeCents={statement.data.accessFeeCents}
+              gracePeriodMinutes={tariff.data?.gracePeriodMinutes}
+            />
+            <VisitorSessionsCard
+              visitorSessions={visitorSessions.data}
+              isPending={visitorSessions.isPending}
+            />
+          </StatementSummary>
+          <StatementTable
+            statement={statement.data}
+            emptyMessage={`Nenhuma unidade no rateio de ${formatMonth(month)}.`}
+          />
         </>
       )}
     </>

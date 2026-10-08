@@ -37,6 +37,7 @@ export function createChargePoint(
     latitude: -23.56905,
     longitude: -46.63145,
     maxPowerKw: 7,
+    photoUrl: 'https://app.evchargeops.com.br/media/points/garage-a.webp',
     status: 'AVAILABLE',
     isMember: true,
     charger: {
