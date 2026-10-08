@@ -102,12 +102,18 @@ describe('EmailLoginRoute', () => {
     )
   })
 
-  it('does not call the api without a token', () => {
+  it('asks for the email to send a code when there is no token', () => {
     const verify = mockVerify(managerUser)
     renderRoutes('/login/email')
 
-    expect(screen.getByRole('alert')).toHaveTextContent(
-      'Este link de acesso é inválido ou expirou.',
+    expect(
+      screen.getByRole('heading', { name: 'Entrar com link', level: 1 }),
+    ).toBeInTheDocument()
+    expect(screen.getByLabelText('E-mail')).toBeInTheDocument()
+    expect(screen.getByText('Válido por 10 minutos')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Usar senha' })).toHaveAttribute(
+      'href',
+      '/login',
     )
     expect(verify).not.toHaveBeenCalled()
   })
