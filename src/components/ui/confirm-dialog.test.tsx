@@ -32,6 +32,27 @@ describe('ConfirmDialog', () => {
     expect(onCancel).toHaveBeenCalledTimes(2)
   })
 
+  it('styles the confirmation as destructive when requested', () => {
+    render(
+      <ConfirmDialog
+        isOpen
+        isDestructive
+        title="Revogar convite?"
+        description="O link deixa de funcionar."
+        confirmLabel="Revogar"
+        onConfirm={vi.fn()}
+        onCancel={vi.fn()}
+      />,
+    )
+
+    expect(screen.getByRole('button', { name: 'Revogar' }).className).toMatch(
+      /destructive/,
+    )
+    expect(screen.getByRole('button', { name: 'Cancelar' }).className).toMatch(
+      /secondary/,
+    )
+  })
+
   it('renders nothing when closed', () => {
     render(
       <ConfirmDialog
