@@ -82,7 +82,7 @@ export function AcceptInviteForm({
         error={errors.password?.message}
         {...register('password')}
       />
-      <Button type="submit" isLoading={acceptInvite.isPending}>
+      <Button type="submit" size="lg" isLoading={acceptInvite.isPending}>
         Criar conta e aceitar convite
       </Button>
     </form>
