@@ -42,7 +42,10 @@ export function WeeklyEnergyChart({ overview }: WeeklyEnergyChartProps) {
               aria-label={`Dias ${range}: ${valueFormatter.format(energyKwh)} kWh`}
             >
               <span className={styles.plot} aria-hidden="true">
-                <span className={styles.value}>
+                <span
+                  className={styles.value}
+                  style={{ animationDelay: `${0.35 + index * 0.05}s` }}
+                >
                   {valueFormatter.format(energyKwh)}
                 </span>
                 <span

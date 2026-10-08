@@ -1,3 +1,4 @@
+import { AnimatedNumber } from '@/components/ui/animated-number'
 import { formatCents, formatCentsAmount } from '@/utils/format-currency'
 
 import type { MonthlyStatement } from '../api/get-statement'
@@ -16,15 +17,20 @@ export function StatementTotalCard({ statement }: StatementTotalCardProps) {
   ] as const
 
   return (
-    <section className={styles.totalCard} aria-labelledby="statement-total-title">
+    <section
+      className={styles.totalCard}
+      aria-labelledby="statement-total-title"
+    >
       <h2 id="statement-total-title" className={styles.totalLabel}>
         Total a ratear
       </h2>
       <span className={styles.amount}>
         <span className={styles.totalCurrency}>R$</span>
-        <span className={styles.totalValue}>
-          {formatCentsAmount(totals.totalCents)}
-        </span>
+        <AnimatedNumber
+          className={styles.totalValue}
+          value={totals.totalCents}
+          format={(value) => formatCentsAmount(Math.round(value))}
+        />
       </span>
       <div className={styles.split} aria-hidden="true">
         {parts

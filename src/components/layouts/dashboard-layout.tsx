@@ -10,7 +10,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { NavLink } from 'react-router'
+import { NavLink, useLocation } from 'react-router'
 
 import { Logo } from '@/components/ui/logo'
 import { paths } from '@/config/paths'
@@ -55,6 +55,7 @@ export function DashboardLayout({
   organization,
 }: DashboardLayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { pathname } = useLocation()
   const openButtonRef = useRef<HTMLButtonElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -145,7 +146,11 @@ export function DashboardLayout({
         {user ? <div className={styles.footer}>{user}</div> : null}
       </aside>
 
-      <main className={styles.page}>{children}</main>
+      <main className={styles.page}>
+        <div key={pathname} className={styles.view}>
+          {children}
+        </div>
+      </main>
     </div>
   )
 }

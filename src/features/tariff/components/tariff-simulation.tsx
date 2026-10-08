@@ -1,3 +1,4 @@
+import { AnimatedNumber } from '@/components/ui/animated-number'
 import { StatusPill } from '@/components/ui/status-pill'
 import { formatDemandFactor } from '@/utils/demand'
 import { formatCents, formatCentsAmount } from '@/utils/format-currency'
@@ -24,9 +25,16 @@ function Amount({ cents }: { cents: number | null }) {
   return (
     <span className={styles.amount}>
       <span className={styles.currency}>R$</span>
-      <span className={styles.value}>
-        {cents === null ? '—' : formatCentsAmount(cents)}
-      </span>
+      {cents === null ? (
+        <span className={styles.value}>—</span>
+      ) : (
+        <AnimatedNumber
+          className={styles.value}
+          value={cents}
+          format={(value) => formatCentsAmount(Math.round(value))}
+          durationMs={320}
+        />
+      )}
     </span>
   )
 }

@@ -161,7 +161,12 @@ function ResidentsPage({
           Não foi possível carregar os moradores e convites.
         </Alert>
       ) : tab === 'members' ? (
-        <div role="tabpanel" aria-label="Moradores" className={styles.panel}>
+        <div
+          key="members"
+          role="tabpanel"
+          aria-label="Moradores"
+          className={styles.panel}
+        >
           <MembersTable
             members={filteredMembers}
             currentUserId={user?.id}
@@ -186,7 +191,12 @@ function ResidentsPage({
           <PendingInvites invites={openInvites} onAction={setAction} />
         </div>
       ) : (
-        <div role="tabpanel" aria-label="Convites" className={styles.panel}>
+        <div
+          key="invites"
+          role="tabpanel"
+          aria-label="Convites"
+          className={styles.panel}
+        >
           <InvitesTable
             invites={filteredInvites}
             emptyMessage={
