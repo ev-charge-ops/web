@@ -6,8 +6,8 @@ import {
 } from '@/components/layouts/legal-layout'
 import { paths } from '@/config/paths'
 
-const contactEmail = 'privacidade@evchargeops.com.br'
-const supportEmail = 'suporte@evchargeops.com.br'
+const contactEmail = 'contato@softmoon.io'
+const supportEmail = 'contato@softmoon.io'
 
 const sections: LegalSection[] = [
   {

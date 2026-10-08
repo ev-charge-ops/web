@@ -9,7 +9,7 @@ import { paths } from '@/config/paths'
 
 import styles from './support.module.css'
 
-const supportEmail = 'suporte@evchargeops.com.br'
+const supportEmail = 'contato@softmoon.io'
 
 const sections: LegalSection[] = [
   {

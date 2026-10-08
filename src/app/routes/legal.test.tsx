@@ -25,8 +25,8 @@ describe('legal routes', () => {
       screen.getByRole('heading', { level: 2, name: 'Seus direitos' }),
     ).toHaveAttribute('id', 'direitos')
     expect(
-      screen.getByRole('link', { name: 'privacidade@evchargeops.com.br' }),
-    ).toHaveAttribute('href', 'mailto:privacidade@evchargeops.com.br')
+      screen.getByRole('link', { name: 'contato@softmoon.io' }),
+    ).toHaveAttribute('href', 'mailto:contato@softmoon.io')
     expect(
       screen.getByRole('link', { name: 'Voltar ao portal' }),
     ).toHaveAttribute('href', '/')
@@ -75,8 +75,8 @@ describe('legal routes', () => {
       screen.getByRole('heading', { level: 1, name: 'Suporte' }),
     ).toBeInTheDocument()
     expect(
-      screen.getAllByRole('link', { name: 'suporte@evchargeops.com.br' })[0],
-    ).toHaveAttribute('href', 'mailto:suporte@evchargeops.com.br')
+      screen.getAllByRole('link', { name: 'contato@softmoon.io' })[0],
+    ).toHaveAttribute('href', 'mailto:contato@softmoon.io')
     for (const question of [
       'Como inicio uma recarga?',
       'Como funcionam os pagamentos e reembolsos?',
