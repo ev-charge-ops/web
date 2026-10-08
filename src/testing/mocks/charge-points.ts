@@ -46,6 +46,9 @@ export function createChargePoint(
       connector: 'TYPE_2',
     },
     pricing: createPricing(),
+    queueLength: 0,
+    reservedUntil: null,
+    myQueueEntry: null,
     ...overrides,
   }
 }
