@@ -29,7 +29,10 @@ describe('OrganizationSwitcher', () => {
     renderApp(<OrganizationSwitcher />)
 
     expect(await screen.findByText(managedOrganization.name)).toBeInTheDocument()
+    expect(screen.getByText('RA')).toBeInTheDocument()
+    expect(screen.getByText('Condomínio residencial')).toBeInTheDocument()
     expect(screen.queryByText(drivenOrganization.name)).not.toBeInTheDocument()
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
   })
 
   it('renders nothing without a managed organization', async () => {
