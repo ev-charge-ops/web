@@ -8,7 +8,6 @@
 }
 
 .mobileBar,
-.closeMenu,
 .scrim {
   display: none;
 }
@@ -111,6 +110,10 @@
 
 .iconButton:active {
   transform: scale(var(--press-scale));
+}
+
+.closeMenu {
+  display: none;
 }
 
 .page {
