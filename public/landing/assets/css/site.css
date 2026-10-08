@@ -232,7 +232,7 @@ body.is-dark .nav .btn {
   position: sticky;
   top: 0;
   height: 100vh;
-  height: 100svh;
+  height: 100dvh;
   overflow: hidden;
   background: var(--studio);
   transition: background 0.6s var(--ease-std);
@@ -590,7 +590,7 @@ body.is-portal .pc-rows div:nth-child(4) {
   position: absolute;
   left: var(--gutter);
   right: var(--gutter);
-  bottom: 20px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
   height: 3px;
   border-radius: 3px;
   background: rgba(17, 19, 22, 0.08);
@@ -614,7 +614,7 @@ body.is-dark .progress i {
   position: relative;
   z-index: 5;
   margin-top: -100vh;
-  margin-top: -100svh;
+  margin-top: -100dvh;
 }
 .step {
   min-height: 150vh;
@@ -626,7 +626,7 @@ body.is-dark .progress i {
   top: 0;
   left: var(--gutter);
   height: 100vh;
-  height: 100svh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -717,7 +717,7 @@ body.is-dark .progress i {
 
 .step-hero {
   min-height: 100vh;
-  min-height: 100svh;
+  min-height: 100dvh;
 }
 .step-hero h1 {
   font-size: clamp(44px, 6vw, 92px);
@@ -1109,7 +1109,7 @@ body.is-dark .progress i {
   }
   .step-hero {
     justify-content: center;
-    min-height: 100svh;
+    min-height: 100dvh;
     padding: 0 20px;
   }
   .step-hero .copy {
