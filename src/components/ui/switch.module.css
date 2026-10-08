@@ -1,0 +1,44 @@
+.field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  flex: none;
+  width: 48px;
+  height: 28px;
+  padding: 3px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--border-strong);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-pulse);
+}
+
+.track[aria-checked='true'] {
+  background: var(--energy);
+}
+
+.thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gray-0);
+  box-shadow: 0 1px 3px rgba(17, 19, 22, 0.2);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.track[aria-checked='true'] .thumb {
+  transform: translateX(20px);
+}
+
+.label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-body);
+  cursor: pointer;
+}
