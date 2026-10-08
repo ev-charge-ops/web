@@ -1,17 +1,16 @@
 .tile {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 14px;
+  padding: var(--space-6);
 }
 
 .eyebrow {
   margin: 0;
-  font-size: 11px;
-  line-height: 14px;
-  font-weight: 800;
-  letter-spacing: var(--tracking-caps);
-  text-transform: uppercase;
-  color: var(--text-subtle);
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 600;
+  color: var(--text-muted);
 }
 
 .pair {
@@ -21,11 +20,10 @@
 }
 
 .value {
-  font-family: var(--font-mono);
-  font-size: 26px;
-  line-height: 30px;
+  font-size: 36px;
+  line-height: 1;
   font-weight: 700;
-  letter-spacing: -0.4px;
+  letter-spacing: var(--tracking-display);
   font-variant-numeric: tabular-nums;
   color: var(--text-title);
 }
@@ -43,14 +41,14 @@
 }
 
 .unit {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   color: var(--text-muted);
 }
 
 .hint {
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 500;
-  color: var(--text-subtle);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+  color: var(--text-muted);
 }
