@@ -20,6 +20,6 @@
     }
   ],
   "rewrites": [
-    { "source": "/((?!\.well-known/|media/).*)", "destination": "/index.html" }
+    { "source": "/((?!\\.well-known/|media/).*)", "destination": "/index.html" }
   ]
 }
