@@ -29,10 +29,19 @@ describe('OrganizationSwitcher', () => {
     renderApp(<OrganizationSwitcher />)
 
     expect(await screen.findByText(managedOrganization.name)).toBeInTheDocument()
-    expect(screen.getByText('RA')).toBeInTheDocument()
+    expect(screen.getByText('Condomínio')).toBeInTheDocument()
     expect(screen.getByText('Condomínio residencial')).toBeInTheDocument()
     expect(screen.queryByText(drivenOrganization.name)).not.toBeInTheDocument()
     expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
+  })
+
+  it('adds the charge point count to the organization details', async () => {
+    mockOrganizations([managedOrganization])
+    renderApp(<OrganizationSwitcher chargePointCount={3} />)
+
+    expect(
+      await screen.findByText('Condomínio residencial · 3 pontos'),
+    ).toBeInTheDocument()
   })
 
   it('renders nothing without a managed organization', async () => {
@@ -52,7 +61,7 @@ describe('OrganizationSwitcher', () => {
     const user = userEvent.setup()
     renderApp(<OrganizationSwitcher />)
 
-    const select = await screen.findByRole('combobox', { name: 'Condomínio' })
+    const select = await screen.findByRole('combobox', { name: 'Trocar de condomínio' })
     expect(select).toHaveValue(managedOrganization.id)
 
     await user.selectOptions(select, secondManagedOrganization.name)
@@ -72,7 +81,7 @@ describe('OrganizationSwitcher', () => {
     renderApp(<OrganizationSwitcher />)
 
     expect(
-      await screen.findByRole('combobox', { name: 'Condomínio' }),
+      await screen.findByRole('combobox', { name: 'Trocar de condomínio' }),
     ).toHaveValue(secondManagedOrganization.id)
   })
 })
