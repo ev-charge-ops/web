@@ -1,4 +1,3 @@
-import { Download } from 'lucide-react'
 import { useSearchParams } from 'react-router'
 
 import { Alert } from '@/components/ui/alert'
@@ -6,8 +5,6 @@ import { Button } from '@/components/ui/button'
 import { MonthPicker } from '@/components/ui/month-picker'
 import { PageTitle } from '@/components/ui/page-title'
 import { Spinner } from '@/components/ui/spinner'
-import { useToast } from '@/components/ui/use-toast'
-import { useExportStatementCsv } from '@/features/cost-sharing/api/export-statement-csv'
 import { useStatement } from '@/features/cost-sharing/api/get-statement'
 import { useVisitorSessions } from '@/features/cost-sharing/api/get-visitor-sessions'
 import { CostFormulaCard } from '@/features/cost-sharing/components/cost-formula-card'
@@ -15,6 +12,7 @@ import { StatementSummary } from '@/features/cost-sharing/components/statement-s
 import { StatementTable } from '@/features/cost-sharing/components/statement-table'
 import { StatementTotalCard } from '@/features/cost-sharing/components/statement-total-card'
 import { VisitorSessionsCard } from '@/features/cost-sharing/components/visitor-sessions-card'
+import { ExportCsvButton } from '@/features/cost-sharing/components/export-csv-button'
 import { ManagedOrganization } from '@/features/organizations/components/managed-organization'
 import { useTariff } from '@/features/tariff/api/get-tariff'
 import {
@@ -31,33 +29,17 @@ const pageTitle = 'Rateio mensal'
 
 function CostSharing({ organizationId }: { organizationId: string }) {
   const [searchParams, setSearchParams] = useSearchParams()
-  const { showToast } = useToast()
   const currentMonth = getCurrentMonth()
   const monthParam = searchParams.get('month')
   const month = isMonth(monthParam) ? monthParam : currentMonth
   const statement = useStatement(organizationId, month)
   const tariff = useTariff(organizationId)
   const visitorSessions = useVisitorSessions(organizationId, month)
-  const exportCsv = useExportStatementCsv(organizationId)
   const isOpenMonth = month === currentMonth
 
   const changeMonth = (next: string) =>
     setSearchParams(next === currentMonth ? {} : { month: next }, {
       replace: true,
-    })
-
-  const download = () =>
-    exportCsv.mutate(month, {
-      onSuccess: (exported) =>
-        showToast({
-          tone: 'success',
-          message: `CSV do rateio de ${formatMonth(exported)} baixado.`,
-        }),
-      onError: () =>
-        showToast({
-          tone: 'error',
-          message: 'Não foi possível exportar o CSV. Tente novamente.',
-        }),
     })
 
   const hasLines = Boolean(statement.data && statement.data.lines.length > 0)
@@ -77,14 +59,11 @@ function CostSharing({ organizationId }: { organizationId: string }) {
               isCompact
               onChange={changeMonth}
             />
-            <Button
-              icon={<Download size={18} strokeWidth={2} aria-hidden />}
-              isLoading={exportCsv.isPending}
+            <ExportCsvButton
+              organizationId={organizationId}
+              month={month}
               disabled={!hasLines}
-              onClick={download}
-            >
-              Exportar CSV
-            </Button>
+            />
           </>
         }
       />
@@ -96,7 +75,11 @@ function CostSharing({ organizationId }: { organizationId: string }) {
       ) : statement.error ? (
         <Alert
           action={
-            <Button variant="secondary" size="sm" onClick={() => statement.refetch()}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => statement.refetch()}
+            >
               Tentar novamente
             </Button>
           }
