@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { Route, Routes } from 'react-router'
@@ -69,7 +69,9 @@ describe('LoginRoute', () => {
       screen.getByText('Acesso sem senha, com o mesmo cuidado.'),
     ).toBeInTheDocument()
     expect(screen.queryByLabelText('Senha')).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Enviar código' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Enviar código' }),
+    ).toBeInTheDocument()
 
     await user.click(screen.getByRole('link', { name: 'Usar senha' }))
     expect(await screen.findByLabelText('Senha')).toBeInTheDocument()
@@ -81,28 +83,37 @@ describe('LoginRoute', () => {
   it('presents the portal pitch, the forgot password link and the driver note', () => {
     renderRoutes()
 
-    expect(screen.getByRole('heading', { name: 'Entrar', level: 1 })).toBeInTheDocument()
-    expect(screen.getByText('Portal do gestor e do síndico')).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'Entrar', level: 1 }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText('Portal do gestor e do síndico'),
+    ).toBeInTheDocument()
     expect(
       screen.getByText('Cada kWh com dono, cada vaga livre a tempo.'),
     ).toBeInTheDocument()
     expect(screen.getByText('Rateio por unidade')).toBeInTheDocument()
     expect(screen.getByText('Capacidade elétrica ao vivo')).toBeInTheDocument()
     expect(screen.getByText('Anomalias por IA')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Esqueci a senha' })).toHaveAttribute(
-      'href',
-      '/forgot-password',
-    )
+    expect(
+      screen.getByRole('link', { name: 'Esqueci a senha' }),
+    ).toHaveAttribute('href', '/forgot-password')
     expect(screen.getByText('Motorista?')).toBeInTheDocument()
   })
 
-  it('links to the privacy policy and terms of use', () => {
+  it('links to support, the privacy policy and the terms of use', () => {
     renderRoutes()
 
+    const links = screen.getByRole('navigation', {
+      name: 'Links institucionais',
+    })
     expect(
-      screen.getByRole('link', { name: 'Política de Privacidade' }),
+      within(links).getByRole('link', { name: 'Suporte' }),
+    ).toHaveAttribute('href', '/suporte')
+    expect(
+      within(links).getByRole('link', { name: 'Privacidade' }),
     ).toHaveAttribute('href', '/privacidade')
-    expect(screen.getByRole('link', { name: 'Termos de Uso' })).toHaveAttribute(
+    expect(within(links).getByRole('link', { name: 'Termos' })).toHaveAttribute(
       'href',
       '/termos',
     )

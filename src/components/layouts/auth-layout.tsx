@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react'
+import { Link } from 'react-router'
 
 import { BackgroundVideo } from '@/components/ui/background-video'
 import { Logo } from '@/components/ui/logo'
+import { paths } from '@/config/paths'
 
 import styles from './auth-layout.module.css'
 
@@ -9,13 +11,18 @@ type AuthLayoutProps = {
   title: string
   description?: ReactNode
   children: ReactNode
-  footer?: ReactNode
   headline?: string
   highlights?: string[]
   image?: string
 }
 
 const defaultHeadline = 'Cada kWh com dono, cada vaga livre a tempo.'
+
+const footerLinks = [
+  { href: paths.legal.support.getHref(), label: 'Suporte' },
+  { href: paths.legal.privacy.getHref(), label: 'Privacidade' },
+  { href: paths.legal.terms.getHref(), label: 'Termos' },
+]
 
 const defaultHighlights = [
   'Rateio por unidade',
@@ -27,7 +34,6 @@ export function AuthLayout({
   title,
   description,
   children,
-  footer,
   headline = defaultHeadline,
   highlights = defaultHighlights,
   image,
@@ -72,7 +78,15 @@ export function AuthLayout({
             ) : null}
           </header>
           {children}
-          {footer ? <footer className={styles.footer}>{footer}</footer> : null}
+          <footer className={styles.footer}>
+            <nav aria-label="Links institucionais" className={styles.links}>
+              {footerLinks.map((link) => (
+                <Link key={link.href} to={link.href} className={styles.link}>
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </footer>
         </div>
       </main>
     </div>

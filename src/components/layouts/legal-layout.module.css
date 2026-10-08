@@ -214,7 +214,8 @@
   margin: 0 0 14px;
 }
 
-.doc ul {
+.doc ul,
+.doc ol {
   margin: 0 0 14px;
   padding-left: 22px;
 }
@@ -267,6 +268,18 @@
 
   .doc {
     font-size: 16px;
+  }
+}
+
+@media (max-width: 560px) {
+  .switcher {
+    flex-wrap: wrap;
+    border-radius: var(--radius-lg);
+  }
+
+  .switch {
+    flex: 1 1 auto;
+    justify-content: center;
   }
 }
 

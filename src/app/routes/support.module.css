@@ -1,0 +1,68 @@
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: 28px;
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--surface-inset);
+}
+
+.contactIcon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--accent-quiet);
+  color: var(--accent-on-quiet);
+}
+
+.contactTexts {
+  display: flex;
+  flex: 1 1 220px;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.contact .contactTitle {
+  font-size: 17px;
+  line-height: 1.3;
+  color: var(--text-title);
+}
+
+.contactHint {
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.contact .contactAction {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 0 var(--space-5);
+  overflow-wrap: anywhere;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--text-on-accent);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background var(--duration-fast) var(--ease-pulse),
+    transform var(--duration-fast) var(--ease-pulse);
+}
+
+.contact .contactAction:hover {
+  background: var(--accent-hover);
+  color: var(--text-on-accent);
+}
+
+.contact .contactAction:active {
+  transform: scale(var(--press-scale));
+}
