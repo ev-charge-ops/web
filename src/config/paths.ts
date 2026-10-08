@@ -70,5 +70,9 @@ export const paths = {
       path: '/termos',
       getHref: () => '/termos',
     },
+    support: {
+      path: '/suporte',
+      getHref: () => '/suporte',
+    },
   },
 } as const

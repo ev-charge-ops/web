@@ -16,7 +16,8 @@ export type LegalSection = {
 
 type LegalLayoutProps = {
   title: string
-  version: string
+  subtitle?: string
+  version?: string
   sections: LegalSection[]
   intro?: ReactNode
 }
@@ -24,6 +25,7 @@ type LegalLayoutProps = {
 const documents = [
   { href: paths.legal.terms.getHref(), label: 'Termos de uso' },
   { href: paths.legal.privacy.getHref(), label: 'Política de privacidade' },
+  { href: paths.legal.support.getHref(), label: 'Suporte' },
 ]
 
 function useActiveSection(ids: string[]) {
@@ -54,6 +56,7 @@ function useActiveSection(ids: string[]) {
 
 export function LegalLayout({
   title,
+  subtitle,
   version,
   sections,
   intro,
@@ -92,7 +95,7 @@ export function LegalLayout({
             ))}
           </nav>
           <div className={styles.version}>
-            <strong>Versão de {version}</strong>
+            {version ? <strong>Versão de {version}</strong> : null}
             <span>Projeto acadêmico FIAP Enterprise Challenge</span>
           </div>
         </aside>
@@ -115,8 +118,8 @@ export function LegalLayout({
             <div className={styles.heading}>
               <h1 className={styles.title}>{title}</h1>
               <p className={styles.subtitle}>
-                Versão de {version} · em conformidade com a LGPD (Lei
-                13.709/2018)
+                {subtitle ??
+                  `Versão de ${version} · em conformidade com a LGPD (Lei 13.709/2018)`}
               </p>
             </div>
             <div className={styles.doc}>
@@ -127,10 +130,12 @@ export function LegalLayout({
                   {section.content}
                 </section>
               ))}
-              <p className={styles.notice}>
-                Versão de {version}. Avisaremos por e-mail e no app antes de
-                qualquer mudança relevante neste documento.
-              </p>
+              {version ? (
+                <p className={styles.notice}>
+                  Versão de {version}. Avisaremos por e-mail e no app antes de
+                  qualquer mudança relevante neste documento.
+                </p>
+              ) : null}
             </div>
           </article>
         </main>
