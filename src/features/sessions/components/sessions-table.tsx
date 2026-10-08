@@ -45,7 +45,9 @@ export function SessionsTable({ sessions, onSelect }: SessionsTableProps) {
               key={session.id}
               className={cn(
                 styles.clickable,
-                session.isAnomaly && styles.flagged,
+                session.isAnomaly &&
+                  session.anomalyReviewStatus !== 'DISMISSED' &&
+                  styles.flagged,
               )}
               onClick={() => onSelect(session)}
             >
@@ -76,6 +78,7 @@ export function SessionsTable({ sessions, onSelect }: SessionsTableProps) {
                 <AnomalyBadge
                   score={session.anomalyScore}
                   isAnomaly={session.isAnomaly}
+                  reviewStatus={session.anomalyReviewStatus}
                 />
               </td>
               <td className={styles.actions}>

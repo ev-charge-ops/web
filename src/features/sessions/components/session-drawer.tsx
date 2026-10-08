@@ -1,4 +1,7 @@
+import { useState } from 'react'
+
 import { Alert } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Drawer } from '@/components/ui/drawer'
 import { Spinner } from '@/components/ui/spinner'
@@ -16,6 +19,8 @@ import {
 } from '../api/get-organization-session'
 import type { OrganizationSession } from '../api/get-sessions'
 import {
+  anomalyReviewLabels,
+  anomalyReviewTones,
   limitTypeLabels,
   regimeLabels,
   sessionStatusLabels,
@@ -23,6 +28,7 @@ import {
 } from '../utils/labels'
 import { getAveragePowerKw, getChargingMinutes } from '../utils/session-metrics'
 import { AnomalyExplanation } from './anomaly-explanation'
+import { AnomalyReviewForm } from './anomaly-review-form'
 import styles from './session-drawer.module.css'
 
 type Line = {
@@ -64,7 +70,72 @@ function formatLimit(session: OrganizationSessionDetail) {
   return limitTypeLabels[limit.type]
 }
 
-function SessionDetails({ session }: { session: OrganizationSessionDetail }) {
+function AnomalyReviewSection({
+  organizationId,
+  session,
+}: {
+  organizationId: string
+  session: OrganizationSessionDetail
+}) {
+  const [isReviewing, setIsReviewing] = useState(false)
+  const status = session.anomalyReviewStatus
+
+  if (!status) return null
+
+  return (
+    <Card className={styles.review}>
+      <div className={styles.reviewHead}>
+        <h3 className={styles.reviewTitle}>Revisão do gestor</h3>
+        <StatusPill tone={anomalyReviewTones[status]}>
+          {anomalyReviewLabels[status]}
+        </StatusPill>
+      </div>
+      {status === 'PENDING_REVIEW' ? (
+        <p className={styles.reviewBody}>
+          O score vem do modelo de detecção de anomalias; nenhuma cobrança muda
+          sem revisão do gestor.
+        </p>
+      ) : (
+        <p className={styles.reviewBody}>
+          {session.anomalyReviewedAt
+            ? `Revisada em ${formatDateTime(session.anomalyReviewedAt)}.`
+            : 'Revisada.'}
+          {session.anomalyReviewNote ? (
+            <>
+              {' '}
+              <span className={styles.reviewNote}>“{session.anomalyReviewNote}”</span>
+            </>
+          ) : null}
+        </p>
+      )}
+      {isReviewing ? (
+        <AnomalyReviewForm
+          organizationId={organizationId}
+          sessionId={session.id}
+          defaultNote={session.anomalyReviewNote}
+          onReviewed={() => setIsReviewing(false)}
+        />
+      ) : (
+        <Button
+          variant={status === 'PENDING_REVIEW' ? 'primary' : 'secondary'}
+          size="sm"
+          className={styles.reviewAction}
+          onClick={() => setIsReviewing(true)}
+        >
+          {status === 'PENDING_REVIEW' ? 'Revisar' : 'Revisar de novo'}
+        </Button>
+      )}
+    </Card>
+  )
+}
+
+function SessionDetails({
+  organizationId,
+  session,
+}: {
+  organizationId: string
+  session: OrganizationSessionDetail
+}) {
   const demandSource = formatDemandSource(
     session.demandFactorSource,
     session.demandModelVersion,
@@ -136,6 +207,7 @@ function SessionDetails({ session }: { session: OrganizationSessionDetail }) {
         <StatusPill tone="offline">{regimeLabels[session.regime]}</StatusPill>
       </div>
       <AnomalyExplanation session={session} />
+      <AnomalyReviewSection organizationId={organizationId} session={session} />
       <DetailSection title="Recarga" lines={chargingLines} />
       <DetailSection title="Cobrança" lines={billingLines} />
     </>
@@ -163,7 +235,7 @@ function SessionDrawerBody({
     return <Alert>Não foi possível carregar os detalhes da sessão.</Alert>
   }
 
-  return <SessionDetails session={session.data} />
+  return <SessionDetails organizationId={organizationId} session={session.data} />
 }
 
 type SessionDrawerProps = {
