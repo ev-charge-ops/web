@@ -23,7 +23,7 @@ describe('StatusPill', () => {
 
   it('renders a decorative dot when requested', () => {
     const { container } = render(
-      <StatusPill tone="charging" withDot>
+      <StatusPill tone="charging">
         Carregando
       </StatusPill>,
     )

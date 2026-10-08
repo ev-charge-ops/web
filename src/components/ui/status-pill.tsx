@@ -8,20 +8,24 @@ export type StatusTone = 'charging' | 'idle' | 'fault' | 'info' | 'offline'
 
 type StatusPillProps = {
   tone?: StatusTone
-  withDot?: boolean
+  isLive?: boolean
   className?: string
   children: ReactNode
 }
 
 export function StatusPill({
   tone = 'info',
-  withDot = false,
+  isLive = false,
   className,
   children,
 }: StatusPillProps) {
   return (
-    <span className={cn(styles.pill, styles[tone], className)} data-tone={tone}>
-      {withDot ? <span className={styles.dot} aria-hidden="true" /> : null}
+    <span
+      className={cn(styles.pill, styles[tone], isLive && styles.live, className)}
+      data-tone={tone}
+      data-live={isLive || undefined}
+    >
+      <span className={styles.dot} aria-hidden="true" />
       {children}
     </span>
   )
