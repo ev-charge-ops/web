@@ -1,14 +1,10 @@
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 
 import { env } from '@/config/env'
-import {
-  createInviteResponse,
-  invites,
-  members,
-} from '@/testing/mocks/invites'
+import { createInviteResponse, invites, members } from '@/testing/mocks/invites'
 import {
   drivenOrganization,
   managedOrganization,
@@ -40,12 +36,28 @@ describe('ResidentsRoute', () => {
     mockResidents()
     renderApp(<ResidentsRoute />, { route: '/residents' })
 
+    const user = userEvent.setup()
     const membersTable = await screen.findByRole('table', { name: 'Moradores' })
     expect(within(membersTable).getByText('Diego Lima')).toBeInTheDocument()
     expect(within(membersTable).getByText('A · 12')).toBeInTheDocument()
     expect(within(membersTable).getByText('Morador')).toBeInTheDocument()
     expect(within(membersTable).getByText('Gestor')).toBeInTheDocument()
-    expect(within(membersTable).getByText('20/09/2026')).toBeInTheDocument()
+    expect(within(membersTable).getAllByText('09/2026')).toHaveLength(2)
+    expect(
+      screen.getByText('1 unidade com acesso à recarga'),
+    ).toBeInTheDocument()
+    expect(
+      await screen.findByText(/^2 moradores · 95 sessões em /),
+    ).toBeInTheDocument()
+
+    const pending = screen.getByRole('region', { name: 'Convites pendentes' })
+    expect(within(pending).getByText('ana@example.com')).toBeInTheDocument()
+    expect(within(pending).getByText('bruno@example.com')).toBeInTheDocument()
+    expect(
+      within(pending).queryByText('diego@example.com'),
+    ).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('tab', { name: 'Convites (3)' }))
 
     const invitesTable = await screen.findByRole('table', { name: 'Convites' })
     const rows = within(invitesTable).getAllByRole('row')
@@ -74,7 +86,7 @@ describe('ResidentsRoute', () => {
     renderApp(<ResidentsRoute />, { route: '/residents' })
 
     expect(
-      await screen.findByText('Nenhum convite enviado ainda.'),
+      await screen.findByRole('tab', { name: 'Convites (0)' }),
     ).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Convidar morador' }))
@@ -92,6 +104,12 @@ describe('ResidentsRoute', () => {
       'ana@example.com',
     )
     await user.type(within(drawer).getByLabelText('Unidade'), 'B · 42')
+    expect(within(drawer).getByText('Sua unidade: B · 42.')).toBeInTheDocument()
+    expect(
+      within(drawer).getByText(
+        /O gestor convidou você para o Residencial Aclimação no EV ChargeOps/,
+      ),
+    ).toBeInTheDocument()
     await user.click(
       within(drawer).getByRole('button', { name: 'Enviar convite' }),
     )
@@ -102,7 +120,7 @@ describe('ResidentsRoute', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(body).toEqual({ email: 'ana@example.com', unitLabel: 'B · 42' })
     expect(
-      await screen.findByRole('table', { name: 'Convites' }),
+      await screen.findByRole('region', { name: 'Convites pendentes' }),
     ).toHaveTextContent('ana@example.com')
   })
 
@@ -156,7 +174,9 @@ describe('ResidentsRoute', () => {
         name: 'Reenviar convite para bruno@example.com',
       }),
     )
-    const dialog = screen.getByRole('alertdialog', { name: 'Reenviar convite?' })
+    const dialog = screen.getByRole('alertdialog', {
+      name: 'Reenviar convite?',
+    })
     await user.click(within(dialog).getByRole('button', { name: 'Reenviar' }))
 
     expect(
@@ -194,9 +214,11 @@ describe('ResidentsRoute', () => {
       await screen.findByText('Convite para ana@example.com revogado'),
     ).toBeInTheDocument()
     expect(revoked).toBe(true)
-    expect(
-      await screen.findByRole('table', { name: 'Convites' }),
-    ).not.toHaveTextContent('ana@example.com')
+    await waitFor(() =>
+      expect(
+        screen.getByRole('region', { name: 'Convites pendentes' }),
+      ).not.toHaveTextContent('ana@example.com'),
+    )
   })
 
   it('shows a toast when the invite can no longer be changed', async () => {
@@ -221,6 +243,25 @@ describe('ResidentsRoute', () => {
       await screen.findByText(
         'Este convite não pode mais ser alterado. A lista foi atualizada.',
       ),
+    ).toBeInTheDocument()
+  })
+
+  it('filters the members by name, unit or email', async () => {
+    mockResidents()
+    const user = userEvent.setup()
+    renderApp(<ResidentsRoute />, { route: '/residents' })
+
+    const search = await screen.findByLabelText('Buscar morador')
+    await user.type(search, 'a · 12')
+
+    const table = screen.getByRole('table', { name: 'Moradores' })
+    expect(within(table).getByText('Diego Lima')).toBeInTheDocument()
+    expect(within(table).queryByText('Marina Costa')).not.toBeInTheDocument()
+
+    await user.clear(search)
+    await user.type(search, 'ninguem')
+    expect(
+      screen.getByText('Nenhum morador encontrado com essa busca.'),
     ).toBeInTheDocument()
   })
 

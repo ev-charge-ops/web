@@ -1,71 +1,80 @@
 .form {
+  --surface-field: var(--surface-inset);
+
   display: flex;
-  flex: 1;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-5);
 }
 
-.listHead {
-  padding: 12px 14px;
-  font-size: 11px;
-  line-height: 14px;
-  font-weight: 800;
-  letter-spacing: var(--tracking-caps);
-  text-transform: uppercase;
-  color: var(--text-subtle);
+.role {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.listRow {
+.roleLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-title);
+}
+
+.roleValue {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 11px 14px;
-  border-top: 1px solid var(--hairline);
+  height: 52px;
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-input);
+  background: var(--surface-inset);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-title);
 }
 
-.listIcon {
-  flex: none;
-  color: var(--text-disabled);
-}
-
-.listLabel {
-  flex: 1;
-  font-size: 13.5px;
-  font-weight: 600;
+.roleHint {
+  font-size: 13px;
+  line-height: 1.45;
   color: var(--text-muted);
 }
 
-.listHint {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-subtle);
-}
-
-.footer {
+.preview {
   display: flex;
-  gap: var(--space-4);
-  margin-top: auto;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
-.cancel,
-.submit {
-  height: 52px;
-  font-size: 16px;
+.previewLabel {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-body);
 }
 
-.cancel {
-  flex: 1;
+.mail {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--surface-inset);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-body);
 }
 
-.submit {
-  flex: 1.4;
+.subject {
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
-@media (max-width: 900px) {
-  .footer {
-    position: sticky;
-    bottom: 0;
-    padding-top: var(--space-4);
-    background: var(--surface-sheet);
-  }
+.subject strong {
+  color: var(--text-title);
+}
+
+.rule {
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+.note {
+  font-size: 13px;
+  color: var(--text-muted);
 }
