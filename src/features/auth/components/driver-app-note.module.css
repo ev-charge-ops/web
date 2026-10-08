@@ -1,0 +1,13 @@
+.note {
+  margin: 0;
+  padding: 14px var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--surface-card);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-muted);
+}
+
+.note strong {
+  color: var(--text-title);
+}
