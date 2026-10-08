@@ -3,16 +3,16 @@ import { useSearchParams } from 'react-router'
 
 import { Alert } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { CheckboxField } from '@/components/ui/checkbox-field'
 import { MonthPicker } from '@/components/ui/month-picker'
 import { PageTitle } from '@/components/ui/page-title'
 import { Pagination } from '@/components/ui/pagination'
 import { SelectField } from '@/components/ui/select-field'
 import { Spinner } from '@/components/ui/spinner'
-import styles from '@/components/ui/table.module.css'
+import { Switch } from '@/components/ui/switch'
+import tableStyles from '@/components/ui/table.module.css'
 import { useChargePoints } from '@/features/charge-points/api/get-charge-points'
 import { ManagedOrganization } from '@/features/organizations/components/managed-organization'
+import { useOverview } from '@/features/overview/api/get-overview'
 import {
   useSessions,
   type OrganizationSession,
@@ -24,10 +24,18 @@ import {
   sessionStatusLabels,
   sessionStatuses,
 } from '@/features/sessions/utils/labels'
-import { formatMonth, formatMonthTitle, getCurrentMonth, isMonth } from '@/utils/month'
+import {
+  formatMonth,
+  formatMonthName,
+  formatMonthTitle,
+  getCurrentMonth,
+  isMonth,
+} from '@/utils/month'
+
+import styles from './sessions.module.css'
 
 const pageTitle = 'Sessões'
-const pageSize = 50
+const pageSize = 20
 
 const statusOptions = [
   { value: '', label: 'Todos os status' },
@@ -37,8 +45,14 @@ const statusOptions = [
   })),
 ]
 
+const countFormatter = new Intl.NumberFormat('pt-BR')
+
 function isSessionStatus(value: string | null): value is SessionStatus {
   return sessionStatuses.some((status) => status === value)
+}
+
+function plural(count: number, singular: string, pluralForm: string) {
+  return `${countFormatter.format(count)} ${count === 1 ? singular : pluralForm}`
 }
 
 type Filters = {
@@ -49,9 +63,34 @@ type Filters = {
   page: number
 }
 
+function SessionsSummary({
+  organizationId,
+  month,
+}: {
+  organizationId: string
+  month: string
+}) {
+  const overview = useOverview(organizationId, month)
+
+  if (!overview.data) return <>{formatMonthTitle(month)}</>
+
+  const { sessionsCount, visitorSessionsCount } = overview.data
+  const residentCount = Math.max(0, sessionsCount - visitorSessionsCount)
+
+  return (
+    <>
+      {plural(sessionsCount, 'sessão', 'sessões')} em {formatMonthName(month)}
+      {sessionsCount > 0
+        ? ` · ${countFormatter.format(residentCount)} de moradores, ${countFormatter.format(visitorSessionsCount)} de visitantes`
+        : ''}
+    </>
+  )
+}
+
 function SessionsPage({ organizationId }: { organizationId: string }) {
   const [searchParams, setSearchParams] = useSearchParams()
   const [selected, setSelected] = useState<OrganizationSession | null>(null)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const currentMonth = getCurrentMonth()
 
   const monthParam = searchParams.get('month')
@@ -85,6 +124,11 @@ function SessionsPage({ organizationId }: { organizationId: string }) {
     setSearchParams(params, { replace: true })
   }
 
+  const openSession = (session: OrganizationSession) => {
+    setSelected(session)
+    setIsDrawerOpen(true)
+  }
+
   const pointOptions = [
     { value: '', label: 'Todos os pontos' },
     ...(chargePoints.data ?? []).map((point) => ({
@@ -94,64 +138,64 @@ function SessionsPage({ organizationId }: { organizationId: string }) {
   ]
 
   const items = sessions.data?.items ?? []
-  const flaggedCount = items.filter((session) => session.isAnomaly).length
   const hasFilters = Boolean(filters.status || filters.point || filters.anomaly)
 
   return (
     <>
       <PageTitle
-        eyebrow={formatMonthTitle(filters.month)}
+        eyebrow={
+          <SessionsSummary
+            organizationId={organizationId}
+            month={filters.month}
+          />
+        }
         title={pageTitle}
-        description="Registro de cada recarga medida no condomínio. Toda linha do rateio nasce daqui. Sessões que o modelo de IA considerou atípicas aparecem destacadas."
       />
-      <Card flush>
-        <div className={styles.head}>
-          <h2 className={styles.title}>
-            Sessões de {formatMonth(filters.month)}
-          </h2>
-          {sessions.data ? (
-            <span className={styles.count}>
-              {sessions.data.total}
-              {flaggedCount > 0
-                ? ` · ${flaggedCount} sinalizada${flaggedCount > 1 ? 's' : ''} pela IA`
-                : ''}
-            </span>
-          ) : null}
-        </div>
-        <div className={styles.toolbar}>
-          <MonthPicker
-            label="Período"
-            value={filters.month}
-            max={currentMonth}
-            onChange={(month) => updateFilters({ month })}
-          />
-          <SelectField
-            label="Ponto"
-            options={pointOptions}
-            value={filters.point}
-            onChange={(event) => updateFilters({ point: event.target.value })}
-          />
-          <SelectField
-            label="Status"
-            options={statusOptions}
-            value={filters.status}
-            onChange={(event) => updateFilters({ status: event.target.value })}
-          />
-          <CheckboxField
-            label="Somente anomalias"
-            checked={filters.anomaly}
-            onChange={(event) => updateFilters({ anomaly: event.target.checked })}
-          />
-        </div>
+      <section className={styles.filters} aria-label="Filtros">
+        <MonthPicker
+          label="Período"
+          value={filters.month}
+          max={currentMonth}
+          isDense
+          onChange={(month) => updateFilters({ month })}
+        />
+        <SelectField
+          label="Ponto"
+          options={pointOptions}
+          value={filters.point}
+          isDense
+          className={styles.select}
+          onChange={(event) => updateFilters({ point: event.target.value })}
+        />
+        <SelectField
+          label="Status"
+          options={statusOptions}
+          value={filters.status}
+          isDense
+          className={styles.select}
+          onChange={(event) => updateFilters({ status: event.target.value })}
+        />
+        <Switch
+          label="Somente anomalias"
+          checked={filters.anomaly}
+          className={styles.switch}
+          onChange={(anomaly) => updateFilters({ anomaly })}
+        />
+      </section>
+      <section className={styles.tableCard} aria-label="Lista de sessões">
         {sessions.isPending ? (
-          <div className={styles.state}>
+          <div className={tableStyles.state}>
             <Spinner label="Carregando sessões" />
           </div>
         ) : sessions.error ? (
-          <div className={styles.state}>
+          <div className={tableStyles.state}>
             <Alert
               action={
-                <Button variant="secondary" size="sm" onClick={() => sessions.refetch()}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => sessions.refetch()}
+                >
                   Tentar novamente
                 </Button>
               }
@@ -166,22 +210,31 @@ function SessionsPage({ organizationId }: { organizationId: string }) {
               : `Nenhuma sessão registrada em ${formatMonth(filters.month)}.`}
           </div>
         ) : (
-          <SessionsTable sessions={items} onSelect={setSelected} />
+          <SessionsTable
+            sessions={items}
+            selectedId={isDrawerOpen ? selected?.id : null}
+            onSelect={openSession}
+          />
         )}
         {sessions.data ? (
           <Pagination
             page={filters.page}
             pageSize={pageSize}
             total={sessions.data.total}
+            itemLabel={sessions.data.total === 1 ? 'sessão' : 'sessões'}
             onChange={(page) => updateFilters({ page })}
           />
         ) : null}
-      </Card>
-      <SessionDrawer
-        organizationId={organizationId}
-        session={selected}
-        onClose={() => setSelected(null)}
-      />
+      </section>
+      {selected ? (
+        <SessionDrawer
+          key={selected.id}
+          organizationId={organizationId}
+          session={selected}
+          isOpen={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+        />
+      ) : null}
     </>
   )
 }
