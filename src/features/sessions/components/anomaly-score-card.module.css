@@ -1,0 +1,120 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-inset);
+}
+
+.flagged {
+  background: var(--status-fault-bg);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+.flagged .title {
+  color: var(--status-fault);
+}
+
+.reason {
+  font-size: 13px;
+  color: var(--text-body);
+}
+
+.score {
+  font-size: 36px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-title);
+}
+
+.flagged .score {
+  color: var(--status-fault);
+}
+
+.meter {
+  height: 8px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--surface-card);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--text-faint);
+  transform-origin: left;
+  animation: grow 0.6s var(--ease-out) 0.4s both;
+}
+
+.flagged .fill {
+  background: var(--critical);
+}
+
+.signals {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 9px var(--space-4);
+  margin: 0;
+  font-size: 13px;
+}
+
+.signal {
+  display: contents;
+}
+
+.signal dt {
+  font-weight: 600;
+  color: var(--text-body);
+}
+
+.signal dd {
+  margin: 0;
+  font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-title);
+}
+
+.note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-body);
+}
+
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    animation: none;
+  }
+}

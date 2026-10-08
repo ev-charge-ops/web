@@ -50,3 +50,20 @@
   color: var(--text-muted);
   pointer-events: none;
 }
+
+.dense {
+  gap: 6px;
+}
+
+.dense .label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.dense .control {
+  height: 44px;
+  padding-left: 14px;
+  font-size: 15px;
+  font-weight: 600;
+}

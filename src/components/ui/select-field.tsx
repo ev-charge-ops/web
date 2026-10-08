@@ -13,11 +13,13 @@ export type SelectOption = {
 type SelectFieldProps = Omit<ComponentProps<'select'>, 'children'> & {
   label: string
   options: SelectOption[]
+  isDense?: boolean
 }
 
 export function SelectField({
   label,
   options,
+  isDense = false,
   id,
   className,
   ...props
@@ -26,7 +28,7 @@ export function SelectField({
   const selectId = id ?? generatedId
 
   return (
-    <div className={cn(styles.field, className)}>
+    <div className={cn(styles.field, isDense && styles.dense, className)}>
       <label htmlFor={selectId} className={styles.label}>
         {label}
       </label>
