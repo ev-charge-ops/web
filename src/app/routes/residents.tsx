@@ -36,6 +36,7 @@ export function ResidentsRoute() {
   return (
     <>
       <PageTitle
+        eyebrow={organization.name}
         title={pageTitle}
         description={`O convite vincula a unidade ao morador de ${organization.name}. O morador cria a conta pelo link recebido por e-mail e usa o app para recarregar.`}
         actions={
