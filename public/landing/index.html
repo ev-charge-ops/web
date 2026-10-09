@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>
+      EV ChargeOps · Recarga de carro elétrico em condomínios, com conta clara
+    </title>
+    <meta
+      name="description"
+      content="EV ChargeOps registra cada recarga por morador, cobra o kWh a custo e fecha o rateio mensal do condomínio. App para o motorista, portal para o síndico."
+    />
+    <link rel="canonical" href="https://www.evchargeops.com.br/" />
+    <meta name="theme-color" content="#E9EAEC" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:url" content="https://www.evchargeops.com.br/" />
+    <meta property="og:title" content="EV ChargeOps · Cada kWh com dono" />
+    <meta
+      property="og:description"
+      content="Recarga compartilhada em condomínios: sessão por morador, tarifa a custo e rateio mensal automático."
+    />
+    <meta
+      property="og:image"
+      content="https://www.evchargeops.com.br/assets/img/og-image.jpg"
+    />
+    <meta name="apple-itunes-app" content="app-id=6819532299" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml" />
+    <link
+      rel="preload"
+      href="assets/fonts/urbanist-latin-700-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="assets/css/site.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "EV ChargeOps",
+        "legalName": "SOFTMOON.IO SERVICOS DE INFORMATICA LTDA",
+        "taxID": "29.734.824/0001-77",
+        "email": "contato@softmoon.io",
+        "url": "https://www.evchargeops.com.br/",
+        "logo": "https://www.evchargeops.com.br/assets/img/logo.svg"
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+    <header class="nav" id="topo">
+      <a class="brand" href="#topo" aria-label="EV ChargeOps, início">
+        <svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true">
+          <rect width="64" height="64" rx="18" fill="#111316" />
+          <path
+            d="M45.02 42.93 A17 17 0 1 1 45.02 21.07"
+            fill="none"
+            stroke="#fff"
+            stroke-width="5"
+            stroke-linecap="round"
+          />
+          <path d="M34 20 L24 34 H31 L29 44 L40 29 H33 Z" fill="#3DDC84" />
+          <circle cx="45.02" cy="21.07" r="3.4" fill="#3DDC84" />
+        </svg>
+        <span>EV ChargeOps</span>
+      </a>
+      <nav aria-label="Seções">
+        <a href="#motorista">Motorista</a>
+        <a href="#sindico">Síndico</a>
+        <a href="#regras">Regras</a>
+        <a href="#contato">Contato</a>
+      </nav>
+      <a class="btn btn-sm" href="https://app.evchargeops.com.br"
+        >Entrar no portal</a
+      >
+    </header>
+
+    <main id="conteudo">
+      <section class="story" id="motorista" aria-label="Como o app funciona">
+        <div class="stage" aria-hidden="true">
+          <div class="bg" data-bg="studio">
+            <video
+              muted
+              playsinline
+              loop
+              preload="auto"
+              poster="assets/img/bg-car-loop.webp"
+            >
+              <source src="assets/video/bg-car-loop.webm" type="video/webm" />
+              <source src="assets/video/bg-car-loop.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="bg" data-bg="garagem">
+            <video
+              muted
+              playsinline
+              loop
+              preload="metadata"
+              poster="assets/img/bg-garagem.webp"
+            >
+              <source src="assets/video/bg-garagem.webm" type="video/webm" />
+              <source src="assets/video/bg-garagem.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="bg bg-car" data-bg="green">
+            <video
+              muted
+              playsinline
+              loop
+              preload="metadata"
+              poster="assets/img/bg-car-top-green.webp"
+            >
+              <source
+                src="assets/video/bg-car-top-green.webm"
+                type="video/webm"
+              />
+              <source
+                src="assets/video/bg-car-top-green.mp4"
+                type="video/mp4"
+              />
+            </video>
+          </div>
+          <div class="bg bg-car" data-bg="amber">
+            <video muted playsinline loop preload="metadata">
+              <source
+                src="assets/video/bg-car-top-amber.webm"
+                type="video/webm"
+              />
+              <source
+                src="assets/video/bg-car-top-amber.mp4"
+                type="video/mp4"
+              />
+            </video>
+          </div>
+          <div class="bg" data-bg="predio">
+            <video
+              muted
+              playsinline
+              loop
+              preload="metadata"
+              poster="assets/img/bg-predio.webp"
+            >
+              <source src="assets/video/bg-garagem.webm" type="video/webm" />
+              <source src="assets/video/bg-garagem.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="veil"></div>
+
+          <svg class="ring" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="92" class="ring-track" />
+            <circle
+              cx="100"
+              cy="100"
+              r="92"
+              class="ring-fill"
+              pathLength="100"
+            />
+          </svg>
+
+          <div class="phone">
+            <span class="btn-side btn-action"></span
+            ><span class="btn-side btn-vol-up"></span
+            ><span class="btn-side btn-vol-down"></span
+            ><span class="btn-side btn-power"></span>
+            <div class="bezel">
+              <div class="screen">
+                <video
+                  id="app"
+                  muted
+                  playsinline
+                  preload="auto"
+                  poster="assets/img/app-scroll.webp"
+                >
+                  <source
+                    src="assets/video/app-scroll.webm"
+                    type="video/webm"
+                  />
+                  <source src="assets/video/app-scroll.mp4" type="video/mp4" />
+                </video>
+                <span class="island"></span>
+                <span class="glare"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="portal-card" aria-hidden="true">
+            <div class="pc-head">
+              <span>Capacidade elétrica</span><span class="pill">Folga</span>
+            </div>
+            <div class="pc-num">
+              <b data-count="13.8">0</b><small>de 63,5 kW para recarga</small>
+            </div>
+            <div class="pc-bar">
+              <i style="--w: 9%"></i><i style="--w: 9%" class="b2"></i
+              ><i class="b3" style="--w: 15%"></i>
+            </div>
+            <div class="pc-rows">
+              <div>
+                <span>A · 11</span><span>118,4 kWh</span><b>R$ 140,38</b>
+              </div>
+              <div>
+                <span>B · 14</span><span>82,7 kWh</span><b>R$ 108,60</b>
+              </div>
+              <div>
+                <span>A · 23</span><span>76,5 kWh</span><b>R$ 109,09</b>
+              </div>
+              <div><span>B · 42</span><span>54,3 kWh</span><b>R$ 83,33</b></div>
+            </div>
+            <div class="pc-total">
+              <span>Rateio de setembro · 6 unidades</span><b>R$ 583,23</b>
+            </div>
+          </div>
+
+          <div class="progress"><i></i></div>
+        </div>
+
+        <div class="steps">
+          <article
+            class="step step-hero"
+            data-bg="studio"
+            data-theme="light"
+            data-t="0,6.4"
+          >
+            <div class="copy">
+              <p class="eyebrow">Recarga de carro elétrico em condomínios</p>
+              <h1>
+                Cada kWh com dono.<br /><span>Cada conta com regra.</span>
+              </h1>
+              <p class="lead">
+                O EV ChargeOps registra cada recarga por morador, cobra a
+                energia a custo e fecha o rateio do mês sozinho. Um app para
+                quem dirige, um portal para quem administra.
+              </p>
+              <div class="ctas">
+                <a class="btn" href="#contato">Levar para o meu condomínio</a>
+                <a class="btn btn-ghost" href="#motorista-1"
+                  >Ver o app funcionando</a
+                >
+              </div>
+              <p class="scroll-hint">Role para ver o app</p>
+            </div>
+          </article>
+
+          <article
+            class="step side-left"
+            id="motorista-1"
+            data-bg="garagem"
+            data-theme="dark"
+            data-t="6.5,13.4"
+          >
+            <div class="copy">
+              <p class="eyebrow">1 · Encontrar</p>
+              <h2>Ponto livre perto da sua vaga.</h2>
+              <p>
+                Mapa com o estado de cada carregador em tempo real: livre, em
+                uso ou em tolerância. Filtre por potência e por pontos do
+                condomínio ou comerciais.
+              </p>
+              <ul class="facts">
+                <li><b>7 kW</b> vagas privativas</li>
+                <li><b>22 kW</b> visitantes</li>
+              </ul>
+            </div>
+          </article>
+
+          <article
+            class="step side-right"
+            data-bg="studio"
+            data-theme="light"
+            data-t="13.5,22.4"
+          >
+            <div class="copy">
+              <p class="eyebrow">2 · Iniciar</p>
+              <h2>Escolha o limite. A tarifa trava no início.</h2>
+              <p>
+                Carregue até 80%, por kWh ou por valor. Antes de conectar você
+                já vê quanto vai custar, quando fica pronto e todas as regras da
+                vaga.
+              </p>
+              <ul class="facts">
+                <li><b>R$ 0,89/kWh</b> energia repassada a custo</li>
+                <li><b>×0,80</b> fora de pico, previsto pela IA</li>
+              </ul>
+            </div>
+          </article>
+
+          <article
+            class="step side-left"
+            data-bg="green"
+            data-theme="dark"
+            data-t="22.5,27.4"
+            data-ring="1"
+          >
+            <div class="copy">
+              <p class="eyebrow">3 · Acompanhar</p>
+              <h2>Cada kWh, em reais, ao vivo.</h2>
+              <p>
+                Potência, tempo e valor atualizados a cada leitura do
+                carregador. O anel mostra quanto falta para o limite que você
+                escolheu.
+              </p>
+            </div>
+          </article>
+
+          <article
+            class="step side-right"
+            data-bg="amber"
+            data-theme="dark"
+            data-t="27.5,31.9"
+            data-ring="1"
+          >
+            <div class="copy">
+              <p class="eyebrow">4 · Liberar a vaga</p>
+              <h2>10 minutos de tolerância. Depois, multa com teto.</h2>
+              <p>
+                Quando a carga termina, o app avisa. Se o carro continuar na
+                vaga, a ocupação custa R$ 0,25 por minuto, com teto de R$ 30,00
+                por sessão. A vaga volta a girar.
+              </p>
+            </div>
+          </article>
+
+          <article
+            class="step side-left"
+            data-bg="studio"
+            data-theme="light"
+            data-t="32,37.9"
+          >
+            <div class="copy">
+              <p class="eyebrow">5 · Pagar o justo</p>
+              <h2>Recibo na hora. Rateio no fim do mês.</h2>
+              <p>
+                Cada sessão gera um recibo com energia, tempo e tarifa travada.
+                No fechamento, o consumo entra no rateio da sua unidade, sem
+                cartão e sem conta dividida por igual.
+              </p>
+            </div>
+          </article>
+
+          <article
+            class="step side-left"
+            id="sindico"
+            data-bg="predio"
+            data-theme="dark"
+            data-t="37.9,39.9"
+            data-portal="1"
+          >
+            <div class="copy">
+              <p class="eyebrow">Para o síndico</p>
+              <h2>Capacidade e rateio, sem planilha.</h2>
+              <p>
+                O portal mostra quanto da demanda contratada está em uso, quem
+                carregou, quanto consumiu e o valor de cada unidade, com
+                exportação em CSV e alerta de anomalias.
+              </p>
+              <a class="btn btn-light" href="https://app.evchargeops.com.br"
+                >Conhecer o portal</a
+              >
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="band" id="regras" aria-labelledby="regras-t">
+        <div class="wrap">
+          <p class="eyebrow">Regras claras</p>
+          <h2 id="regras-t" class="reveal">Dois regimes, uma plataforma.</h2>
+          <div class="grid2">
+            <div class="card reveal">
+              <span class="tag tag-green">Grupo A</span>
+              <h3>Condomínios, empresas e campi</h3>
+              <p>
+                Sem fins lucrativos: a energia é repassada a custo, sem margem,
+                como prevê a ANEEL RN 1.000/2021. O consumo de cada morador
+                entra no rateio mensal da unidade.
+              </p>
+              <ul class="checks">
+                <li>Taxa de acesso mensal definida pelo condomínio</li>
+                <li>Tolerância e multa de ocupação configuráveis</li>
+                <li>Exportação do rateio em CSV</li>
+              </ul>
+            </div>
+            <div class="card reveal">
+              <span class="tag tag-blue">Grupo B</span>
+              <h3>Pontos de visitantes e operadores</h3>
+              <p>
+                Preço livre com fator de demanda calculado por IA. Pagamento no
+                cartão com pré-autorização e captura do valor real ao encerrar.
+              </p>
+              <ul class="checks">
+                <li>Tarifa base × fator de demanda, travada no início</li>
+                <li>Pré-autorização e recibo automático</li>
+                <li>Mesmo app, mesmo mapa</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="band band-dark" aria-labelledby="tec-t">
+        <div class="wrap">
+          <p class="eyebrow">Por dentro</p>
+          <h2 id="tec-t" class="reveal">Feito para a garagem de verdade.</h2>
+          <div class="grid3">
+            <div class="feat reveal">
+              <b>Potência dividida com segurança</b>
+              <p>
+                Cada sessão recebe potência dentro da demanda contratada,
+                preservando a reserva da área comum.
+              </p>
+            </div>
+            <div class="feat reveal">
+              <b>IA no preço e na auditoria</b>
+              <p>
+                Um modelo prevê o fator de demanda; outro pontua cada sessão
+                encerrada e sinaliza consumo fora do perfil.
+              </p>
+            </div>
+            <div class="feat reveal">
+              <b>LGPD desde o cadastro</b>
+              <p>
+                Consentimento por finalidade, exportação dos seus dados e
+                exclusão da conta pelo próprio app.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="band cta-band" id="contato" aria-labelledby="contato-t">
+        <div class="wrap cta-wrap">
+          <div>
+            <h2 id="contato-t" class="reveal">
+              Leve o EV ChargeOps para o seu condomínio.
+            </h2>
+            <p class="lead reveal">
+              Conte quantos carregadores e unidades vocês têm. Respondemos com
+              um plano de implantação.
+            </p>
+          </div>
+          <div class="cta-actions reveal">
+            <a
+              class="btn"
+              href="mailto:contato@softmoon.io?subject=EV%20ChargeOps%20no%20meu%20condom%C3%ADnio"
+              >Falar com a equipe</a
+            >
+            <a class="btn btn-ghost" href="https://app.evchargeops.com.br"
+              >Já sou cliente · entrar</a
+            >
+            <div class="stores">
+              <a
+                class="store"
+                href="https://apps.apple.com/br/app/id6819532299"
+                aria-label="Baixar na App Store"
+                >App Store</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="wrap foot-grid">
+        <div class="foot-brand">
+          <svg width="40" height="40" viewBox="0 0 64 64" aria-hidden="true">
+            <rect width="64" height="64" rx="18" fill="#26282C" />
+            <path
+              d="M45.02 42.93 A17 17 0 1 1 45.02 21.07"
+              fill="none"
+              stroke="#fff"
+              stroke-width="5"
+              stroke-linecap="round"
+            />
+            <path d="M34 20 L24 34 H31 L29 44 L40 29 H33 Z" fill="#3DDC84" />
+            <circle cx="45.02" cy="21.07" r="3.4" fill="#3DDC84" />
+          </svg>
+          <p>Recarga compartilhada, conta clara.</p>
+        </div>
+        <dl class="company" data-company>
+          <div>
+            <dt>Razão social</dt>
+            <dd data-company="name">
+              SOFTMOON.IO SERVICOS DE INFORMATICA LTDA
+            </dd>
+          </div>
+          <div>
+            <dt>CNPJ</dt>
+            <dd data-company="cnpj">29.734.824/0001-77</dd>
+          </div>
+        </dl>
+        <nav class="foot-links" aria-label="Links legais">
+          <a href="https://app.evchargeops.com.br/termos">Termos de uso</a>
+          <a href="https://app.evchargeops.com.br/privacidade"
+            >Política de privacidade</a
+          >
+          <a href="https://app.evchargeops.com.br/suporte">Suporte</a>
+          <a href="https://app.evchargeops.com.br">Portal do condomínio</a>
+        </nav>
+      </div>
+      <div class="wrap foot-bottom">
+        <span
+          >© 2026 SOFTMOON.IO SERVICOS DE INFORMATICA LTDA · CNPJ
+          29.734.824/0001-77</span
+        >
+        <span>Enterprise Challenge 2026 · FIAP</span>
+      </div>
+    </footer>
+
+    <script src="assets/js/site.js" defer></script>
+  </body>
+</html>
