@@ -1,29 +1,28 @@
-import { Link } from 'react-router'
+import { Link } from "react-router";
 
 import {
   LegalLayout,
   type LegalSection,
-} from '@/components/layouts/legal-layout'
-import { company } from '@/config/company'
-import { paths } from '@/config/paths'
+} from "@/components/layouts/legal-layout";
+import { company } from "@/config/company";
+import { paths } from "@/config/paths";
 
-const contactEmail = 'contato@softmoon.io'
+const contactEmail = "contato@softmoon.io";
 
 const sections: LegalSection[] = [
   {
-    id: 'quem-somos',
-    title: 'Quem somos',
+    id: "quem-somos",
+    title: "Quem somos",
     content: (
       <>
         <p>
           O EV ChargeOps é o app do motorista para a recarga compartilhada de
           veículos elétricos em condomínios e em pontos públicos, com um portal
-          web para o gestor do condomínio. É um MVP acadêmico desenvolvido no
-          FIAP Enterprise Challenge em parceria com a GoodWe.
+          web para o gestor do condomínio.
         </p>
         <p>
-          A controladora dos dados é {company.legalName}, inscrita no CNPJ sob
-          o nº {company.cnpj}.
+          A controladora dos dados é {company.legalName}, inscrita no CNPJ sob o
+          nº {company.cnpj}.
         </p>
         <p>
           Esta política explica como tratamos os dados pessoais de motoristas,
@@ -35,8 +34,8 @@ const sections: LegalSection[] = [
     ),
   },
   {
-    id: 'dados',
-    title: 'Quais dados coletamos',
+    id: "dados",
+    title: "Quais dados coletamos",
     content: (
       <ul>
         <li>
@@ -79,8 +78,8 @@ const sections: LegalSection[] = [
     ),
   },
   {
-    id: 'finalidades',
-    title: 'Para que usamos',
+    id: "finalidades",
+    title: "Para que usamos",
     content: (
       <>
         <ul>
@@ -106,7 +105,7 @@ const sections: LegalSection[] = [
           </li>
         </ul>
         <p>
-          Você pode alterar as finalidades opcionais a qualquer momento em{' '}
+          Você pode alterar as finalidades opcionais a qualquer momento em{" "}
           <strong>Conta → Privacidade e dados</strong> no app. Não vendemos
           dados, não os usamos para publicidade e não rastreamos você em apps ou
           sites de terceiros.
@@ -115,8 +114,8 @@ const sections: LegalSection[] = [
     ),
   },
   {
-    id: 'notificacoes',
-    title: 'Notificações',
+    id: "notificacoes",
+    title: "Notificações",
     content: (
       <p>
         Com a sua permissão, o app envia notificações push e agenda lembretes
@@ -128,8 +127,8 @@ const sections: LegalSection[] = [
     ),
   },
   {
-    id: 'base-legal',
-    title: 'Base legal',
+    id: "base-legal",
+    title: "Base legal",
     content: (
       <p>
         Cada finalidade se apoia em uma base prevista no art. 7º da LGPD:
@@ -141,8 +140,8 @@ const sections: LegalSection[] = [
     ),
   },
   {
-    id: 'compartilhamento',
-    title: 'Compartilhamento',
+    id: "compartilhamento",
+    title: "Compartilhamento",
     content: (
       <>
         <p>
@@ -188,15 +187,15 @@ const sections: LegalSection[] = [
     ),
   },
   {
-    id: 'fontes',
-    title: 'Dados de pontos públicos',
+    id: "fontes",
+    title: "Dados de pontos públicos",
     content: (
       <p>
-        A localização dos pontos de recarga públicos vem do{' '}
+        A localização dos pontos de recarga públicos vem do{" "}
         <a href="https://openchargemap.org" target="_blank" rel="noreferrer">
           Open Charge Map
         </a>
-        , disponibilizada sob a licença{' '}
+        , disponibilizada sob a licença{" "}
         <a
           href="https://creativecommons.org/licenses/by-sa/4.0/"
           target="_blank"
@@ -210,25 +209,25 @@ const sections: LegalSection[] = [
     ),
   },
   {
-    id: 'retencao',
-    title: 'Retenção',
+    id: "retencao",
+    title: "Retenção",
     content: (
       <p>
-        Mantemos os dados enquanto sua conta estiver ativa ou enquanto durar o
-        projeto acadêmico. Ao fim do projeto, ou quando você excluir a conta, os
-        dados pessoais são apagados ou anonimizados. Ficam guardados apenas os
-        registros de recargas e pagamentos necessários ao rateio do condomínio e
-        ao cumprimento de obrigações legais, pelo prazo que a lei exigir.
+        Mantemos os dados enquanto sua conta estiver ativa. Quando você excluir
+        a conta, os dados pessoais são apagados ou anonimizados. Ficam guardados
+        apenas os registros de recargas e pagamentos necessários ao rateio do
+        condomínio e ao cumprimento de obrigações legais, pelo prazo que a lei
+        exigir.
       </p>
     ),
   },
   {
-    id: 'exclusao',
-    title: 'Exclusão da conta',
+    id: "exclusao",
+    title: "Exclusão da conta",
     content: (
       <>
         <p>
-          Você pode excluir a conta a qualquer momento no app, em{' '}
+          Você pode excluir a conta a qualquer momento no app, em{" "}
           <strong>Conta → Privacidade e dados → Excluir conta</strong>. A
           exclusão é imediata e não depende de contato com o suporte.
         </p>
@@ -253,8 +252,8 @@ const sections: LegalSection[] = [
     ),
   },
   {
-    id: 'direitos',
-    title: 'Seus direitos',
+    id: "direitos",
+    title: "Seus direitos",
     content: (
       <>
         <p>
@@ -264,7 +263,7 @@ const sections: LegalSection[] = [
           a revogação do consentimento.
         </p>
         <p>
-          No app, você pode <strong>exportar seus dados</strong> e{' '}
+          No app, você pode <strong>exportar seus dados</strong> e{" "}
           <strong>excluir a conta</strong> em Conta → Privacidade e dados. Você
           também pode apresentar reclamação à Autoridade Nacional de Proteção de
           Dados (ANPD).
@@ -273,19 +272,19 @@ const sections: LegalSection[] = [
     ),
   },
   {
-    id: 'encarregado',
-    title: 'Encarregado de dados',
+    id: "encarregado",
+    title: "Encarregado de dados",
     content: (
       <p>
-        Para exercer seus direitos ou tirar dúvidas, escreva para{' '}
+        Para exercer seus direitos ou tirar dúvidas, escreva para{" "}
         <a href={`mailto:${contactEmail}`}>{contactEmail}</a>. Para ajuda com o
-        app, veja a página de{' '}
+        app, veja a página de{" "}
         <Link to={paths.legal.support.getHref()}>Suporte</Link>. Os e-mails
         enviados pelo endereço noreply não são monitorados.
       </p>
     ),
   },
-]
+];
 
 export function PrivacyRoute() {
   return (
@@ -294,5 +293,5 @@ export function PrivacyRoute() {
       version="08/10/2026"
       sections={sections}
     />
-  )
+  );
 }
