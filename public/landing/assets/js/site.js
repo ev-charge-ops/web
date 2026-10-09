@@ -22,11 +22,9 @@
     (s.dataset.t || "0,0").split(",").map(Number),
   );
   let active = -1;
-  let targetTime = 0;
-  let shownTime = 0;
-  let lastScroll = 0;
-  let scrolling = false;
-  let idleTimer = 0;
+  let targetTime = ranges[0][0];
+  let shownTime = targetTime;
+  let syncedScroll = -1;
 
   function setActive(i) {
     if (i === active) return;
@@ -44,7 +42,7 @@
       el.classList.toggle("on", on);
       const v = el.querySelector("video");
       if (!on) v.pause();
-      else if (scrolling && !reduce) v.play().catch(() => {});
+      else if (!reduce) v.play().catch(() => {});
     });
     if (s.dataset.portal && counter && !counter.dataset.done) countUp(counter);
   }
@@ -63,14 +61,21 @@
   }
 
   function onScroll() {
+    syncedScroll = scrollY;
     const vh = innerHeight;
     let idx = 0;
     steps.forEach((s, i) => {
-      const r = s.getBoundingClientRect();
-      if (r.top < vh * 0.55) idx = i;
-      if (r.top < vh * 0.8) s.classList.add("in");
+      if (s.getBoundingClientRect().top < vh * 0.55) idx = i;
     });
-    setActive(idx);
+    const storyBottom = story.getBoundingClientRect().bottom;
+    body.style.setProperty("--lift", `${Math.min(0, storyBottom - vh)}px`);
+    const storyOut = storyBottom < vh * 0.25;
+    steps.forEach((s, i) => s.classList.toggle("in", i === idx && !storyOut));
+    if (storyOut) {
+      body.classList.remove("is-dark");
+      Object.values(bgs).forEach((el) => el.querySelector("video").pause());
+      active = -1;
+    } else setActive(idx);
 
     const s = steps[idx];
     const r = s.getBoundingClientRect();
@@ -92,29 +97,11 @@
     const sr = story.getBoundingClientRect();
     const p = Math.min(Math.max(-sr.top / (sr.height - vh), 0), 1);
     progressBar.style.setProperty("--p", p.toFixed(4));
+  }
 
-    const now = performance.now();
-    scrolling = true;
-    const bgv = bgs[s.dataset.bg]?.querySelector("video");
-    if (bgv && !reduce) {
-      const speed = Math.min(
-        (Math.abs(scrollY - lastScroll) /
-          Math.max(now - (onScroll.t || now - 16), 1)) *
-          0.6,
-        2,
-      );
-      if (bgv.paused) bgv.play().catch(() => {});
-      try {
-        bgv.playbackRate = Math.max(0.5, speed || 1);
-      } catch {}
-    }
-    onScroll.t = now;
-    lastScroll = scrollY;
-    clearTimeout(idleTimer);
-    idleTimer = setTimeout(() => {
-      scrolling = false;
-      Object.values(bgs).forEach((el) => el.querySelector("video").pause());
-    }, 180);
+  function sync() {
+    if (scrollY !== syncedScroll) onScroll();
+    requestAnimationFrame(sync);
   }
 
   function loop() {
@@ -139,10 +126,18 @@
       .catch(() => {});
     requestAnimationFrame(loop);
   }
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState !== "visible" || reduce) return;
+    const s = steps[active];
+    bgs[s?.dataset.bg]
+      ?.querySelector("video")
+      .play()
+      .catch(() => {});
+  });
   addEventListener("scroll", onScroll, { passive: true });
   addEventListener("resize", onScroll);
   onScroll();
-  scrolling = false;
+  requestAnimationFrame(sync);
 
   const io = new IntersectionObserver(
     (es) =>
@@ -155,4 +150,31 @@
     { threshold: 0.2 },
   );
   document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+})();
+
+(() => {
+  const tabs = [...document.querySelectorAll(".portal-tabs [data-shot]")];
+  const shots = [...document.querySelectorAll(".browser-view [data-shot]")];
+  if (!tabs.length) return;
+  let current = 0;
+  let timer = 0;
+  const show = (i) => {
+    current = i;
+    tabs.forEach((t, k) => t.setAttribute("aria-selected", String(k === i)));
+    shots.forEach((img) =>
+      img.classList.toggle("on", img.dataset.shot === tabs[i].dataset.shot),
+    );
+  };
+  const schedule = () => {
+    clearInterval(timer);
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    timer = setInterval(() => show((current + 1) % tabs.length), 5000);
+  };
+  tabs.forEach((t, i) =>
+    t.addEventListener("click", () => {
+      show(i);
+      schedule();
+    }),
+  );
+  schedule();
 })();
