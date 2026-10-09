@@ -24,9 +24,6 @@
   let active = -1;
   let targetTime = ranges[0][0];
   let shownTime = targetTime;
-  let lastScroll = 0;
-  let scrolling = false;
-  let idleTimer = 0;
   let syncedScroll = -1;
 
   function setActive(i) {
@@ -45,7 +42,7 @@
       el.classList.toggle("on", on);
       const v = el.querySelector("video");
       if (!on) v.pause();
-      else if (scrolling && !reduce) v.play().catch(() => {});
+      else if (!reduce) v.play().catch(() => {});
     });
     if (s.dataset.portal && counter && !counter.dataset.done) countUp(counter);
   }
@@ -74,7 +71,11 @@
     body.style.setProperty("--lift", `${Math.min(0, storyBottom - vh)}px`);
     const storyOut = storyBottom < vh * 0.25;
     steps.forEach((s, i) => s.classList.toggle("in", i === idx && !storyOut));
-    setActive(idx);
+    if (storyOut) {
+      body.classList.remove("is-dark");
+      Object.values(bgs).forEach((el) => el.querySelector("video").pause());
+      active = -1;
+    } else setActive(idx);
 
     const s = steps[idx];
     const r = s.getBoundingClientRect();
@@ -96,29 +97,6 @@
     const sr = story.getBoundingClientRect();
     const p = Math.min(Math.max(-sr.top / (sr.height - vh), 0), 1);
     progressBar.style.setProperty("--p", p.toFixed(4));
-
-    const now = performance.now();
-    scrolling = true;
-    const bgv = bgs[s.dataset.bg]?.querySelector("video");
-    if (bgv && !reduce) {
-      const speed = Math.min(
-        (Math.abs(scrollY - lastScroll) /
-          Math.max(now - (onScroll.t || now - 16), 1)) *
-          0.6,
-        2,
-      );
-      if (bgv.paused) bgv.play().catch(() => {});
-      try {
-        bgv.playbackRate = Math.max(0.5, speed || 1);
-      } catch {}
-    }
-    onScroll.t = now;
-    lastScroll = scrollY;
-    clearTimeout(idleTimer);
-    idleTimer = setTimeout(() => {
-      scrolling = false;
-      Object.values(bgs).forEach((el) => el.querySelector("video").pause());
-    }, 180);
   }
 
   function sync() {
@@ -148,10 +126,17 @@
       .catch(() => {});
     requestAnimationFrame(loop);
   }
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState !== "visible" || reduce) return;
+    const s = steps[active];
+    bgs[s?.dataset.bg]
+      ?.querySelector("video")
+      .play()
+      .catch(() => {});
+  });
   addEventListener("scroll", onScroll, { passive: true });
   addEventListener("resize", onScroll);
   onScroll();
-  scrolling = false;
   requestAnimationFrame(sync);
 
   const io = new IntersectionObserver(

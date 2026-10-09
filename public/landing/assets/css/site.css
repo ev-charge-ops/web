@@ -1245,7 +1245,7 @@ body.is-dark .progress i {
 }
 .browser-view {
   position: relative;
-  aspect-ratio: 1440 / 900;
+  aspect-ratio: 1568 / 776;
   background: var(--studio);
 }
 .browser-view img {
