@@ -145,23 +145,6 @@ const sections: LegalSection[] = [
       </>
     ),
   },
-  {
-    id: 'piloto',
-    title: 'Os carregadores são reais?',
-    content: (
-      <>
-        <p>
-          O EV ChargeOps é um projeto piloto acadêmico. Nesta fase, as recargas
-          são simuladas: o carregador não é acionado e a energia, a potência e o
-          tempo exibidos vêm de um simulador.
-        </p>
-        <p>
-          A localização dos pontos públicos vem do Open Charge Map, sob a
-          licença CC BY-SA 4.0, e os preços desses pontos são de demonstração.
-        </p>
-      </>
-    ),
-  },
 ]
 
 const intro = (
