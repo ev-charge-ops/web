@@ -1,58 +1,58 @@
-import { ArrowLeft } from 'lucide-react'
-import { useEffect, useState, type ReactNode } from 'react'
-import { Link, NavLink } from 'react-router'
+import { ArrowLeft } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
+import { Link, NavLink } from "react-router";
 
-import { Logo } from '@/components/ui/logo'
-import { companyIdentification } from '@/config/company'
-import { paths } from '@/config/paths'
-import { cn } from '@/utils/cn'
+import { Logo } from "@/components/ui/logo";
+import { companyIdentification } from "@/config/company";
+import { paths } from "@/config/paths";
+import { cn } from "@/utils/cn";
 
-import styles from './legal-layout.module.css'
+import styles from "./legal-layout.module.css";
 
 export type LegalSection = {
-  id: string
-  title: string
-  content: ReactNode
-}
+  id: string;
+  title: string;
+  content: ReactNode;
+};
 
 type LegalLayoutProps = {
-  title: string
-  subtitle?: string
-  version?: string
-  sections: LegalSection[]
-  intro?: ReactNode
-}
+  title: string;
+  subtitle?: string;
+  version?: string;
+  sections: LegalSection[];
+  intro?: ReactNode;
+};
 
 const documents = [
-  { href: paths.legal.terms.getHref(), label: 'Termos de uso' },
-  { href: paths.legal.privacy.getHref(), label: 'Política de privacidade' },
-  { href: paths.legal.support.getHref(), label: 'Suporte' },
-]
+  { href: paths.legal.terms.getHref(), label: "Termos de uso" },
+  { href: paths.legal.privacy.getHref(), label: "Política de privacidade" },
+  { href: paths.legal.support.getHref(), label: "Suporte" },
+];
 
 function useActiveSection(ids: string[]) {
-  const [activeId, setActiveId] = useState(ids[0])
+  const [activeId, setActiveId] = useState(ids[0]);
 
   useEffect(() => {
-    if (typeof IntersectionObserver === 'undefined') return
-    const visible = new Map<string, boolean>()
+    if (typeof IntersectionObserver === "undefined") return;
+    const visible = new Map<string, boolean>();
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          visible.set(entry.target.id, entry.isIntersecting)
+          visible.set(entry.target.id, entry.isIntersecting);
         }
-        const first = ids.find((id) => visible.get(id))
-        if (first) setActiveId(first)
+        const first = ids.find((id) => visible.get(id));
+        if (first) setActiveId(first);
       },
-      { rootMargin: '0px 0px -65% 0px' },
-    )
+      { rootMargin: "0px 0px -65% 0px" },
+    );
     for (const id of ids) {
-      const element = document.getElementById(id)
-      if (element) observer.observe(element)
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
     }
-    return () => observer.disconnect()
-  }, [ids])
+    return () => observer.disconnect();
+  }, [ids]);
 
-  return activeId
+  return activeId;
 }
 
 export function LegalLayout({
@@ -62,8 +62,8 @@ export function LegalLayout({
   sections,
   intro,
 }: LegalLayoutProps) {
-  const [ids] = useState(() => sections.map((section) => section.id))
-  const activeId = useActiveSection(ids)
+  const [ids] = useState(() => sections.map((section) => section.id));
+  const activeId = useActiveSection(ids);
 
   return (
     <div className={styles.page}>
@@ -89,7 +89,7 @@ export function LegalLayout({
                   styles.tocLink,
                   section.id === activeId && styles.tocActive,
                 )}
-                aria-current={section.id === activeId ? 'location' : undefined}
+                aria-current={section.id === activeId ? "location" : undefined}
               >
                 {section.title}
               </a>
@@ -97,7 +97,6 @@ export function LegalLayout({
           </nav>
           <div className={styles.version}>
             {version ? <strong>Versão de {version}</strong> : null}
-            <span>Projeto acadêmico FIAP Enterprise Challenge</span>
           </div>
         </aside>
 
@@ -143,5 +142,5 @@ export function LegalLayout({
         </main>
       </div>
     </div>
-  )
+  );
 }
