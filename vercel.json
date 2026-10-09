@@ -1,25 +1,37 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "headers": [
+  "routes": [
     {
-      "source": "/.well-known/apple-app-site-association",
-      "headers": [{ "key": "Content-Type", "value": "application/json" }]
+      "src": "/\.well-known/(apple-app-site-association|assetlinks\.json)",
+      "headers": { "Content-Type": "application/json" },
+      "continue": true
     },
     {
-      "source": "/.well-known/assetlinks.json",
-      "headers": [{ "key": "Content-Type", "value": "application/json" }]
+      "src": "/media/(.*)",
+      "headers": {
+        "Cache-Control": "public, max-age=2592000, s-maxage=31536000, stale-while-revalidate=604800"
+      },
+      "continue": true
     },
     {
-      "source": "/media/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=2592000, s-maxage=31536000, stale-while-revalidate=604800"
-        }
-      ]
-    }
-  ],
-  "rewrites": [
-    { "source": "/((?!\\.well-known/|media/).*)", "destination": "/index.html" }
+      "src": "/assets/(.*)",
+      "has": [{ "type": "host", "value": "www.evchargeops.com.br" }],
+      "headers": {
+        "Cache-Control": "public, max-age=604800, stale-while-revalidate=86400"
+      },
+      "continue": true
+    },
+    {
+      "src": "/",
+      "has": [{ "type": "host", "value": "www.evchargeops.com.br" }],
+      "dest": "/landing/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "has": [{ "type": "host", "value": "www.evchargeops.com.br" }],
+      "dest": "/landing/$1"
+    },
+    { "handle": "filesystem" },
+    { "src": "/(?!\.well-known/|media/|landing/)(.*)", "dest": "/index.html" }
   ]
 }
