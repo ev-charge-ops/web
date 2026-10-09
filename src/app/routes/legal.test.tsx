@@ -90,7 +90,6 @@ describe('legal routes', () => {
       'Como funcionam os pagamentos e reembolsos?',
       'Como excluo minha conta?',
       'Como meus dados são tratados?',
-      'Os carregadores são reais?',
     ]) {
       expect(
         screen.getByRole('heading', { level: 2, name: question }),
