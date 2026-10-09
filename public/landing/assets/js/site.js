@@ -60,58 +60,109 @@
     requestAnimationFrame(tick);
   }
 
+  const stage = document.querySelector(".stage");
+  const stepsEl = document.querySelector(".steps");
+  const touch = matchMedia("(pointer: coarse)").matches;
+  let metrics = null;
+  let lift = null;
+  let ring = null;
+  let progress = null;
+
+  function measure() {
+    const top = (el) => el.getBoundingClientRect().top + scrollY;
+    metrics = {
+      tops: steps.map(top),
+      heights: steps.map((s) => s.offsetHeight),
+      storyBottom: top(story) + story.offsetHeight,
+      storyTop: top(story),
+    };
+  }
+
+  function playSegment(i) {
+    if (!touch || reduce || i < 0) return;
+    const [t0] = ranges[i];
+    if (app.readyState >= 1) app.currentTime = t0;
+    app.play().catch(() => {});
+  }
+
   function onScroll() {
     syncedScroll = scrollY;
+    if (!metrics) measure();
+    const y = scrollY;
     const vh = innerHeight;
     let idx = 0;
-    steps.forEach((s, i) => {
-      if (s.getBoundingClientRect().top < vh * 0.55) idx = i;
+    metrics.tops.forEach((t, i) => {
+      if (t - y < vh * 0.55) idx = i;
     });
-    const storyBottom = story.getBoundingClientRect().bottom;
-    body.style.setProperty("--lift", `${Math.min(0, storyBottom - vh)}px`);
+    const storyBottom = metrics.storyBottom - y;
+    const nextLift = Math.min(0, Math.round(storyBottom - vh));
+    if (nextLift !== lift) {
+      lift = nextLift;
+      stepsEl.style.setProperty("--lift", `${lift}px`);
+    }
     const storyOut = storyBottom < vh * 0.25;
     steps.forEach((s, i) => s.classList.toggle("in", i === idx && !storyOut));
     if (storyOut) {
-      body.classList.remove("is-dark");
-      Object.values(bgs).forEach((el) => el.querySelector("video").pause());
-      active = -1;
-    } else setActive(idx);
+      if (active !== -1) {
+        body.classList.remove("is-dark");
+        Object.values(bgs).forEach((el) => el.querySelector("video").pause());
+        if (touch) app.pause();
+        active = -1;
+      }
+    } else if (idx !== active) {
+      setActive(idx);
+      playSegment(idx);
+    }
 
     const s = steps[idx];
-    const r = s.getBoundingClientRect();
+    const top = metrics.tops[idx] - y;
+    const height = metrics.heights[idx];
     const local = Math.min(
-      Math.max(
-        idx === 0 ? scrollY / r.height : (vh * 0.55 - r.top) / r.height,
-        0,
-      ),
+      Math.max(idx === 0 ? y / height : (vh * 0.55 - top) / height, 0),
       1,
     );
     const [t0, t1] = ranges[idx];
     targetTime = t0 + (t1 - t0) * local;
 
-    if (s.dataset.ring)
-      body.style.setProperty(
-        "--ring",
-        s.dataset.bg === "amber" ? 1 : (0.15 + local * 0.65).toFixed(3),
-      );
-    const sr = story.getBoundingClientRect();
-    const p = Math.min(Math.max(-sr.top / (sr.height - vh), 0), 1);
-    progressBar.style.setProperty("--p", p.toFixed(4));
-  }
-
-  function sync() {
-    if (scrollY !== syncedScroll) onScroll();
-    requestAnimationFrame(sync);
+    if (s.dataset.ring) {
+      const nextRing =
+        s.dataset.bg === "amber" ? "1" : (0.15 + local * 0.65).toFixed(2);
+      if (nextRing !== ring) {
+        ring = nextRing;
+        stage.style.setProperty("--ring", ring);
+      }
+    }
+    const p = Math.min(
+      Math.max(
+        (y - metrics.storyTop) / (metrics.storyBottom - metrics.storyTop - vh),
+        0,
+      ),
+      1,
+    ).toFixed(3);
+    if (p !== progress) {
+      progress = p;
+      progressBar.style.setProperty("--p", p);
+    }
   }
 
   function loop() {
-    shownTime += (targetTime - shownTime) * 0.18;
-    if (
-      app.readyState >= 1 &&
-      Math.abs(app.currentTime - shownTime) > 1 / 24 &&
-      !app.seeking
-    ) {
-      app.currentTime = shownTime;
+    if (scrollY !== syncedScroll) onScroll();
+    if (touch) {
+      if (active >= 0 && app.readyState >= 1 && !app.seeking) {
+        const [t0, t1] = ranges[active];
+        if (app.currentTime < t0 - 0.1 || app.currentTime >= t1) {
+          app.currentTime = t0;
+        }
+      }
+    } else {
+      shownTime += (targetTime - shownTime) * 0.18;
+      if (
+        app.readyState >= 1 &&
+        Math.abs(app.currentTime - shownTime) > 1 / 24 &&
+        !app.seeking
+      ) {
+        app.currentTime = shownTime;
+      }
     }
     requestAnimationFrame(loop);
   }
@@ -119,25 +170,35 @@
   if (reduce) {
     steps.forEach((s) => s.classList.add("in"));
   } else {
-    app.pause();
-    app
-      .play()
-      .then(() => app.pause())
-      .catch(() => {});
+    if (!touch) {
+      app.pause();
+      app
+        .play()
+        .then(() => app.pause())
+        .catch(() => {});
+    }
     requestAnimationFrame(loop);
   }
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState !== "visible" || reduce) return;
+    if (touch && active >= 0) app.play().catch(() => {});
     const s = steps[active];
     bgs[s?.dataset.bg]
       ?.querySelector("video")
       .play()
       .catch(() => {});
   });
+  const remeasure = () => {
+    measure();
+    onScroll();
+  };
   addEventListener("scroll", onScroll, { passive: true });
-  addEventListener("resize", onScroll);
+  app.addEventListener("loadedmetadata", () => {
+    if (touch && active >= 0) app.currentTime = ranges[active][0];
+  });
+  addEventListener("resize", remeasure);
+  addEventListener("load", remeasure);
   onScroll();
-  requestAnimationFrame(sync);
 
   const io = new IntersectionObserver(
     (es) =>

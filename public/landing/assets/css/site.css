@@ -244,6 +244,7 @@ body.is-dark .stage {
   position: absolute;
   inset: 0;
   opacity: 0;
+  will-change: opacity;
   transition: opacity 0.9s var(--ease-std);
   pointer-events: none;
 }
@@ -599,7 +600,9 @@ body.is-portal .pc-rows div:nth-child(4) {
 .progress i {
   display: block;
   height: 100%;
-  width: calc(var(--p, 0) * 100%);
+  width: 100%;
+  transform: scaleX(var(--p, 0));
+  transform-origin: left center;
   background: var(--green-600);
   border-radius: 3px;
 }
@@ -1070,14 +1073,33 @@ body.is-dark .progress i {
     padding-top: 0;
   }
   .step:not(.step-hero) .copy {
-    background: rgba(243, 244, 245, 0.94);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: #f3f4f5;
     border-radius: 24px;
     padding: 18px;
   }
   .step[data-theme="dark"] .copy {
-    background: rgba(23, 24, 27, 0.92);
+    background: #17181b;
+  }
+  .nav {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  body.is-dark .nav {
+    background: rgba(23, 24, 27, 0.94);
+  }
+  .copy > * {
+    filter: none;
+  }
+  .bg-car video,
+  .bg.on.bg-car video {
+    mix-blend-mode: normal;
+    opacity: 0.35;
+  }
+  .bg video,
+  .bg.on video {
+    transform: none;
+    transition: none;
   }
   .step .eyebrow {
     margin-bottom: 8px;
