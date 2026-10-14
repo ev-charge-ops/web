@@ -905,18 +905,6 @@ body.is-dark .progress i {
   justify-content: flex-end;
   margin-top: 6px;
 }
-.store {
-  height: 48px;
-  padding: 0 18px;
-  border-radius: 14px;
-  border: 1.5px solid var(--ink);
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 15px;
-}
-
 .reveal {
   opacity: 0;
   transform: translateY(24px);
@@ -1319,4 +1307,46 @@ body.is-dark .progress i {
   .browser-bar span {
     font-size: 11px;
   }
+}
+.get-app {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+}
+.get-app > span {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.appstore {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 56px;
+  padding: 0 20px 0 16px;
+  border-radius: 14px;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+  transition: transform 0.14s var(--ease-std);
+}
+.appstore:active {
+  transform: scale(0.97);
+}
+.appstore span {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+.appstore small {
+  font-size: 12px;
+  font-weight: 600;
+}
+.appstore b {
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
