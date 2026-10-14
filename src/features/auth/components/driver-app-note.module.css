@@ -11,3 +11,8 @@
 .note strong {
   color: var(--text-title);
 }
+
+.note a {
+  color: var(--text-title);
+  font-weight: 700;
+}
