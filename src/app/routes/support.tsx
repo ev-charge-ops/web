@@ -107,6 +107,12 @@ const sections: LegalSection[] = [
           suporte.
         </p>
         <p>
+          Sem acesso ao app, envie um e-mail para{' '}
+          <a href={`mailto:${supportEmail}`}>{supportEmail}</a> a partir do
+          endereço da conta, com o assunto "Excluir minha conta". A exclusão é
+          feita em até 7 dias e confirmada por e-mail.
+        </p>
+        <p>
           Seus dados pessoais são apagados ou anonimizados. Os registros das
           recargas e dos pagamentos ficam guardados sem identificar você, porque
           são necessários ao rateio do condomínio e às obrigações legais. Os
