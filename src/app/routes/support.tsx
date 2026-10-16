@@ -1,20 +1,20 @@
-import { Mail } from 'lucide-react'
-import { Link } from 'react-router'
+import { Mail } from "lucide-react";
+import { Link } from "react-router";
 
 import {
   LegalLayout,
   type LegalSection,
-} from '@/components/layouts/legal-layout'
-import { paths } from '@/config/paths'
+} from "@/components/layouts/legal-layout";
+import { paths } from "@/config/paths";
 
-import styles from './support.module.css'
+import styles from "./support.module.css";
 
-const supportEmail = 'contato@softmoon.io'
+const supportEmail = "contato@softmoon.io";
 
 const sections: LegalSection[] = [
   {
-    id: 'sobre',
-    title: 'O que é o EV ChargeOps',
+    id: "sobre",
+    title: "O que é o EV ChargeOps",
     content: (
       <>
         <p>
@@ -31,8 +31,8 @@ const sections: LegalSection[] = [
     ),
   },
   {
-    id: 'iniciar-recarga',
-    title: 'Como inicio uma recarga?',
+    id: "iniciar-recarga",
+    title: "Como inicio uma recarga?",
     content: (
       <>
         <ol>
@@ -64,8 +64,8 @@ const sections: LegalSection[] = [
     ),
   },
   {
-    id: 'pagamentos',
-    title: 'Como funcionam os pagamentos e reembolsos?',
+    id: "pagamentos",
+    title: "Como funcionam os pagamentos e reembolsos?",
     content: (
       <>
         <ul>
@@ -87,7 +87,7 @@ const sections: LegalSection[] = [
           O prazo para o valor voltar ao limite depende do banco emissor.
         </p>
         <p>
-          Para contestar uma cobrança ou pedir reembolso, escreva para{' '}
+          Para contestar uma cobrança ou pedir reembolso, escreva para{" "}
           <a href={`mailto:${supportEmail}`}>{supportEmail}</a> informando a
           data e o ponto da recarga. Reembolsos aprovados voltam para o mesmo
           cartão.
@@ -96,21 +96,27 @@ const sections: LegalSection[] = [
     ),
   },
   {
-    id: 'excluir-conta',
-    title: 'Como excluo minha conta?',
+    id: "excluir-conta",
+    title: "Como excluo minha conta?",
     content: (
       <>
         <p>
-          No app, abra{' '}
+          No app, abra{" "}
           <strong>Conta → Privacidade e dados → Excluir conta</strong> e
           confirme. A exclusão é imediata e não depende de contato com o
           suporte.
         </p>
         <p>
+          Sem acesso ao app, envie um e-mail para{" "}
+          <a href={`mailto:${supportEmail}`}>{supportEmail}</a> a partir do
+          endereço da conta, com o assunto "Excluir minha conta". A exclusão é
+          feita em até 7 dias e confirmada por e-mail.
+        </p>
+        <p>
           Seus dados pessoais são apagados ou anonimizados. Os registros das
           recargas e dos pagamentos ficam guardados sem identificar você, porque
           são necessários ao rateio do condomínio e às obrigações legais. Os
-          detalhes estão na{' '}
+          detalhes estão na{" "}
           <Link to={paths.legal.privacy.getHref()}>
             Política de privacidade
           </Link>
@@ -120,8 +126,8 @@ const sections: LegalSection[] = [
     ),
   },
   {
-    id: 'dados-privacidade',
-    title: 'Como meus dados são tratados?',
+    id: "dados-privacidade",
+    title: "Como meus dados são tratados?",
     content: (
       <>
         <p>
@@ -145,7 +151,7 @@ const sections: LegalSection[] = [
       </>
     ),
   },
-]
+];
 
 const intro = (
   <div className={styles.contact}>
@@ -162,7 +168,7 @@ const intro = (
       {supportEmail}
     </a>
   </div>
-)
+);
 
 export function SupportRoute() {
   return (
@@ -172,5 +178,5 @@ export function SupportRoute() {
       intro={intro}
       sections={sections}
     />
-  )
+  );
 }
