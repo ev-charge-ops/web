@@ -99,11 +99,13 @@ describe("LoginRoute", () => {
       screen.getByRole("link", { name: "Esqueci a senha" }),
     ).toHaveAttribute("href", "/forgot-password");
     expect(screen.getByText("Motorista?")).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Baixe na App Store" }),
-    ).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "App Store" })).toHaveAttribute(
       "href",
       "https://apps.apple.com/br/app/ev-chargeops/id6819532299",
+    );
+    expect(screen.getByRole("link", { name: "Google Play" })).toHaveAttribute(
+      "href",
+      "https://play.google.com/store/apps/details?id=io.softmoon.evchargeops",
     );
   });
 
