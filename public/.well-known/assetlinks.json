@@ -7,7 +7,8 @@
       "namespace": "android_app",
       "package_name": "io.softmoon.evchargeops",
       "sha256_cert_fingerprints": [
-        "EA:D8:6E:16:FE:69:B0:73:2E:52:63:46:59:36:D7:32:90:82:05:D9:C7:AD:BB:E3:C3:35:24:04:74:80:49:07"
+        "EA:D8:6E:16:FE:69:B0:73:2E:52:63:46:59:36:D7:32:90:82:05:D9:C7:AD:BB:E3:C3:35:24:04:74:80:49:07",
+        "76:C6:E5:9D:08:EF:AF:F6:A5:41:97:4E:C5:C1:77:76:D0:A6:A0:D0:ED:E7:1C:20:83:06:7B:7D:12:58:74:C4"
       ]
     }
   }
